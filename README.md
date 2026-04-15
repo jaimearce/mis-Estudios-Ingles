@@ -24,7 +24,7 @@ Facilitar la preparación autónoma para pruebas de inglés mediante:
 
 | Característica | Detalle |
 |------|--------|
-| Archivo | `ekt-jaimeArce.html` |
+| Archivo | `EKT-jaimeArce.html` |
 | Preguntas | 100 |
 | Nivel | B2 (Intermedio - Alto) |
 | Aprobación | 60 / 100 |
@@ -37,7 +37,7 @@ Facilitar la preparación autónoma para pruebas de inglés mediante:
 | 1 | Tiempos Verbales | 15 |
 | 2 | Condicionales y *Wish* | 10 |
 | 3 | Voz Pasiva y *Reported Speech* | 10 |
-| 4 | Gramática general (modales, artículos, etc.) | 10 |
+| 4 | Gramática general | 10 |
 | 5 | Vocabulario en contexto | 15 |
 | 6 | Conectores y cohesión | 10 |
 | 7 | Lectura: *Sustainable Engineering* | 15 |
@@ -56,15 +56,30 @@ Facilitar la preparación autónoma para pruebas de inglés mediante:
 
 #### 📊 Estructura del examen
 
-| Parte | Tipo | Opciones | Preguntas |
-|------|------|----------|----------|
-| 1 | Vocabulario por contexto | 4 | 8 |
-| 2 | Avisos / señales | 3 | 6 |
-| 3 | Conversaciones | 3 | 6 |
-| 4 | Lectura (espacios en blanco) | 3 | 10 |
-| 5 | Parafraseo | 3 | 9 |
-| 6 | Inferencia | 4 | 6 |
-| 7 | Lectura (espacios en blanco) | 4 | 12 |
+| Parte | Tipo | Preguntas |
+|------|------|----------|
+| 1 | Vocabulario por contexto | 8 |
+| 2 | Avisos / señales | 6 |
+| 3 | Conversaciones | 6 |
+| 4 | Lectura (espacios en blanco) | 10 |
+| 5 | Parafraseo | 9 |
+| 6 | Inferencia | 6 |
+| 7 | Lectura (espacios en blanco) | 12 |
+
+---
+
+### 3. 📝 Módulo de Comprensión Escrita
+
+| Característica | Detalle |
+|------|--------|
+| Archivo | `ComprecionEscrita.html` |
+| Enfoque | Lectura y análisis textual |
+| Objetivo | Fortalecer comprensión escrita en inglés |
+
+Este módulo permite:
+- Analizar textos en inglés  
+- Mejorar la interpretación contextual  
+- Desarrollar habilidades de lectura crítica  
 
 ---
 
@@ -74,18 +89,18 @@ Facilitar la preparación autónoma para pruebas de inglés mediante:
 - 📖 **Explicación gramatical detallada**  
 - 🌐 **Traducción al español**  
 - ⏱️ **Cronómetro integrado**  
-- 📊 **Resultados completos** (puntaje + porcentaje + análisis por sección)  
+- 📊 **Resultados completos**  
 - 🔴🟢 Indicador de **APROBADO / NO APROBADO**  
-- 📝 Modo revisión (errores / todas las preguntas / vocabulario)  
-- 🎨 **Modo oscuro** (optimizado para largas sesiones)  
+- 📝 Modo revisión  
+- 🎨 **Modo oscuro**  
 - ⌨️ **Atajos de teclado**  
-- 📱 **Diseño responsive**  
-- 🚫 **100% offline** (sin dependencias externas)  
+- 📱 **Responsive**  
+- 🚫 **100% offline**  
 
 ---
 
 ## 🚀 Cómo Usar
 
-1. Clona o descarga este repositorio:
+1. Clona el repositorio:
 ```bash
 git clone https://github.com/jaimearce/mis-Estudios-Ingles.git
