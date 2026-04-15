@@ -2,10 +2,7 @@
 
 Aplicación web basada en archivos HTML interactivos diseñada para entrenar competencias en inglés mediante simulación real de exámenes tipo **EKT (UFPS)** y **Saber Pro**.
 
-El enfoque pedagógico se basa en:
-- Aprendizaje por contexto  
-- Retroalimentación inmediata  
-- Refuerzo gramatical + traducción  
+El sistema se complementa con un módulo adicional de **comunicación escrita en español**, enfocado en el desarrollo de habilidades argumentativas.
 
 ---
 
@@ -15,6 +12,9 @@ Facilitar la preparación autónoma para pruebas de inglés mediante:
 - Simulación realista de examen  
 - Explicaciones detalladas por pregunta  
 - Evaluación cuantitativa del desempeño  
+
+Complementariamente:
+- Fortalecer la **producción escrita en español** (tipo Saber Pro)
 
 ---
 
@@ -68,18 +68,20 @@ Facilitar la preparación autónoma para pruebas de inglés mediante:
 
 ---
 
-### 3. 📝 Módulo de Comprensión Escrita
+### 3. 📝 Módulo de Comunicación Escrita (Español)
 
 | Característica | Detalle |
 |------|--------|
 | Archivo | `ComprecionEscrita.html` |
-| Enfoque | Lectura y análisis textual |
-| Objetivo | Fortalecer comprensión escrita en inglés |
+| Idioma | Español |
+| Enfoque | Producción escrita argumentativa |
+| Objetivo | Desarrollar habilidades de redacción tipo Saber Pro |
 
 Este módulo permite:
-- Analizar textos en inglés  
-- Mejorar la interpretación contextual  
-- Desarrollar habilidades de lectura crítica  
+- Redactar ensayos argumentativos en español  
+- Mejorar la estructura lógica del texto  
+- Desarrollar coherencia y cohesión  
+- Recibir retroalimentación automática basada en criterios de evaluación  
 
 ---
 
@@ -87,7 +89,7 @@ Este módulo permite:
 
 - ✅ **Feedback inmediato** por pregunta  
 - 📖 **Explicación gramatical detallada**  
-- 🌐 **Traducción al español**  
+- 🌐 **Traducción al español** (en módulos de inglés)  
 - ⏱️ **Cronómetro integrado**  
 - 📊 **Resultados completos**  
 - 🔴🟢 Indicador de **APROBADO / NO APROBADO**  
