@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prepara Ingles — Saber Pro 2026</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{--bg:#0B0D0F;--card:#15181D;--text:#F0EBE0;--muted:#7A7468;--accent:#D4943A;--accent-light:#F0C36D;--accent-dark:#A06A20;--correct:#34D399;--correct-bg:rgba(52,211,153,0.1);--incorrect:#FB7185;--incorrect-bg:rgba(251,113,133,0.1);--border:#2A2722}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Source Sans 3',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+h1,h2,h3,h4{font-family:'Playfair Display',serif}
+.bg-orbs{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.bg-orbs .orb{position:absolute;border-radius:50%;filter:blur(80px);opacity:.15;animation:orbFloat 20s ease-in-out infinite alternate}
+.bg-orbs .orb:nth-child(1){width:500px;height:500px;background:var(--accent);top:-10%;left:-10%;animation-duration:25s}
+.bg-orbs .orb:nth-child(2){width:400px;height:400px;background:#8B5E2F;bottom:-15%;right:-10%;animation-duration:20s;animation-delay:-5s}
+.bg-orbs .orb:nth-child(3){width:300px;height:300px;background:var(--accent-light);top:50%;left:50%;transform:translate(-50%,-50%);animation-duration:30s;animation-delay:-10s;opacity:.07}
+@keyframes orbFloat{0%{transform:translate(0,0) scale(1)}33%{transform:translate(30px,-40px) scale(1.1)}66%{transform:translate(-20px,30px) scale(.95)}100%{transform:translate(15px,-15px) scale(1.05)}}
+.screen{display:none;position:relative;z-index:1}.screen.active{display:flex}
+#welcome{min-height:100vh;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;animation:fadeUp .8s ease-out}
+#welcome .badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(212,148,58,.12);border:1px solid rgba(212,148,58,.25);border-radius:999px;padding:.4rem 1.2rem;font-size:.85rem;color:var(--accent-light);margin-bottom:1.5rem;animation:fadeUp .8s ease-out .1s both}
+#welcome h1{font-size:clamp(2.5rem,7vw,4.5rem);font-weight:900;line-height:1.1;margin-bottom:1rem;background:linear-gradient(135deg,var(--text) 30%,var(--accent-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:fadeUp .8s ease-out .2s both}
+#welcome .subtitle{font-size:clamp(1rem,2.5vw,1.25rem);color:var(--muted);max-width:560px;line-height:1.6;margin-bottom:2.5rem;animation:fadeUp .8s ease-out .3s both}
+.stats-row{display:flex;gap:1.5rem;flex-wrap:wrap;justify-content:center;margin-bottom:2.5rem;animation:fadeUp .8s ease-out .4s both}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem 1.5rem;min-width:110px;transition:border-color .3s}
+.stat-card:hover{border-color:var(--accent-dark)}
+.stat-card .num{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:900;color:var(--accent)}
+.stat-card .label{font-size:.8rem;color:var(--muted);margin-top:.2rem}
+.btn-start{display:inline-flex;align-items:center;gap:.75rem;background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:#0B0D0F;font-weight:700;font-size:1.1rem;padding:1rem 2.5rem;border-radius:12px;border:none;cursor:pointer;transition:all .3s;animation:fadeUp .8s ease-out .5s both}
+.btn-start:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(212,148,58,.35)}
+.how-to{margin-top:2rem;padding:1rem 1.5rem;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;max-width:460px;text-align:left;animation:fadeUp .8s ease-out .6s both}
+.how-to p{font-size:.82rem;color:var(--muted);line-height:1.6}.how-to strong{color:var(--accent-light)}
+#quiz{min-height:100vh;flex-direction:column;padding:1rem;max-width:800px;margin:0 auto;width:100%}
+.quiz-header{display:flex;align-items:center;justify-content:space-between;padding:.75rem 0;margin-bottom:.5rem}
+.part-badge{font-size:.75rem;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--accent);background:rgba(212,148,58,.1);border:1px solid rgba(212,148,58,.2);padding:.3rem .8rem;border-radius:6px}
+.score-badge{font-size:.85rem;color:var(--muted);display:flex;align-items:center;gap:.4rem}.score-badge i{color:var(--accent)}
+.timer-badge{font-size:.8rem;color:var(--muted);display:flex;align-items:center;gap:.35rem}.timer-badge i{color:var(--accent-dark);font-size:.7rem}
+.progress-wrap{width:100%;height:4px;background:var(--border);border-radius:99px;overflow:hidden;margin-bottom:1.5rem}
+.progress-bar{height:100%;background:linear-gradient(90deg,var(--accent-dark),var(--accent-light));border-radius:99px;transition:width .5s ease}
+.question-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;flex:1;animation:cardIn .4s ease-out}
+.passage-box{background:rgba(212,148,58,.04);border:1px solid rgba(212,148,58,.12);border-radius:10px;padding:1.25rem;margin-bottom:1.5rem;font-size:.95rem;line-height:1.75;color:#C8C2B6;max-height:220px;overflow-y:auto}
+.passage-box::-webkit-scrollbar{width:4px}.passage-box::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
+.notice-box{background:rgba(240,195,109,.06);border:1px solid rgba(240,195,109,.2);border-radius:10px;padding:1rem 1.25rem;margin-bottom:1.5rem;font-size:.95rem;line-height:1.6;color:var(--accent-light);font-weight:600;text-align:center}
+.blank-hl{display:inline-block;background:rgba(212,148,58,.2);color:var(--accent-light);font-weight:700;padding:.1rem .5rem;border-radius:4px;border-bottom:2px solid var(--accent);min-width:55px;text-align:center;transition:all .3s}
+.blank-hl.filled-correct{background:rgba(52,211,153,.2);border-color:var(--correct);color:var(--correct)}
+.blank-hl.filled-wrong{background:rgba(251,113,133,.2);border-color:var(--incorrect);color:var(--incorrect)}
+.blank-hl.active-blank{box-shadow:0 0 12px rgba(212,148,58,.4)}
+.blank-num{font-size:.6rem;color:var(--accent);vertical-align:super;margin-left:2px}
+.q-number{font-size:.8rem;color:var(--muted);margin-bottom:.5rem;font-weight:600}
+.q-text{font-size:1.1rem;line-height:1.6;margin-bottom:1.5rem;color:var(--text)}
+.q-text em{color:var(--accent-light);font-style:italic}
+.options-grid{display:grid;gap:.65rem}.options-grid.cols-2{grid-template-columns:1fr 1fr}
+.option-btn{display:flex;align-items:center;gap:.75rem;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:.8rem 1rem;color:var(--text);font-size:.93rem;cursor:pointer;transition:all .2s;text-align:left}
+.option-btn:hover:not(.disabled){background:rgba(212,148,58,.08);border-color:var(--accent-dark);transform:translateX(4px)}
+.option-btn .opt-letter{display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:7px;background:rgba(255,255,255,.05);font-weight:700;font-size:.78rem;color:var(--muted);flex-shrink:0;transition:all .2s}
+.option-btn:hover:not(.disabled) .opt-letter{background:rgba(212,148,58,.15);color:var(--accent)}
+.option-btn.selected{border-color:var(--accent);background:rgba(212,148,58,.1)}
+.option-btn.selected .opt-letter{background:var(--accent);color:var(--bg)}
+.option-btn.correct-answer{border-color:var(--correct)!important;background:var(--correct-bg)!important}
+.option-btn.correct-answer .opt-letter{background:var(--correct)!important;color:var(--bg)!important}
+.option-btn.wrong-answer{border-color:var(--incorrect)!important;background:var(--incorrect-bg)!important}
+.option-btn.wrong-answer .opt-letter{background:var(--incorrect)!important;color:var(--bg)!important}
+.option-btn.disabled{cursor:default;pointer-events:none}
+.feedback-box{margin-top:1.5rem;padding:1.25rem;border-radius:12px;animation:slideUp .35s ease-out}
+.feedback-box.correct-fb{background:var(--correct-bg);border:1px solid rgba(52,211,153,.25)}
+.feedback-box.incorrect-fb{background:var(--incorrect-bg);border:1px solid rgba(251,113,133,.25)}
+.feedback-header{display:flex;align-items:center;gap:.6rem;font-weight:700;font-size:1rem;margin-bottom:.75rem}
+.correct-fb .feedback-header{color:var(--correct)}.incorrect-fb .feedback-header{color:var(--incorrect)}
+.feedback-body{font-size:.88rem;line-height:1.65;color:#B8B2A6}.feedback-body strong{color:var(--text)}
+.translation-box{margin-top:.75rem;padding:.75rem 1rem;background:rgba(255,255,255,.03);border-radius:8px;border-left:3px solid var(--accent);font-size:.85rem;color:var(--accent-light);font-style:italic}
+.btn-next{display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;margin-top:1.25rem;padding:.85rem;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:10px;color:var(--text);font-weight:600;font-size:.95rem;cursor:pointer;transition:all .2s}
+.btn-next:hover{background:rgba(212,148,58,.1);border-color:var(--accent-dark)}
+#results{min-height:100vh;flex-direction:column;align-items:center;justify-content:flex-start;padding:2rem 1rem;max-width:820px;margin:0 auto;width:100%;animation:fadeUp .6s ease-out}
+.results-hero{text-align:center;margin-bottom:2rem;margin-top:1rem}
+.results-hero h2{font-size:clamp(1.8rem,5vw,2.5rem);font-weight:900;margin-bottom:.5rem}
+.circle-score{width:160px;height:160px;margin:1.5rem auto;position:relative;display:flex;align-items:center;justify-content:center}
+.circle-score svg{position:absolute;width:100%;height:100%;transform:rotate(-90deg)}
+.circle-score .track{fill:none;stroke:var(--border);stroke-width:8}
+.circle-score .fill-ring{fill:none;stroke:var(--accent);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset 1.5s ease}
+.circle-score .score-text{font-family:'Playfair Display',serif;font-size:2.5rem;font-weight:900;color:var(--accent-light)}
+.circle-score .score-label{font-size:.75rem;color:var(--muted);position:absolute;bottom:30px}
+.section-breakdown{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:.6rem;width:100%;margin-bottom:2rem}
+.section-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.85rem;text-align:center}
+.section-card .s-name{font-size:.7rem;color:var(--muted);margin-bottom:.3rem}.section-card .s-score{font-size:1.2rem;font-weight:700}.section-card .s-detail{font-size:.72rem;color:var(--muted);margin-top:.15rem}
+.tabs-row{display:flex;gap:0;border-bottom:1px solid var(--border);width:100%;margin-bottom:1.5rem}
+.tab-btn{flex:1;padding:.75rem;text-align:center;font-weight:600;font-size:.82rem;color:var(--muted);background:none;border:none;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-content{width:100%;display:none}.tab-content.active{display:block}
+.review-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.15rem;margin-bottom:.65rem}
+.review-item.wrong-review{border-left:3px solid var(--incorrect)}.review-item.right-review{border-left:3px solid var(--correct)}
+.review-q{font-size:.88rem;color:var(--text);margin-bottom:.4rem}
+.review-answer{font-size:.83rem;margin-bottom:.3rem}.review-answer .label{color:var(--muted)}.review-answer .val-correct{color:var(--correct);font-weight:600}.review-answer .val-wrong{color:var(--incorrect);font-weight:600;text-decoration:line-through}
+.review-exp{font-size:.8rem;color:#9E9888;line-height:1.55;margin-top:.4rem;padding-top:.4rem;border-top:1px solid var(--border)}
+.vocab-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:.55rem}
+.vocab-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:.7rem .9rem;display:flex;justify-content:space-between;align-items:center}
+.vocab-card .en{font-weight:600;color:var(--accent-light)}.vocab-card .es{font-size:.83rem;color:var(--muted)}
+.btn-restart{display:inline-flex;align-items:center;gap:.6rem;background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:var(--bg);font-weight:700;padding:.85rem 2rem;border-radius:10px;border:none;cursor:pointer;font-size:1rem;margin-top:1.5rem;margin-bottom:2rem;transition:all .3s}
+.btn-restart:hover{transform:translateY(-2px);box-shadow:0 6px 25px rgba(212,148,58,.3)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes cardIn{from{opacity:0;transform:translateY(15px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shake{0%,100%{transform:translateX(0)}20%{transform:translateX(-6px)}40%{transform:translateX(6px)}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.shake{animation:shake .4s ease}
+@media(max-width:600px){.options-grid.cols-2{grid-template-columns:1fr}.question-card{padding:1.2rem}.stats-row{gap:.75rem}.stat-card{min-width:85px;padding:.7rem 1rem}.stat-card .num{font-size:1.4rem}.section-breakdown{grid-template-columns:1fr 1fr}}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="bg-orbs" aria-hidden="true"><div class="orb"></div><div class="orb"></div><div class="orb"></div></div>
+
+<section id="welcome" class="screen active" role="main">
+  <div class="badge"><i class="fa-solid fa-graduation-cap"></i> Saber Pro 2026</div>
+  <h1>Prepara tu Ingles</h1>
+  <p class="subtitle">55 preguntas del modulo de ingles Saber Pro, distribuidas en 7 partes segun la estructura oficial del examen.</p>
+  <div class="stats-row">
+    <div class="stat-card"><div class="num">55</div><div class="label">Preguntas</div></div>
+    <div class="stat-card"><div class="num">7</div><div class="label">Partes</div></div>
+    <div class="stat-card"><div class="num">~50</div><div class="label">Minutos</div></div>
+  </div>
+  <button class="btn-start" onclick="startQuiz()" aria-label="Comenzar el test">Comenzar <i class="fa-solid fa-arrow-right"></i></button>
+  <div class="how-to">
+    <p><strong>Como usarlo:</strong> Guarda como archivo <strong>.html</strong> y abre con Chrome, Edge o Firefox. Usa teclas <strong>A, B, C, D</strong> para responder y <strong>Enter</strong> para avanzar. Cada pregunta muestra explicacion y traducion al responder.</p>
+  </div>
+</section>
+
+<section id="quiz" class="screen" role="main" aria-live="polite">
+  <div class="quiz-header">
+    <div class="part-badge" id="partBadge"></div>
+    <div style="display:flex;align-items:center;gap:1rem;">
+      <div class="timer-badge"><i class="fa-solid fa-clock"></i> <span id="timerDisplay">00:00</span></div>
+      <div class="score-badge"><i class="fa-solid fa-star"></i> <span id="scoreDisplay">0</span>/55</div>
+    </div>
+  </div>
+  <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
+  <div class="question-card" id="questionCard"></div>
+</section>
+
+<section id="results" class="screen" role="main"></section>
+
+<script>
+/* =============================================
+   PASAJES PARA PARTES CON LECTURA
+   ============================================= */
+
+function buildPart4Passage(fb){
+  function b(n){
+    if(fb&&fb[n]){var c=fb[n].ok?'filled-correct':'filled-wrong';return '<span class="blank-hl '+c+'">'+fb[n].text+'</span>';}
+    return '<span class="blank-hl'+(fb?'':' active-blank')+'" id="bk4_'+n+'">___<sup class="blank-num">'+n+'</sup></span>';
+  }
+  return 'Many people '+b(1)+' know much about the problems that come '+b(2)+' pollution. '+b(3)+' children and adults '+b(4)+' about this serious issue. Scientists '+b(5)+' that the situation was getting worse every year. '+b(6)+', governments have not done enough to protect '+b(7)+', '+b(8)+' they continue to promise changes. The air quality in many cities '+b(9)+' dramatically over the last decade, and many families '+b(10)+' to move to rural areas.';
+}
+
+var passagePart5='<strong>A SOCIAL EXPERIMENT IN ONEIDA, NEW YORK</strong><br><br>In the nineteenth century there was a village called Oneida in New York State where a "family" of 300 members lived together in a large beautiful house where they shared everything.<br><br>A man named John Humphrey Noyes, and a small group of people moved there in 1848. They wanted a place where they could live according to their particular beliefs in their efforts to create a more equal society.<br><br>Today, this place is touristic and, like me, many visitors come because they had relatives among those 19th century dreamers. Others just want to see for themselves the building where this successful social group in American history lived. "I don\'t know of anywhere else where you can live in a historical place," said the director of the Oneida site. "It\'s very unusual."<br><br>The present owners share the building with guests who stay in large comfortably furnished bedrooms with private baths. There are eight guest rooms in the hotel area, and each guest pays $100 for a big bedroom, a simple breakfast and a private tour of the 10,300-square-meter building, which also contains 35 apartments.<br><br>The library and the building\'s grounds are also open to guests, as well as several of the public rooms. The 170-year-old library, unchanged from the original construction, holds a rich collection of 19th century books and magazines, which learners used to study Latin, Greek, algebra and astronomy.<br><br>This place is open for everybody and it\'s worth a visit.';
+
+var passagePart6='<strong>THE RISE OF REMOTE WORK</strong><br><br>Over the past five years, remote work has transformed from a rare benefit to a standard practice in many industries. Companies like TechFlow and DataMind reported that employee productivity increased by 23% after adopting flexible work policies. However, not all sectors have embraced this change. Manufacturing, healthcare, and hospitality still require physical presence.<br><br>Maria Chen, a workplace researcher at Stanford University, notes that "remote work is not a universal solution — it depends heavily on the nature of the task." Interestingly, a recent survey showed that 67% of workers who switched to remote work reported feeling more connected to their families, but 45% also reported feelings of isolation from colleagues.<br><br>The debate continues as cities like Barcelona and Lisbon have started offering "digital nomad visas" to attract foreign remote workers, boosting their local economies. Meanwhile, some companies are experimenting with hybrid models, where employees split their time between home and office. The future of work remains uncertain, but one thing is clear: the traditional 9-to-5 office schedule is no longer the only option.';
+
+function buildPart7Passage(fb){
+  function b(n){
+    if(fb&&fb[n]){var c=fb[n].ok?'filled-correct':'filled-wrong';return '<span class="blank-hl '+c+'">'+fb[n].text+'</span>';}
+    return '<span class="blank-hl'+(fb?'':' active-blank')+'" id="bk7_'+n+'">___<sup class="blank-num">'+n+'</sup></span>';
+  }
+  return 'Chocolate has a fascinating history that '+b(1)+' back thousands of years. The ancient Maya and Aztec civilizations '+b(2)+' cacao beans as a form of currency and '+b(3)+' them into a bitter drink. When Spanish explorers '+b(4)+' arrived in the Americas in the 16th century, they '+b(5)+' this drink back to Europe. However, it was not '+b(6)+' the 19th century that chocolate '+b(7)+' the sweet treat we know today. In 1847, Joseph Fry '+b(8)+' the first solid chocolate bar by adding sugar and cocoa butter to the mixture. Since then, chocolate '+b(9)+' one of the most popular foods in the world. Today, the global chocolate industry '+b(10)+' more than $100 billion annually. Scientists have also discovered that dark chocolate '+b(11)+' health benefits, including improving heart health. '+b(12)+', experts recommend consuming it in moderation because of its high calorie content.';
+}
+
+/* =============================================
+   55 PREGUNTAS — 7 PARTES
+   ============================================= */
+
+var Q=[];
+var o8=["afraid","angry","cold","hungry","nervous","sad","thirsty","tired"];
+
+// PARTE 1 — Vocabulario por contexto (8 opciones, 6 preguntas)
+Q.push({id:1,part:1,pn:"Vocabulario (8 op.)",tp:"matching",cl:2,
+tx:"People often cry when they feel like this.",
+op:o8,cr:"sad",
+ex:'"Sad" (triste) describe infelicidad. "Cry" (llorar) es la respuesta natural al sentirse <strong>sad</strong>. Palabra clave para emociones negativas.',
+tr:'"Las personas a menudo lloran cuando se sienten asi." → <strong>Sad = Triste</strong>'});
+
+Q.push({id:2,part:1,pn:"Vocabulario (8 op.)",tp:"matching",cl:2,
+tx:"If we feel like this, we want to eat something.",
+op:o8,cr:"hungry",
+ex:'"Hungry" (hambriento/a) es la necesidad de comer. "Want to eat something" = querer comer algo. Viene de "hunger" (hambre). No confundir con "thirsty" (sed).',
+tr:'"Si nos sentimos asi, queremos comer algo." → <strong>Hungry = Hambriento/a</strong>'});
+
+Q.push({id:3,part:1,pn:"Vocabulario (8 op.)",tp:"matching",cl:2,
+tx:"When we hate something, we sometimes feel like this.",
+op:o8,cr:"angry",
+ex:'"Angry" (enojado/a) es irritacion o furia. "Hate" (odiar) frecuentemente produce sentirse <strong>angry</strong>. Relacionado: "anger" (enojo), "get angry" (enojarse).',
+tr:'"Cuando odiamos algo, a veces nos sentimos asi." → <strong>Angry = Enojado/a</strong>'});
+
+Q.push({id:4,part:1,pn:"Vocabulario (8 op.)",tp:"matching",cl:2,
+tx:"Some people feel like this when it is hot, and need to drink something.",
+op:o8,cr:"thirsty",
+ex:'"Thirsty" (sediento/a) es necesidad de beber. Pistas: "when it is hot" (hace calor) y "need to drink" (necesitar beber). Viene de "thirst" (sed).',
+tr:'"Algunas personas se sienten asi cuando hace calor y necesitan beber." → <strong>Thirsty = Sediento/a</strong>'});
+
+Q.push({id:5,part:1,pn:"Vocabulario (8 op.)",tp:"matching",cl:2,
+tx:"A person feels like this when they need to sleep after a long day.",
+op:o8,cr:"tired",
+ex:'"Tired" (cansado/a) es agotamiento fisico o mental. Pistas: "need to sleep" (necesitar dormir) y "after a long day" (despues de un largo dia).',
+tr:'"Una persona se siente asi cuando necesita dormir despues de un largo dia." → <strong>Tired = Cansado/a</strong>'});
+
+Q.push({id:6,part:1,pn:"Vocabulario (8 op.)",tp:"matching",cl:2,
+tx:"Students often feel this way before taking an important exam.",
+op:o8,cr:"nervous",
+ex:'"Nervous" (nervioso/a) es ansiedad antes de un evento importante. "Before taking an exam" = antes de tomar un examen. Relacionado: "nerves" (nervios), "get nervous" (ponerse nervioso).',
+tr:'"Los estudiantes a menudo se sienten asi antes de un examen importante." → <strong>Nervous = Nervioso/a</strong>'});
+
+// PARTE 2 — Avisos (3 opciones, 6 preguntas)
+Q.push({id:7,part:2,pn:"Avisos (3 op.)",tp:"notice",cl:1,
+nt:"WARNING: No swimming allowed after 6:00 PM",
+tx:"What does this notice tell you?",
+op:["You can swim anytime.","You must not swim after 6 PM.","Swimming is always dangerous."],
+cr:"You must not swim after 6 PM.",
+ex:'"Must not" (no debe / esta prohibido) indica prohibicion. "Warning" = advertencia. "Allowed" = permitido. El aviso prohbe nadar despues de las 6 PM.',
+tr:'"ADVERTENCIA: No se permite nadar despues de las 6 PM" → <strong>Must not = No debe (prohibicion); Warning = Advertencia</strong>'});
+
+Q.push({id:8,part:2,pn:"Avisos (3 op.)",tp:"notice",cl:1,
+nt:"EMPLOYEES ONLY — Do not enter without authorization",
+tx:"Who can enter this area?",
+op:["Only workers.","Anyone who wants to.","Customers with a ticket."],
+cr:"Only workers.",
+ex:'"Employees only" (solo empleados) restringe el acceso. "Workers" = trabajadores/empleados. "Without authorization" = sin autorizacion. Solo el personal puede entrar.',
+tr:'"SOLO EMPLEADOS — No entrar sin autorizacion" → <strong>Employees only = Solo empleados; Workers = Trabajadores</strong>'});
+
+Q.push({id:9,part:2,pn:"Avisos (3 op.)",tp:"notice",cl:1,
+nt:"FREE COFFEE — Every Saturday morning from 8:00 to 10:00 AM",
+tx:"When can you get free coffee?",
+op:["Every weekday morning.","Only on Saturday evenings.","On Saturday mornings."],
+cr:"On Saturday mornings.",
+ex:'"Saturday morning" = sabado por la manana. "From 8:00 to 10:00 AM" indica el horario. "Free" = gratis/gratuito. El cafe gratis es solo sabados en la manana.',
+tr:'"CAFE GRATIS — Cada sabado por la manana de 8:00 a 10:00 AM" → <strong>Free = Gratis; Saturday morning = Sabado por la manana</strong>'});
+
+Q.push({id:10,part:2,pn:"Avisos (3 op.)",tp:"notice",cl:1,
+nt:"OUT OF ORDER — This elevator will be repaired next Monday",
+tx:"What does this sign mean?",
+op:["The elevator works perfectly.","The elevator is not working now.","The elevator will be removed."],
+cr:"The elevator is not working now.",
+ex:'"Out of order" = fuera de servicio / no funciona. Es una expresion fija muy comun en ingles para maquinas o equipos rotos. "Repaired" = reparado.',
+tr:'"FUERA DE SERVICIO — Este ascensor sera reparado el proximo lunes" → <strong>Out of order = Fuera de servicio; Repaired = Reparado</strong>'});
+
+Q.push({id:11,part:2,pn:"Avisos (3 op.)",tp:"notice",cl:1,
+nt:"PLEASE KEEP YOUR VOICE DOWN — Study area in use",
+tx:"What should you do here?",
+op:["Talk loudly with friends.","Be quiet in this area.","Leave the area immediately."],
+cr:"Be quiet in this area.",
+ex:'"Keep your voice down" = bajar la voz / mantener la voz baja. "Study area" = zona de estudio. Te pide silencio, no que te vayas. "Quiet" = silencioso/a.',
+tr:'"POR FAVOR BAJE LA VOZ — Zona de estudio en uso" → <strong>Keep your voice down = Bajar la voz; Quiet = Silencioso</strong>'});
+
+Q.push({id:12,part:2,pn:"Avisos (3 op.)",tp:"notice",cl:1,
+nt:"LAST DAY SALE — 50% off all items — Today only!",
+tx:"What is happening today?",
+op:["New items are arriving.","Everything costs half price.","The store is closing forever."],
+cr:"Everything costs half price.",
+ex:'"50% off" = 50% de descuento = mitad de precio. "Sale" = oferta/liquidacion. "Last day" = ultimo dia. "Today only" = solo hoy. No significa que la tienda cierre, solo que la oferta termina hoy.',
+tr:'"ULTIMO DIA DE OFERTA — 50% de descuento en todo — Solo hoy!" → <strong>50% off = 50% de descuento; Sale = Oferta</strong>'});
+
+// PARTE 3 — Conversacion (3 opciones, 6 preguntas)
+Q.push({id:13,part:3,pn:"Conversacion (3 op.)",tp:"conv",cl:1,
+tx:'<em>— Do you prefer cats or dogs?</em>',
+op:["Both are nice.","It is not OK.","All right."],
+cr:"Both are nice.",
+ex:'"Both" (ambos/los dos) responde a una pregunta de preferencia entre dos cosas. "Prefer" = preferir. "Both X and Y" = tanto X como Y.',
+tr:'"Prefieres gatos o perros?" → "Ambos son lindos." — <strong>Both = Ambos</strong>'});
+
+Q.push({id:14,part:3,pn:"Conversacion (3 op.)",tp:"conv",cl:1,
+tx:'<em>— I forgot to turn the lights off.</em>',
+op:["How about this?","Are you sure?","Do it this way."],
+cr:"Are you sure?",
+ex:'"Are you sure?" (Estas seguro/a?) reacciona cuando alguien dice que olvido algo. "Turn off" = apagar. "Forgot" es pasado de "forget" (olvidar).',
+tr:'"Olvide apagar las luces." → "Estas seguro/a?" — <strong>Turn off = Apagar; Sure = Seguro/a</strong>'});
+
+Q.push({id:15,part:3,pn:"Conversacion (3 op.)",tp:"conv",cl:1,
+tx:'<em>— I am afraid my sister is sick.</em>',
+op:["Oh, I am sorry.","Too late.","Can I go now?"],
+cr:"Oh, I am sorry.",
+ex:'"I am sorry" (Lo siento) es la respuesta empirica ante malas noticias. "Afraid" aqui NO significa miedo sino "temo que" (dar malas noticias). "Sick" = enfermo/a.',
+tr:'"Temo que mi hermana este enferma." → "Oh, lo siento." — <strong>Afraid = "Temo que"; Sick = Enfermo/a</strong>'});
+
+Q.push({id:16,part:3,pn:"Conversacion (3 op.)",tp:"conv",cl:1,
+tx:'<em>— Let us go to the park next weekend.</em>',
+op:["As soon as possible.","Hope it is.","Great idea."],
+cr:"Great idea.",
+ex:'"Great idea" (Gran idea) acepta una propuesta con entusiasmo. "Let us" = "Let us" = vamos a. "Next weekend" = proximo fin de semana. "Great" = genial.',
+tr:'"Vamos al parque el proximo fin de semana." → "Gran idea." — <strong>Great = Genial; Next weekend = Proximo fin de semana</strong>'});
+
+Q.push({id:17,part:3,pn:"Conversacion (3 op.)",tp:"conv",cl:1,
+tx:'<em>— Can I talk to you for a minute?</em>',
+op:["Be careful.","Of course.","Just one."],
+cr:"Of course.",
+ex:'"Of course" (Por supuesto) acepta una solicitud cortesmente. "Can I...?" = Puedo...? (pedir permiso). "For a minute" = por un minuto.',
+tr:'"Puedo hablar contigo por un minuto?" → "Por supuesto." — <strong>Of course = Por supuesto</strong>'});
+
+Q.push({id:18,part:3,pn:"Conversacion (3 op.)",tp:"conv",cl:1,
+tx:'<em>— What do you do for a living?</em>',
+op:["I am a teacher.","I live near here.","I do it well."],
+cr:"I am a teacher.",
+ex:'"What do you do for a living?" es la pregunta estandar para preguntar la profesion de alguien. "For a living" = para vivir / para ganarse la vida. Responder con "I am a + profesion".',
+tr:'"A que te dedicas?" → "Soy profesor/a." — <strong>For a living = Para ganarse la vida</strong>'});
+
+// PARTE 4 — Lectura con espacios en blanco (3 opciones, 10 preguntas)
+Q.push({id:19,part:4,pn:"Lectura cloze (3 op.)",tp:"fill3",cl:1,pt:"p4",bn:1,
+tx:"Many people ___(1)___ know much about the problems...",
+op:["does not","do not","did not"],
+cr:"do not",
+ex:'"Do not" (no) es negativo en presente simple con sujetos plurales. "People" es plural. "Does not" es para he/she/it. "Did not" es pasado.',
+tr:'"Muchas personas <strong>no</strong> saben mucho..." — <strong>Do not = No (plural, presente)</strong>'});
+
+Q.push({id:20,part:4,pn:"Lectura cloze (3 op.)",tp:"fill3",cl:1,pt:"p4",bn:2,
+tx:"...the problems that come ___(2)___ pollution.",
+op:["among","against","from"],
+cr:"from",
+ex:'"Come from" = provenir de. "From" indica origen. "Among" = entre. "Against" = contra. Los problemas provienen DE la contaminacion.',
+tr:'"...los problemas que provienen <strong>de</strong> la contaminacion." — <strong>Come from = Provenir de</strong>'});
+
+Q.push({id:21,part:4,pn:"Lectura cloze (3 op.)",tp:"fill3",cl:1,pt:"p4",bn:3,
+tx:"___(3)___ children and adults worry about this issue.",
+op:["Either","Both","Each"],
+cr:"Both",
+ex:'"Both X and Y" = tanto X como Y. Incluye dos grupos. "Either" = cualquiera de dos (negativo). "Each" = cada uno (individual).',
+tr:'"<strong>Tanto</strong> ninos como adultos se preocupan..." — <strong>Both X and Y = Tanto X como Y</strong>'});
+
+Q.push({id:22,part:4,pn:"Lectura cloze (3 op.)",tp:"fill3",cl:1,pt:"p4",bn:4,
+tx:"Both children and adults ___(4)___ about this serious issue.",
+op:["worry","worries","worrying"],
+cr:"worry",
+ex:'Sujeto plural "children and adults" usa verbo sin "-s" en presente simple. "Worries" es para he/she/it. "Worrying" es gerundio. "Worry about" = preocuparse por.',
+tr:'"...se <strong>preocupan</strong> por este problema grave." — <strong>Worry about = Preocuparse por</strong>'});
+
+Q.push({id:23,part:4,pn:"Lectura cloze (3 op.)",tp:"fill3",cl:1,pt:"p4",bn:5,
+tx:"Scientists ___(5)___ that the situation was getting worse...",
+op:["believed","believes","believe"],
+cr:"believed",
+ex:'"Believed" = creyeron (pasado simple). "Was getting worse" indica pasado. Pasado de "believe" = "believed" (se anade -d).',
+tr:'"Los cientificos <strong>creian</strong> que la situacion estaba empeorando..." — <strong>Believed = Creyeron (pasado)</strong>'});
+
+Q.push({id:24,part:4,pn:"Lectura cloze (3 op.)",tp:"fill3",cl:1,pt:"p4",bn:6,
+tx:"___(6)___, governments have not done enough to protect...",
+op:["Almost","However","Indeed"],
+cr:"However",
+ex:'"However" (sin embargo) es conector de contraste. Conecta: cientificos dijeron que era grave PERO gobiernos no actuaron. Va seguido de coma.',
+tr:'"<strong>Sin embargo</strong>, los gobiernos no han hecho suficiente..." — <strong>However = Sin embargo</strong>'});
+
+Q.push({id:25,part:4,pn:"Lectura cloze (3 op.)",tp:"fill3",cl:1,pt:"p4",bn:7,
+tx:"...governments have not done enough to protect ___(7)___...",
+op:["you","her","them"],
+cr:"them",
+ex:'"Them" (los/les) es pronombre objeto 3ra persona plural. Se refiere a "children and adults". Despues de "protect" se necesita objeto directo.',
+tr:'"...para <strong>protegerlos</strong>..." — <strong>Them = Los/Les (objeto, plural)</strong>'});
+
+Q.push({id:26,part:4,pn:"Lectura cloze (3 op.)",tp:"fill3",cl:1,pt:"p4",bn:8,
+tx:"...to protect them, ___(8)___ they continue to promise changes.",
+op:["but","or","so"],
+cr:"but",
+ex:'"But" (pero) = contraste. No han protegido PERO continuan prometiendo. "Or" = o. "So" = asi que (consecuencia).',
+tr:'"...para protegerlos, <strong>pero</strong> continuan prometiendo cambios." — <strong>But = Pero</strong>'});
+
+Q.push({id:27,part:4,pn:"Lectura cloze (3 op.)",tp:"fill3",cl:1,pt:"p4",bn:9,
+tx:"The air quality in many cities ___(9)___ dramatically over the last decade...",
+op:["has improved","has decreased","has stopped"],
+cr:"has decreased",
+ex:'"Has decreased" = ha disminuido. "Over the last decade" indica presente perfecto. "Air quality" (calidad del aire) empeorando = disminuyendo. "Improved" = mejorado (lo contrario).',
+tr:'"La calidad del aire <strong>ha disminuido</strong> dramaticamente..." — <strong>Has decreased = Ha disminuido</strong>'});
+
+Q.push({id:28,part:4,pn:"Lectura cloze (3 op.)",tp:"fill3",cl:1,pt:"p4",bn:10,
+tx:"...and many families ___(10)___ to move to rural areas.",
+op:["have decided","have refused","have forgotten"],
+cr:"have decided",
+ex:'"Have decided" = han decidido. Presente perfecto con "many families" (plural). "Decided to move" = decidieron mudarse. "Refused" = rehusaron. "Forgotten" = olvidado.',
+tr:'"...y muchas familias <strong>han decidido</strong> mudarse a zonas rurales." — <strong>Have decided = Han decidido</strong>'});
+
+// PARTE 5 — Lectura parafraseo (3 opciones, 9 preguntas)
+Q.push({id:29,part:5,pn:"Lectura parafraseo (3 op.)",tp:"read3",cl:1,pt:"p5",
+tx:"John Humphrey Noyes travelled to New York State...",
+op:["to visit his family.","to change his way of life.","to know more about his country."],
+cr:"to change his way of life.",
+ex:'El texto dice "wanted a place where they could live according to their particular beliefs" = querian vivir segun sus creencias = cambiar su forma de vida.',
+tr:'Noyes viajo para <strong>cambiar su forma de vida</strong>. — <strong>Way of life = Forma de vida; Beliefs = Creencias</strong>'});
+
+Q.push({id:30,part:5,pn:"Lectura parafraseo (3 op.)",tp:"read3",cl:1,pt:"p5",
+tx:"Nowadays Oneida is...",
+op:["a hotel.","a display.","a school."],
+cr:"a hotel.",
+ex:'Menciona "eight guest rooms in the hotel area", "each guest pays $100" y "comfortably furnished bedrooms". Esto describe un hotel. "Nowadays" = hoy en dia.',
+tr:'Hoy en dia Oneida es <strong>un hotel</strong>. — <strong>Nowadays = Hoy en dia; Guest = Huesped</strong>'});
+
+Q.push({id:31,part:5,pn:"Lectura parafraseo (3 op.)",tp:"read3",cl:1,pt:"p5",
+tx:"The writer visited the place because he...",
+op:["had particular social beliefs.","had family who had lived there.","had interest in historical buildings."],
+cr:"had family who had lived there.",
+ex:'"Like me, many visitors come because they had relatives among those 19th century dreamers." "Relatives" = parientes. El escritor tiene familia que vivio alli.',
+tr:'Visito porque <strong>tenia familia que vivio alli</strong>. — <strong>Relatives = Parientes</strong>'});
+
+Q.push({id:32,part:5,pn:"Lectura parafraseo (3 op.)",tp:"read3",cl:1,pt:"p5",
+tx:"If you want to see the building...",
+op:["you need to pay to have a guided visit.","you can join a small group of people.","you will have your own guide included."],
+cr:"you will have your own guide included.",
+ex:'"Each guest pays $100 for... a private tour." "Private" = privado, entonces tienes tu propio guia incluido en el precio.',
+tr:'Tendras <strong>tu propio guia incluido</strong>. — <strong>Private tour = Tour privado</strong>'});
+
+Q.push({id:33,part:5,pn:"Lectura parafraseo (3 op.)",tp:"read3",cl:1,pt:"p5",
+tx:"All visitors to the Oneida historical site...",
+op:["have access to most parts of the house.","have to go to the 19th century library.","are not allowed to see certain places."],
+cr:"have access to most parts of the house.",
+ex:'"The library and the building\'s grounds are also open to guests, as well as several of the public rooms." "Open to guests" = abierto a los huespedes = acceso a la mayor parte.',
+tr:'Los visitantes <strong>tienen acceso a la mayor parte</strong>. — <strong>Open to = Abierto a</strong>'});
+
+Q.push({id:34,part:5,pn:"Lectura parafraseo (3 op.)",tp:"read3",cl:1,pt:"p5",
+tx:"The old library...",
+op:["has changed a little.","has remained the same.","has been damaged."],
+cr:"has remained the same.",
+ex:'"Unchanged from the original construction" = sin cambios desde la construccion original. "Remain the same" = permanecer igual.',
+tr:'La biblioteca antigua <strong>ha permanecido igual</strong>. — <strong>Unchanged = Sin cambios</strong>'});
+
+Q.push({id:35,part:5,pn:"Lectura parafraseo (3 op.)",tp:"read3",cl:1,pt:"p5",
+tx:"People at Oneida studied...",
+op:["languages.","politics.","anatomy."],
+cr:"languages.",
+ex:'"Study Latin, Greek, algebra and astronomy." Latin y Greek son idiomas (languages). Algebra = matematicas, astronomy = ciencia. La opcion correcta es languages.',
+tr:'Estudiaron <strong>idiomas</strong> (latin y griego). — <strong>Learners = Estudiantes</strong>'});
+
+Q.push({id:36,part:5,pn:"Lectura parafraseo (3 op.)",tp:"read3",cl:1,pt:"p5",
+tx:"The Oneida community was unusual because...",
+op:["they became famous artists.","they managed to live together sharing everything.","they built many hotels."],
+cr:"they managed to live together sharing everything.",
+ex:'"A family of 300 members lived together in a large beautiful house where they shared everything." Vivir 300 personas juntas compartiendo todo era "very unusual" (muy inusual).',
+tr:'La comunidad era inusual porque <strong>vivian juntos compartiendo todo</strong>. — <strong>Share = Compartir; Unusual = Inusual</strong>'});
+
+Q.push({id:37,part:5,pn:"Lectura parafraseo (3 op.)",tp:"read3",cl:1,pt:"p5",
+tx:"The $100 payment includes...",
+op:["only the bedroom.","a bedroom, breakfast and a private tour.","lunch and a guide."],
+cr:"a bedroom, breakfast and a private tour.",
+ex:'"Each guest pays $100 for a big bedroom, a simple breakfast and a private tour." Las tres cosas estan incluidas en el precio.',
+tr:'El pago de $100 incluye <strong>habitacion, desayuno y tour privado</strong>. — <strong>Include = Incluir</strong>'});
+
+// PARTE 6 — Lectura inferencia (4 opciones, 6 preguntas)
+Q.push({id:38,part:6,pn:"Lectura inferencia (4 op.)",tp:"infer",cl:1,pt:"p6",
+tx:"What can be inferred about companies that adopted remote work?",
+op:["They all reduced their office space.","Some of them saw positive results in productivity.","They forced all employees to work from home.","Most of them later returned to traditional offices."],
+cr:"Some of them saw positive results in productivity.",
+ex:'"Employee productivity increased by 23% after adopting flexible work policies." Se infiere que ALGUNAS compañias vieron resultados positivos. "Inferred" = se infiere. No dice "todas" ni "obligaron".',
+tr:'Se infiere que <strong>algunas vieron resultados positivos</strong>. — <strong>Infer = Inferir; Productivity = Productividad</strong>'});
+
+Q.push({id:39,part:6,pn:"Lectura inferencia (4 op.)",tp:"infer",cl:1,pt:"p6",
+tx:"What does Maria Chen's comment suggest?",
+op:["Remote work is perfect for every industry.","All workers should have the option to work remotely.","The effectiveness of remote work varies by job type.","Physical offices will disappear completely."],
+cr:"The effectiveness of remote work varies by job type.",
+ex:'"Remote work is not a universal solution — it depends heavily on the nature of the task." Se infiere que la efectividad varia segun el tipo de trabajo. "Varies" = varia.',
+tr:'Se sugiere que <strong>la efectividad varia segun el trabajo</strong>. — <strong>Depends on = Depende de; Nature = Naturaleza</strong>'});
+
+Q.push({id:40,part:6,pn:"Lectura inferencia (4 op.)",tp:"infer",cl:1,pt:"p6",
+tx:"What can be inferred about remote workers' social lives?",
+op:["They are universally happier than office workers.","They experience both positive and negative social effects.","They never see their colleagues again.","They prefer to work alone at all times."],
+cr:"They experience both positive and negative social effects.",
+ex:'"67% reported feeling more connected to their families, but 45% also reported feelings of isolation." Datos positivos Y negativos = efectos sociales mixtos. "Isolation" = aislamiento.',
+tr:'Se infiere que <strong>experimentan efectos positivos y negativos</strong>. — <strong>Isolation = Aislamiento; Connected = Conectado</strong>'});
+
+Q.push({id:41,part:6,pn:"Lectura inferencia (4 op.)",tp:"infer",cl:1,pt:"p6",
+tx:"Why are cities offering digital nomad visas?",
+op:["To force locals to work from home.","To reduce the number of tourists.","To attract foreign workers and benefit economically.","To help companies find cheaper employees."],
+cr:"To attract foreign workers and benefit economically.",
+ex:'"Offering digital nomad visas to attract foreign remote workers, boosting their local economies." "Boosting" = impulsando. Se infiere que el motivo es economico: atraer trabajadores que gastan dinero localmente.',
+tr:'Para <strong>atraer trabajadores extranjeros y beneficiarse economicamente</strong>. — <strong>Attract = Atraer; Boost = Impulsar</strong>'});
+
+Q.push({id:42,part:6,pn:"Lectura inferencia (4 op.)",tp:"infer",cl:1,pt:"p6",
+tx:"What can be inferred about the future of work?",
+op:["All jobs will eventually become remote.","The transition to remote work has been completely smooth.","The ideal work arrangement likely differs across industries.","Remote work was invented in the last five years."],
+cr:"The ideal work arrangement likely differs across industries.",
+ex:'No todos los sectores lo adoptaron. Algunos requieren presencia fisica. Se infiere que no hay una solucion unica: el arreglo ideal probablemente difiere por industria.',
+tr:'El arreglo ideal <strong>probablemente difiere entre industrias</strong>. — <strong>Differ = Diferir; Arrangement = Arreglo</strong>'});
+
+Q.push({id:43,part:6,pn:"Lectura inferencia (4 op.)",tp:"infer",cl:1,pt:"p6",
+tx:"What does the passage suggest about traditional work sectors?",
+op:["They have completely disappeared.","They still play an important role in the economy.","They have all adopted remote work successfully.","They are less important than tech companies."],
+cr:"They still play an important role in the economy.",
+ex:'"Manufacturing, healthcare, and hospitality still require physical presence." Se infiere que siguen siendo importantes ya que no pueden ser remotos. "Require" = requieren.',
+tr:'Los sectores tradicionales <strong>siguen siendo importantes</strong>. — <strong>Require = Requerir; Physical presence = Presencia fisica</strong>'});
+
+// PARTE 7 — Lectura con espacios en blanco (4 opciones, 12 preguntas)
+Q.push({id:44,part:7,pn:"Lectura cloze (4 op.)",tp:"fill4",cl:1,pt:"p7",bn:1,
+tx:"Chocolate has a fascinating history that ___(1)___ back thousands of years.",
+op:["dates","goes","comes","runs"],
+cr:"dates",
+ex:'"Dates back" = se remonta a. Es una expresion fija para hablar del origen historico de algo. "Fascinating" = fascinante. No se usa "goes back" ni "comes back" en este contexto.',
+tr:'"El chocolate tiene una historia fascinante que <strong>se remonta</strong> a miles de anos." — <strong>Dates back = Se remonta a</strong>'});
+
+Q.push({id:45,part:7,pn:"Lectura cloze (4 op.)",tp:"fill4",cl:1,pt:"p7",bn:2,
+tx:"The ancient Maya and Aztec civilizations ___(2)___ cacao beans as a form of currency...",
+op:["considered","used","watched","carried"],
+cr:"used",
+ex:'"Used as" = usadas como. Las civilizaciones usaban los granos de cacao COMO moneda. "Currency" = moneda/dinero. "Considered" seria "consideraron", pero no encaja con "as a form of".',
+tr:'"Las civilizaciones maya y azteca <strong>usaban</strong> los granos de cacao como moneda..." — <strong>Used as = Usado como; Currency = Moneda</strong>'});
+
+Q.push({id:46,part:7,pn:"Lectura cloze (4 op.)",tp:"fill4",cl:1,pt:"p7",bn:3,
+tx:"...and ___(3)___ them into a bitter drink.",
+op:["turned","prepared","threw","put"],
+cr:"turned",
+ex:'"Turned them into" = los convirtieron en. "Turn into" = convertir en. Expresion muy comun para transformacion. "Bitter" = amargo.',
+tr:'"...y los <strong>convirtieron</strong> en una bebida amarga." — <strong>Turn into = Convertir en; Bitter = Amargo</strong>'});
+
+Q.push({id:47,part:7,pn:"Lectura cloze (4 op.)",tp:"fill4",cl:1,pt:"p7",bn:4,
+tx:"When Spanish explorers ___(4)___ arrived in the Americas in the 16th century...",
+op:["first","last","never","almost"],
+cr:"first",
+ex:'"First arrived" = llegaron por primera vez. "First" enfatiza que fue el primer contacto. "16th century" = siglo 16. Contexto historico del descubrimiento.',
+tr:'"Cuando los exploradores espanoles <strong>llegaron por primera vez</strong> a las Americas..." — <strong>First = Primero/Primera vez</strong>'});
+
+Q.push({id:48,part:7,pn:"Lectura cloze (4 op.)",tp:"fill4",cl:1,pt:"p7",bn:5,
+tx:"...they ___(5)___ this drink back to Europe.",
+op:["took","brought","left","sent"],
+cr:"brought",
+ex:'"Brought back" = trajeron de vuelta. "Bring" (traer) pasado irregular = "brought". "Took" = llevaron (direccion opuesta). De Europa a Americas = took; de Americas a Europa = brought.',
+tr:'"...<strong>trajeron</strong> esta bebida de vuelta a Europa." — <strong>Brought back = Trajeron de vuelta</strong>'});
+
+Q.push({id:49,part:7,pn:"Lectura cloze (4 op.)",tp:"fill4",cl:1,pt:"p7",bn:6,
+tx:"However, it was not ___(6)___ the 19th century that chocolate...",
+op:["until","since","after","before"],
+cr:"until",
+ex:'"It was not until... that" = no fue hasta... que. Estructura enfatica muy frecuente en ingles. El chocolate no se vuelvio dulce HASTA el siglo 19.',
+tr:'"Sin embargo, no fue <strong>hasta</strong> el siglo 19 que el chocolate..." — <strong>It was not until... that = No fue hasta... que</strong>'});
+
+Q.push({id:50,part:7,pn:"Lectura cloze (4 op.)",tp:"fill4",cl:1,pt:"p7",bn:7,
+tx:"...that chocolate ___(7)___ the sweet treat we know today.",
+op:["became","becomes","becoming","become"],
+cr:"became",
+ex:'"Became" = se convirtio en (pasado simple). El contexto es siglo 19 (pasado). "Becomes" es presente. "Becoming" es gerundio. "Become" es base. "Treat" = golosina/postre.',
+tr:'"...que el chocolate <strong>se convirtio</strong> en el dulce que conocemos hoy." — <strong>Became = Se convirtio en (pasado); Treat = Golosina</strong>'});
+
+Q.push({id:51,part:7,pn:"Lectura cloze (4 op.)",tp:"fill4",cl:1,pt:"p7",bn:8,
+tx:"In 1847, Joseph Fry ___(8)___ the first solid chocolate bar...",
+op:["created","creates","creating","create"],
+cr:"created",
+ex:'"Created" = creo (pasado simple). "In 1847" indica pasado. "Solid chocolate bar" = barra de chocolate solido. Pasado de "create" = "created" (se anade -d).',
+tr:'"En 1847, Joseph Fry <strong>creo</strong> la primera barra de chocolate solido..." — <strong>Created = Creo (pasado); Solid = Solido</strong>'});
+
+Q.push({id:52,part:7,pn:"Lectura cloze (4 op.)",tp:"fill4",cl:1,pt:"p7",bn:9,
+tx:"Since then, chocolate ___(9)___ one of the most popular foods in the world.",
+op:["has become","became","becomes","becoming"],
+cr:"has become",
+ex:'"Since then" = desde entonces. "Since" + punto en el pasado exige presente perfecto: "has become" = se ha convertido. "Since" es una senal clave para presente perfecto.',
+tr:'"Desde entonces, el chocolate <strong>se ha convertido</strong> en uno de los alimentos mas populares..." — <strong>Since then + presente perfecto; Has become = Se ha convertido</strong>'});
+
+Q.push({id:53,part:7,pn:"Lectura cloze (4 op.)",tp:"fill4",cl:1,pt:"p7",bn:10,
+tx:"Today, the global chocolate industry ___(10)___ more than $100 billion annually.",
+op:["is worth","was worth","will worth","worth"],
+cr:"is worth",
+ex:'"Is worth" = vale. "Today" indica presente. "Worth" no es verbo por si solo, necesita "be": "is worth $100 billion" = vale $100 mil millones. "Annually" = anualmente.',
+tr:'"Hoy, la industria global del chocolate <strong>vale</strong> mas de $100 mil millones anualmente." — <strong>Is worth = Vale; Annually = Anualmente</strong>'});
+
+Q.push({id:54,part:7,pn:"Lectura cloze (4 op.)",tp:"fill4",cl:1,pt:"p7",bn:11,
+tx:"Scientists have also discovered that dark chocolate ___(11)___ health benefits...",
+op:["contains","shows","provides","offers"],
+cr:"provides",
+ex:'"Provides health benefits" = proporciona beneficios para la salud. "Provide" coloca con "benefits" es estandar. "Contains" = contiene (para ingredientes). "Dark" = oscuro.',
+tr:'"Los cientificos descubrieron que el chocolate oscuro <strong>proporciona</strong> beneficios..." — <strong>Provides = Proporciona; Health benefits = Beneficios de salud</strong>'});
+
+Q.push({id:55,part:7,pn:"Lectura cloze (4 op.)",tp:"fill4",cl:1,pt:"p7",bn:12,
+tx:"___(12)___, experts recommend consuming it in moderation because of its high calorie content.",
+op:["Therefore","However","Besides","Instead"],
+cr:"However",
+ex:'"However" = sin embargo. Contraste: tiene beneficios PERO se recomienda moderacion por las calorias. "Moderation" = moderacion. "Calorie content" = contenido de calorias.',
+tr:'"<strong>Sin embargo</strong>, los expertos recomiendan consumirlo con moderacion..." — <strong>Moderation = Moderacion; Calorie = Caloria</strong>'});
+
+/* Vocabulario clave */
+var vocabList=[
+{en:"sad",es:"triste"},{en:"hungry",es:"hambriento/a"},{en:"angry",es:"enojado/a"},
+{en:"thirsty",es:"sediento/a"},{en:"tired",es:"cansado/a"},{en:"nervous",es:"nervioso/a"},
+{en:"must not",es:"no debe (prohibicion)"},{en:"warning",es:"advertencia"},
+{en:"out of order",es:"fuera de servicio"},{en:"keep your voice down",es:"bajar la voz"},
+{en:"50% off",es:"50% de descuento"},{en:"sale",es:"oferta/liquidacion"},
+{en:"both",es:"ambos/tanto...como"},{en:"for a living",es:"para ganarse la vida"},
+{en:"come from",es:"provenir de"},{en:"worry about",es:"preocuparse por"},
+{en:"however",es:"sin embargo"},{en:"has decreased",es:"ha disminuido"},
+{en:"have decided",es:"han decidido"},{en:"nowadays",es:"hoy en dia"},
+{en:"guest",es:"huesped"},{en:"relatives",es:"parientes"},
+{en:"private tour",es:"tour privado"},{en:"unchanged",es:"sin cambios"},
+{en:"way of life",es:"forma de vida"},{en:"beliefs",es:"creencias"},
+{en:"infer",es:"inferir"},{en:"productivity",es:"productividad"},
+{en:"isolation",es:"aislamiento"},{en:"attract",es:"atraer"},
+{en:"boost",es:"impulsar"},{en:"require",es:"requerir"},
+{en:"dates back",es:"se remonta a"},{en:"currency",es:"moneda"},
+{en:"turn into",es:"convertir en"},{en:"brought back",es:"trajo de vuelta"},
+{en:"not until... that",es:"no fue hasta... que"},
+{en:"treat",es:"golosina/postre"},{en:"since then",es:"desde entonces"},
+{en:"is worth",es:"vale"},{en:"annually",es:"anualmente"},
+{en:"provides",es:"proporciona"},{en:"moderation",es:"moderacion"},
+{en:"calorie",es:"caloria"},{en:"of course",es:"por supuesto"}
+];
+
+/* =============================================
+   ESTADO
+   ============================================= */
+var cur=0,score=0,answers=[],answered=false;
+var p4b={},p7b={};
+var timerSec=0,timerInterval=null;
+
+/* =============================================
+   LOGICA
+   ============================================= */
+function startQuiz(){
+  cur=0;score=0;answers=[];answered=false;p4b={};p7b={};
+  timerSec=0;
+  if(timerInterval)clearInterval(timerInterval);
+  timerInterval=setInterval(function(){
+    timerSec++;var m=String(Math.floor(timerSec/60)).padStart(2,'0');
+    var s=String(timerSec%60).padStart(2,'0');
+    document.getElementById('timerDisplay').textContent=m+':'+s;
+  },1000);
+  showScreen('quiz');
+  renderQ();
+}
+
+function showScreen(id){
+  var ss=document.querySelectorAll('.screen');
+  for(var i=0;i<ss.length;i++)ss[i].classList.remove('active');
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function getPassage(pt){
+  if(pt==='p4')return buildPart4Passage(p4b);
+  if(pt==='p5')return passagePart5;
+  if(pt==='p6')return passagePart6;
+  if(pt==='p7')return buildPart7Passage(p7b);
+  return '';
+}
+
+function renderQ(){
+  answered=false;
+  var q=Q[cur];
+  var card=document.getElementById('questionCard');
+
+  document.getElementById('partBadge').textContent='Parte '+q.part+' — '+q.pn;
+  document.getElementById('scoreDisplay').textContent=score;
+  document.getElementById('progressBar').style.width=(cur/Q.length*100)+'%';
+
+  card.style.animation='none';void card.offsetHeight;card.style.animation='cardIn .4s ease-out';
+
+  var html='';
+
+  // Pasaje
+  if(q.pt)html+='<div class="passage-box">'+getPassage(q.pt)+'</div>';
+
+  // Aviso
+  if(q.nt)html+='<div class="notice-box"><i class="fa-solid fa-sign-hanging" style="margin-right:8px;"></i>'+q.nt+'</div>';
+
+  // Pregunta
+  html+='<div class="q-number">Pregunta '+q.id+' de '+Q.length+'</div>';
+  html+='<div class="q-text">'+q.tx+'</div>';
+
+  // Opciones
+  var cc=q.cl===2?' cols-2':'';
+  html+='<div class="options-grid'+cc+'">';
+  var lt='ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  for(var i=0;i<q.op.length;i++){
+    html+='<button class="option-btn" data-idx="'+i+'" onclick="selOpt('+i+')" aria-label="Opcion '+lt[i]+': '+q.op[i]+'">';
+    html+='<span class="opt-letter">'+lt[i]+'</span><span>'+q.op[i]+'</span></button>';
+  }
+  html+='</div><div id="fbArea"></div>';
+
+  card.innerHTML=html;
+
+  // Resaltar blank activo
+  if(q.bn){
+    var bkId=q.pt==='p4'?'bk4_'+q.bn:'bk7_'+q.bn;
+    var bk=document.getElementById(bkId);
+    if(bk)bk.classList.add('active-blank');
+  }
+}
+
+function selOpt(idx){
+  if(answered)return;
+  answered=true;
+  var q=Q[cur];
+  var sel=q.op[idx];
+  var ok=(sel===q.cr);
+  if(ok)score++;
+
+  answers.push({id:q.id,part:q.part,pn:q.pn,sel:sel,cr:q.cr,ok:ok,tx:q.tx,ex:q.ex,tr:q.tr});
+
+  // Guardar blank
+  if(q.bn){
+    var blanks=q.pt==='p4'?p4b:p7b;
+    blanks[q.bn]={text:q.cr,ok:ok};
+  }
+
+  // Marcar botones
+  var btns=document.querySelectorAll('.option-btn');
+  for(var i=0;i<btns.length;i++){
+    btns[i].classList.add('disabled');
+    if(q.op[i]===q.cr)btns[i].classList.add('correct-answer');
+    if(i===idx&&!ok){btns[i].classList.add('wrong-answer');document.querySelector('.options-grid').classList.add('shake');}
+  }
+
+  document.getElementById('scoreDisplay').textContent=score;
+
+  // Llenar blank
+  if(q.bn){
+    var bkId=q.pt==='p4'?'bk4_'+q.bn:'bk7_'+q.bn;
+    var bk=document.getElementById(bkId);
+    if(bk){bk.textContent=q.cr;bk.classList.remove('active-blank');bk.classList.add(ok?'filled-correct':'filled-wrong');}
+  }
+
+  // Feedback
+  var fa=document.getElementById('fbArea');
+  var ic=ok?'fa-circle-check':'fa-circle-xmark';
+  var fc=ok?'correct-fb':'incorrect-fb';
+  var ht=ok?'Correcto':'Incorrecto — Respuesta: '+q.cr;
+  var nl=cur<Q.length-1?'Siguiente pregunta':'Ver resultados';
+
+  fa.innerHTML='<div class="feedback-box '+fc+'"><div class="feedback-header"><i class="fa-solid '+ic+'"></i> '+ht+'</div><div class="feedback-body">'+q.ex+'</div><div class="translation-box"><i class="fa-solid fa-language" style="margin-right:6px;"></i>'+q.tr+'</div></div><button class="btn-next" onclick="nextQ()" aria-label="'+nl+'">'+nl+' <i class="fa-solid fa-arrow-right"></i></button>';
+}
+
+function nextQ(){
+  cur++;
+  if(cur<Q.length){renderQ();window.scrollTo({top:0,behavior:'smooth'});}
+  else{if(timerInterval)clearInterval(timerInterval);showRes();}
+}
+
+/* =============================================
+   RESULTADOS
+   ============================================= */
+function showRes(){
+  showScreen('results');
+  var pct=Math.round((score/Q.length)*100);
+  var circ=2*Math.PI*68;
+  var off=circ-(pct/100)*circ;
+
+  var lv='',lc='';
+  if(pct>=85){lv='B2';lc='var(--correct)';}
+  else if(pct>=65){lv='B1';lc='var(--accent-light)';}
+  else if(pct>=40){lv='A2';lc='var(--accent)';}
+  else{lv='A1';lc='var(--incorrect)';}
+
+  var secs=[
+    {n:'Vocabulario (8 op.)',p:1},{n:'Avisos (3 op.)',p:2},
+    {n:'Conversacion (3 op.)',p:3},{n:'Lectura cloze (3 op.)',p:4},
+    {n:'Lectura parafraseo (3 op.)',p:5},{n:'Lectura inferencia (4 op.)',p:6},
+    {n:'Lectura cloze (4 op.)',p:7}
+  ];
+
+  var sh='';
+  for(var s=0;s<secs.length;s++){
+    var sd=secs[s];
+    var sa=answers.filter(function(a){return a.part===sd.p;});
+    var cc=sa.filter(function(a){return a.ok;}).length;
+    var sp=sa.length>0?Math.round((cc/sa.length)*100):0;
+    var col=sp>=70?'var(--correct)':(sp>=40?'var(--accent)':'var(--incorrect)');
+    sh+='<div class="section-card"><div class="s-name">P'+sd.p+': '+sd.n+'</div><div class="s-score" style="color:'+col+'">'+cc+'/'+sa.length+'</div><div class="s-detail">'+sp+'% acierto</div></div>';
+  }
+
+  var wa=answers.filter(function(a){return !a.ok;});
+  var wh=wa.length===0?'<p style="color:var(--correct);text-align:center;padding:2rem;">Sin errores. Excelente trabajo.</p>':wa.map(ri).join('');
+  var ah=answers.map(ri).join('');
+
+  var vh='';
+  for(var v=0;v<vocabList.length;v++){
+    vh+='<div class="vocab-card"><span class="en">'+vocabList[v].en+'</span><span class="es">'+vocabList[v].es+'</span></div>';
+  }
+
+  var tm=String(Math.floor(timerSec/60)).padStart(2,'0')+':'+String(timerSec%60).padStart(2,'0');
+
+  document.getElementById('results').innerHTML=
+    '<div class="results-hero"><h2>Resultados del Test</h2>'+
+    '<p style="color:var(--muted);font-size:.95rem;">Nivel MCER estimado: <strong style="color:'+lc+';font-size:1.2rem;">'+lv+'</strong> &nbsp;|&nbsp; Tiempo: <strong style="color:var(--accent-light);">'+tm+'</strong></p>'+
+    '<div class="circle-score"><svg viewBox="0 0 160 160"><circle class="track" cx="80" cy="80" r="68"/><circle class="fill-ring" cx="80" cy="80" r="68" stroke-dasharray="'+circ+'" stroke-dashoffset="'+circ+'" id="scoreRing"/></svg><div><div class="score-text">'+score+'/'+Q.length+'</div></div><div class="score-label">'+pct+'%</div></div></div>'+
+    '<div class="section-breakdown">'+sh+'</div>'+
+    '<div class="tabs-row"><button class="tab-btn active" onclick="swTab(\'w\',this)">Errores ('+wa.length+')</button><button class="tab-btn" onclick="swTab(\'a\',this)">Todas (55)</button><button class="tab-btn" onclick="swTab(\'v\',this)">Vocabulario ('+vocabList.length+')</button></div>'+
+    '<div class="tab-content active" id="tab-w">'+wh+'</div>'+
+    '<div class="tab-content" id="tab-a">'+ah+'</div>'+
+    '<div class="tab-content" id="tab-v"><p style="color:var(--muted);font-size:.85rem;margin-bottom:1rem;">Palabras clave del test para memorizar:</p><div class="vocab-grid">'+vh+'</div></div>'+
+    '<div style="text-align:center;"><button class="btn-restart" onclick="startQuiz()"><i class="fa-solid fa-rotate-right"></i> Intentar de nuevo</button></div>';
+
+  requestAnimationFrame(function(){setTimeout(function(){var r=document.getElementById('scoreRing');if(r)r.style.strokeDashoffset=off;},150);});
+}
+
+function ri(a){
+  var cl=a.ok?'right-review':'wrong-review';
+  var ct=a.tx.replace(/<[^>]*>/g,'');
+  var ce=a.ex.replace(/<[^>]*>/g,'');
+  var ct2=a.tr.replace(/<[^>]*>/g,'');
+  var h='<div class="review-item '+cl+'"><div class="review-q"><strong>P'+a.id+'</strong> — '+ct+'</div>';
+  if(!a.ok)h+='<div class="review-answer"><span class="label">Tu respuesta: </span><span class="val-wrong">'+a.sel+'</span></div>';
+  h+='<div class="review-answer"><span class="label">Correcta: </span><span class="val-correct">'+a.cr+'</span></div>';
+  h+='<div class="review-exp">'+ce+'<br><em style="color:var(--accent-light);">'+ct2+'</em></div></div>';
+  return h;
+}
+
+function swTab(t,btn){
+  var tabs=document.querySelectorAll('.tab-btn');
+  var cts=document.querySelectorAll('.tab-content');
+  for(var i=0;i<tabs.length;i++)tabs[i].classList.remove('active');
+  for(var j=0;j<cts.length;j++)cts[j].classList.remove('active');
+  btn.classList.add('active');
+  document.getElementById('tab-'+t).classList.add('active');
+}
+
+/* Teclado */
+document.addEventListener('keydown',function(e){
+  if(!document.getElementById('quiz').classList.contains('active'))return;
+  if(answered){if(e.key==='Enter'||e.key===' '){e.preventDefault();nextQ();}return;}
+  var km={a:0,b:1,c:2,d:3,e:4,f:5,g:6,h:7};
+  var k=e.key.toLowerCase();
+  if(km.hasOwnProperty(k)&&km[k]<Q[cur].op.length)selOpt(km[k]);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EKT Ingles UFPS 2026</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{--bg:#080C0A;--card:#111A14;--text:#E8F0EB;--muted:#6B7F72;--accent:#10B981;--accent-light:#6EE7B7;--accent-dark:#059669;--correct:#34D399;--correct-bg:rgba(52,211,153,.1);--incorrect:#FB7185;--incorrect-bg:rgba(251,113,133,.1);--border:#1E2E24;--pass:#10B981;--fail:#FB7185}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Source Sans 3',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+h1,h2,h3,h4{font-family:'Playfair Display',serif}
+.bg-orbs{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.bg-orbs .orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:.12;animation:oF 22s ease-in-out infinite alternate}
+.bg-orbs .orb:nth-child(1){width:500px;height:500px;background:var(--accent);top:-12%;left:-8%;animation-duration:26s}
+.bg-orbs .orb:nth-child(2){width:380px;height:380px;background:#065F46;bottom:-14%;right:-8%;animation-duration:20s;animation-delay:-6s}
+.bg-orbs .orb:nth-child(3){width:280px;height:280px;background:var(--accent-light);top:45%;left:55%;animation-duration:32s;animation-delay:-12s;opacity:.06}
+@keyframes oF{0%{transform:translate(0,0) scale(1)}33%{transform:translate(25px,-35px) scale(1.08)}66%{transform:translate(-18px,28px) scale(.94)}100%{transform:translate(12px,-12px) scale(1.04)}}
+.screen{display:none;position:relative;z-index:1}.screen.active{display:flex}
+#welcome{min-height:100vh;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;animation:fU .8s ease-out}
+#welcome .badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.22);border-radius:999px;padding:.4rem 1.2rem;font-size:.82rem;color:var(--accent-light);margin-bottom:1.5rem;animation:fU .8s ease-out .1s both}
+#welcome h1{font-size:clamp(2.2rem,6.5vw,4rem);font-weight:900;line-height:1.1;margin-bottom:.8rem;background:linear-gradient(135deg,var(--text) 30%,var(--accent-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:fU .8s ease-out .2s both}
+#welcome .subtitle{font-size:clamp(.95rem,2.3vw,1.15rem);color:var(--muted);max-width:560px;line-height:1.6;margin-bottom:2rem;animation:fU .8s ease-out .3s both}
+.warning-box{display:inline-flex;align-items:center;gap:.6rem;background:rgba(251,113,133,.08);border:1px solid rgba(251,113,133,.2);border-radius:10px;padding:.6rem 1.2rem;font-size:.85rem;color:var(--incorrect);margin-bottom:2rem;animation:fU .8s ease-out .35s both}
+.stats-row{display:flex;gap:1.2rem;flex-wrap:wrap;justify-content:center;margin-bottom:2rem;animation:fU .8s ease-out .4s both}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:.9rem 1.3rem;min-width:100px;transition:border-color .3s}
+.stat-card:hover{border-color:var(--accent-dark)}
+.stat-card .num{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:900;color:var(--accent)}
+.stat-card .label{font-size:.75rem;color:var(--muted);margin-top:.15rem}
+.btn-start{display:inline-flex;align-items:center;gap:.7rem;background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:#080C0A;font-weight:700;font-size:1.05rem;padding:.95rem 2.2rem;border-radius:12px;border:none;cursor:pointer;transition:all .3s;animation:fU .8s ease-out .5s both}
+.btn-start:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(16,185,129,.3)}
+.how-to{margin-top:1.5rem;padding:.9rem 1.3rem;background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:10px;max-width:460px;text-align:left;animation:fU .8s ease-out .6s both}
+.how-to p{font-size:.8rem;color:var(--muted);line-height:1.55}.how-to strong{color:var(--accent-light)}
+#quiz{min-height:100vh;flex-direction:column;padding:1rem;max-width:800px;margin:0 auto;width:100%}
+.qh{display:flex;align-items:center;justify-content:space-between;padding:.7rem 0;margin-bottom:.4rem;flex-wrap:wrap;gap:.4rem}
+.pb{font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--accent);background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.18);padding:.25rem .7rem;border-radius:6px}
+.sb{font-size:.82rem;color:var(--muted);display:flex;align-items:center;gap:.35rem}.sb i{color:var(--accent)}
+.tb{font-size:.78rem;color:var(--muted);display:flex;align-items:center;gap:.3rem}.tb i{color:var(--accent-dark);font-size:.68rem}
+.pw{width:100%;height:4px;background:var(--border);border-radius:99px;overflow:hidden;margin-bottom:1.2rem}
+.pb2{height:100%;background:linear-gradient(90deg,var(--accent-dark),var(--accent-light));border-radius:99px;transition:width .4s ease}
+.qc{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:1.8rem;flex:1;animation:cI .35s ease-out}
+.pbox{background:rgba(16,185,129,.03);border:1px solid rgba(16,185,129,.1);border-radius:10px;padding:1.1rem;margin-bottom:1.3rem;font-size:.9rem;line-height:1.7;color:#B8CFC0;max-height:200px;overflow-y:auto}
+.pbox::-webkit-scrollbar{width:4px}.pbox::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
+.qn{font-size:.78rem;color:var(--muted);margin-bottom:.4rem;font-weight:600}
+.qt{font-size:1.05rem;line-height:1.55;margin-bottom:1.3rem;color:var(--text)}
+.qt em{color:var(--accent-light);font-style:italic}
+.og{display:grid;gap:.55rem}.og.c2{grid-template-columns:1fr 1fr}
+.ob{display:flex;align-items:center;gap:.65rem;background:rgba(255,255,255,.025);border:1px solid var(--border);border-radius:9px;padding:.7rem .9rem;color:var(--text);font-size:.9rem;cursor:pointer;transition:all .2s;text-align:left}
+.ob:hover:not(.dis){background:rgba(16,185,129,.06);border-color:var(--accent-dark);transform:translateX(3px)}
+.ob .ol{display:flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:6px;background:rgba(255,255,255,.04);font-weight:700;font-size:.75rem;color:var(--muted);flex-shrink:0;transition:all .2s}
+.ob:hover:not(.dis) .ol{background:rgba(16,185,129,.12);color:var(--accent)}
+.ob.sel{border-color:var(--accent);background:rgba(16,185,129,.08)}.ob.sel .ol{background:var(--accent);color:var(--bg)}
+.ob.ca{border-color:var(--correct)!important;background:var(--correct-bg)!important}.ob.ca .ol{background:var(--correct)!important;color:var(--bg)!important}
+.ob.wa{border-color:var(--incorrect)!important;background:var(--incorrect-bg)!important}.ob.wa .ol{background:var(--incorrect)!important;color:var(--bg)!important}
+.ob.dis{cursor:default;pointer-events:none}
+.fb{margin-top:1.3rem;padding:1.1rem;border-radius:11px;animation:sU .3s ease-out}
+.fb.cf{background:var(--correct-bg);border:1px solid rgba(52,211,153,.22)}.fb.if{background:var(--incorrect-bg);border:1px solid rgba(251,113,133,.22)}
+.fh{display:flex;align-items:center;gap:.5rem;font-weight:700;font-size:.95rem;margin-bottom:.6rem}
+.cf .fh{color:var(--correct)}.if .fh{color:var(--incorrect)}
+.fb2{font-size:.84rem;line-height:1.6;color:#A8BFAD}.fb2 strong{color:var(--text)}
+.trb{margin-top:.65rem;padding:.65rem .9rem;background:rgba(255,255,255,.025);border-radius:7px;border-left:3px solid var(--accent);font-size:.82rem;color:var(--accent-light);font-style:italic}
+.bn{display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;margin-top:1.1rem;padding:.8rem;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:9px;color:var(--text);font-weight:600;font-size:.9rem;cursor:pointer;transition:all .2s}
+.bn:hover{background:rgba(16,185,129,.08);border-color:var(--accent-dark)}
+#results{min-height:100vh;flex-direction:column;align-items:center;justify-content:flex-start;padding:2rem 1rem;max-width:820px;margin:0 auto;width:100%;animation:fU .6s ease-out}
+.rh{text-align:center;margin-bottom:1.5rem;margin-top:.5rem}
+.rh h2{font-size:clamp(1.6rem,4.5vw,2.2rem);font-weight:900;margin-bottom:.4rem}
+.verdict{display:inline-flex;align-items:center;gap:.6rem;padding:.5rem 1.5rem;border-radius:10px;font-weight:800;font-size:1.2rem;margin:.8rem 0}
+.verdict.pass{background:var(--correct-bg);border:1px solid rgba(52,211,153,.3);color:var(--correct)}
+.verdict.fail{background:var(--incorrect-bg);border:1px solid rgba(251,113,133,.3);color:var(--incorrect)}
+.cs{width:150px;height:150px;margin:1.2rem auto;position:relative;display:flex;align-items:center;justify-content:center}
+.cs svg{position:absolute;width:100%;height:100%;transform:rotate(-90deg)}
+.cs .tk{fill:none;stroke:var(--border);stroke-width:7}
+.cs .fr{fill:none;stroke:var(--accent);stroke-width:7;stroke-linecap:round;transition:stroke-dashoffset 1.5s ease}
+.cs .st{font-family:'Playfair Display',serif;font-size:2.2rem;font-weight:900;color:var(--accent-light)}
+.cs .sl{font-size:.7rem;color:var(--muted);position:absolute;bottom:26px}
+.sbd{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:.5rem;width:100%;margin-bottom:1.5rem}
+.sc{background:var(--card);border:1px solid var(--border);border-radius:9px;padding:.7rem;text-align:center}
+.sc .sn{font-size:.65rem;color:var(--muted);margin-bottom:.25rem}.sc .ss{font-size:1.1rem;font-weight:700}.sc .sd{font-size:.68rem;color:var(--muted);margin-top:.1rem}
+.trow{display:flex;border-bottom:1px solid var(--border);width:100%;margin-bottom:1.2rem}
+.tbtn{flex:1;padding:.65rem;text-align:center;font-weight:600;font-size:.78rem;color:var(--muted);background:none;border:none;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s}
+.tbtn.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tc{width:100%;display:none}.tc.active{display:block}
+.ri{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem;margin-bottom:.55rem}
+.ri.wr{border-left:3px solid var(--incorrect)}.ri.rr{border-left:3px solid var(--correct)}
+.ri .rq{font-size:.84rem;color:var(--text);margin-bottom:.35rem}
+.ri .ra{font-size:.8rem;margin-bottom:.25rem}.ri .ra .lb{color:var(--muted)}.ri .ra .vc{color:var(--correct);font-weight:600}.ri .ra .vw{color:var(--incorrect);font-weight:600;text-decoration:line-through}
+.ri .re{font-size:.76rem;color:#8A9E90;line-height:1.5;margin-top:.35rem;padding-top:.35rem;border-top:1px solid var(--border)}
+.vg{display:grid;grid-template-columns:repeat(auto-fill,minmax(195px,1fr));gap:.5rem}
+.vc2{background:var(--card);border:1px solid var(--border);border-radius:7px;padding:.6rem .8rem;display:flex;justify-content:space-between;align-items:center}
+.vc2 .ve{font-weight:600;color:var(--accent-light);font-size:.85rem}.vc2 .vs{font-size:.8rem;color:var(--muted)}
+.br{display:inline-flex;align-items:center;gap:.5rem;background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:var(--bg);font-weight:700;padding:.8rem 1.8rem;border-radius:10px;border:none;cursor:pointer;font-size:.95rem;margin-top:1.2rem;margin-bottom:2rem;transition:all .3s}
+.br:hover{transform:translateY(-2px);box-shadow:0 6px 22px rgba(16,185,129,.25)}
+@keyframes fU{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes cI{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes sU{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes shk{0%,100%{transform:translateX(0)}20%{transform:translateX(-5px)}40%{transform:translateX(5px)}60%{transform:translateX(-3px)}80%{transform:translateX(3px)}}
+.shk{animation:shk .35s ease}
+@media(max-width:600px){.og.c2{grid-template-columns:1fr}.qc{padding:1.1rem}.stats-row{gap:.6rem}.stat-card{min-width:80px;padding:.65rem .9rem}.stat-card .num{font-size:1.3rem}.sbd{grid-template-columns:1fr 1fr}}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="bg-orbs" aria-hidden="true"><div class="orb"></div><div class="orb"></div><div class="orb"></div></div>
+
+<section id="welcome" class="screen active" role="main">
+  <div class="badge"><i class="fa-solid fa-university"></i> UFPS Cucuta — EKT 2026</div>
+  <h1>Examen de Ingles EKT</h1>
+  <p class="subtitle">100 preguntas de nivel B2 que evaluan gramatica, vocabulario, conectores y comprension lectora segun el estandar de la prueba EKT del Centro de Idiomas.</p>
+  <div class="warning-box"><i class="fa-solid fa-triangle-exclamation"></i> Nota minima para aprobar y graduarte: <strong>60/100</strong></div>
+  <div class="stats-row">
+    <div class="stat-card"><div class="num">100</div><div class="label">Preguntas</div></div>
+    <div class="stat-card"><div class="num">8</div><div class="label">Partes</div></div>
+    <div class="stat-card"><div class="num">B2</div><div class="label">Nivel</div></div>
+  </div>
+  <button class="btn-start" onclick="startQuiz()" aria-label="Comenzar">Comenzar <i class="fa-solid fa-arrow-right"></i></button>
+  <div class="how-to"><p><strong>Instrucciones:</strong> Guarda como <strong>.html</strong> y abre con Chrome/Edge/Firefox. Teclas <strong>A,B,C,D</strong> para responder, <strong>Enter</strong> para avanzar. Cada pregunta muestra explicacion y traduccion.</p></div>
+</section>
+
+<section id="quiz" class="screen" role="main" aria-live="polite">
+  <div class="qh">
+    <div class="pb" id="pBdg"></div>
+    <div style="display:flex;align-items:center;gap:.8rem;">
+      <div class="tb"><i class="fa-solid fa-clock"></i> <span id="tmD">00:00</span></div>
+      <div class="sb"><i class="fa-solid fa-star"></i> <span id="scD">0</span>/100</div>
+    </div>
+  </div>
+  <div class="pw"><div class="pb2" id="prB"></div></div>
+  <div class="qc" id="qC"></div>
+</section>
+
+<section id="results" class="screen" role="main"></section>
+
+<script>
+/* ========== PASAJES DE LECTURA ========== */
+var pass7='<strong>SUSTAINABLE ENGINEERING IN THE 21ST CENTURY</strong><br><br>Sustainable engineering has emerged as one of the most critical fields in the 21st century. As climate change accelerates and natural resources diminish, engineers face the challenge of designing systems that minimize environmental impact while meeting human needs. This approach requires a fundamental shift from traditional engineering practices, which often prioritized cost and efficiency over environmental considerations.<br><br>A key principle of sustainable engineering is the concept of a circular economy, which aims to eliminate waste by designing products that can be reused, repaired, or recycled. Unlike the traditional linear model of "take, make, dispose," the circular approach treats waste as a resource rather than a problem. Several leading companies have adopted circular economy principles, redesigning their products and supply chains accordingly.<br><br>In the construction sector, sustainable engineering has led to the development of green buildings that use significantly less energy and water than conventional structures. Technologies such as smart glass, which adjusts its transparency based on sunlight, and green roofs, which provide natural insulation, are becoming increasingly common. According to a recent report, green buildings can reduce energy consumption by up to 30% and water usage by up to 50%.<br><br>Despite these advances, significant barriers remain. The initial costs of sustainable technologies can be prohibitive for developing countries, and there is often a lack of awareness among policymakers and the general public. Furthermore, some critics argue that sustainable engineering solutions are merely temporary fixes that fail to address the root causes of environmental degradation, such as overconsumption and population growth.<br><br>Nevertheless, experts agree that sustainable engineering is not a luxury but a necessity. As one leading environmental engineer states: "We cannot continue to build and manufacture as if the planet had infinite resources. The question is not whether we should adopt sustainable practices, but how quickly we can do so before the damage becomes irreversible."';
+
+var pass8='<strong>ARTIFICIAL INTELLIGENCE IN HEALTHCARE</strong><br><br>Artificial intelligence is revolutionizing healthcare in ways that were unimaginable just a decade ago. From diagnosing diseases to developing new drugs, AI systems are increasingly being integrated into medical practice, promising faster, more accurate, and more personalized care than ever before.<br><br>One of the most promising applications of AI in healthcare is in medical imaging. Deep learning algorithms can now analyze X-rays, MRI scans, and CT images with remarkable accuracy. In some studies, AI systems have matched or even outperformed experienced radiologists in detecting certain conditions, including lung cancer, diabetic retinopathy, and bone fractures. For instance, a recent study found that an AI system detected breast cancer in mammograms with 94.5% accuracy, compared to 88.4% for human radiologists.<br><br>AI is also transforming drug discovery, a process that traditionally takes an average of 10-15 years and costs billions of dollars. By analyzing vast datasets of molecular structures and biological interactions, AI can identify potential drug candidates in months rather than years. Several companies have already used AI to identify promising compounds for diseases such as COVID-19, Alzheimer&#39;s, and various forms of cancer.<br><br>However, the integration of AI in healthcare is not without challenges. Concerns about data privacy, algorithmic bias, and the potential displacement of medical professionals have sparked heated debates. A particularly troubling issue is that AI systems trained primarily on data from certain populations may perform poorly when applied to diverse patient groups. For example, dermatology AI systems trained mainly on light-skinned patients have shown significantly lower accuracy when diagnosing skin conditions in darker-skinned individuals.<br><br>Moreover, there is the question of accountability: when an AI system makes an incorrect diagnosis, who bears the responsibility — the developer, the hospital, or the physician who relied on the system? Regulatory frameworks are still struggling to keep pace with these technological developments.<br><br>Despite these challenges, the potential benefits of AI in healthcare are too significant to ignore. Experts predict that within the next decade, AI will become an indispensable tool in virtually every area of medicine. The key, they emphasize, lies not in replacing human doctors but in augmenting their capabilities with intelligent systems that can process information at speeds and scales no human could achieve alone.';
+
+/* ========== INFO DE PARTES ========== */
+var PI={
+  1:{n:"Tiempos Verbales",d:"15 preguntas"},
+  2:{n:"Condicionales y Wish",d:"10 preguntas"},
+  3:{n:"Voz Pasiva y Reported Speech",d:"10 preguntas"},
+  4:{n:"Modales, Articulos, Pronombres",d:"10 preguntas"},
+  5:{n:"Vocabulario en Contexto",d:"15 preguntas"},
+  6:{n:"Conectores y Cohesion",d:"10 preguntas"},
+  7:{n:"Comprension Lectora 1",d:"15 preguntas"},
+  8:{n:"Comprension Lectora 2",d:"15 preguntas"}
+};
+
+/* ========== FUNCION AUXILIAR PARA CREAR PREGUNTAS ========== */
+function mq(id,part,tx,ops,ci,ex,tr){
+  return {id:id,part:part,pn:PI[part].n,tp:part>=7?'r':'g',cl:1,tx:tx,op:ops,cr:ops[ci],ex:ex,tr:tr};
+}
+
+/* ========== 100 PREGUNTAS ========== */
+var Q=[];
+
+// ===== PARTE 1: TIEMPOS VERBALES (1-15) =====
+Q.push(mq(1,1,'She ___ to the gym every morning.',  ['go','goes','went','is going'], 1,
+  '"Goes" es presente simple 3ra persona singular. "Every morning" = cada manana indica habito/rutina, entonces presente simple. Regla: he/she/it + verbo con "-s" o "-es".',
+  '"Ella ___ al gimnasio cada manana." → <strong>Goes = Va (presente simple, 3ra persona)</strong>'));
+
+Q.push(mq(2,1,'They ___ the movie when the power went out.',  ['watch','were watching','watched','have watched'], 1,
+  '"Were watching" es pasado continuo. La accion estaba en progreso cuando fue interrumpida ("when the power went out"). Estructura: was/were + verbo-ing.',
+  '"Ellos ___ la pelicula cuando se fue la luz." → <strong>Were watching = Estaban viendo (pasado continuo)</strong>'));
+
+Q.push(mq(3,1,'I ___ in this city since 2018.',  ['live','lived','have lived','am living'], 2,
+  '"Have lived" es presente perfecto. "Since 2018" = desde 2018 es una senal clave para presente perfecto. Indica accion que comenzo en el pasado y continua.',
+  '"He vivido en esta ciudad desde 2018." → <strong>Have lived = He vivido (presente perfecto); Since = Desde</strong>'));
+
+Q.push(mq(4,1,'By the time we arrived, the concert ___.',  ['started','had started','has started','was starting'], 1,
+  '"Had started" es pasado perfecto. "By the time" = para cuando indica que una accion ocurrio ANTES que otra en el pasado. Pasado perfecto = habia + participio.',
+  '"Para cuando llegamos, el concierto ___." → <strong>Had started = Habia comenzado (pasado perfecto)</strong>'));
+
+Q.push(mq(5,1,'Next year, they ___ a new office in Bogota.',  ['open','will open','are opening','would open'], 1,
+  '"Will open" es futuro simple. "Next year" = el proximo ano indica futuro. Estructura: will + verbo base. "Are opening" tambien es valido pero "will open" es la forma mas comun.',
+  '"El proximo ano, ellos ___ una nueva oficina en Bogota." → <strong>Will open = Abriran (futuro simple)</strong>'));
+
+Q.push(mq(6,1,'He ___ his homework right now.',  ['does','is doing','has done','did'], 1,
+  '"Is doing" es presente continuo. "Right now" = ahora mismo indica accion en progreso. Estructura: am/is/are + verbo-ing.',
+  '"El ___ su tarea ahora mismo." → <strong>Is doing = Esta haciendo (presente continuo)</strong>'));
+
+Q.push(mq(7,1,'We ___ to Paris three times.',  ['went','have been','have gone','are going'], 1,
+  '"Have been" es presente perfecto para experiencias de vida. "Three times" = tres veces indica experiencia acumulada. "Have gone" implica que aun estan alla. "Have been" = han ido (y volvieron).',
+  '"Hemos ___ a Paris tres veces." → <strong>Have been = Hemos ido (experiencia, presente perfecto)</strong>'));
+
+Q.push(mq(8,1,'The train ___ at exactly 6:00 PM tomorrow.',  ['leaves','will leave','is leaving','has left'], 0,
+  '"Leaves" es presente simple para horarios futuros programados. Trenes, vuelos, eventos usan presente simple para futuro. "At exactly 6:00 PM" = a las 6:00 PM exactas.',
+  '"El tren ___ a las 6:00 PM exactas manana." → <strong>Leaves = Sale (presente simple para horario programado)</strong>'));
+
+Q.push(mq(9,1,'When I called her, she ___ dinner.',  ['cooked','was cooking','has cooked','cooks'], 1,
+  '"Was cooking" es pasado continuo. "When I called" = cuando llame indica accion en progreso en ese momento del pasado.',
+  '"Cuando la llame, ella ___ la cena." → <strong>Was cooking = Estaba cocinando (pasado continuo)</strong>'));
+
+Q.push(mq(10,1,'I ___ never ___ sushi before last night.',  ['have/eaten','had/eaten','was/eating','did/eat'], 1,
+  '"Had eaten" es pasado perfecto. "Never... before last night" = nunca... antes de anoche indica una accion anterior a un punto especifico del pasado.',
+  '"Nunca ___ sushi antes de anoche." → <strong>Had eaten = Habia comido (pasado perfecto)</strong>'));
+
+Q.push(mq(11,1,'Look at those clouds! It ___.',  ['rains','is going to rain','will rain','rained'], 1,
+  '"Is going to rain" = va a llover. "Going to" se usa para predicciones con evidencia visible ("look at those clouds" = mira esas nubes). "Will" es para predicciones sin evidencia.',
+  '"Mira esas nubes! Va a ___." → <strong>Is going to rain = Va a llover (going to con evidencia)</strong>'));
+
+Q.push(mq(12,1,'She ___ English for five years before she moved to London.',  ['studied','was studying','had been studying','has studied'], 2,
+  '"Had been studying" es pasado perfecto continuo. Indica una accion que estuvo en progreso DURANTE un periodo antes de otra accion en el pasado. "For five years" + "before she moved".',
+  '"Ella ___ ingles por cinco anos antes de mudarse a Londres." → <strong>Had been studying = Habia estado estudiando (pasado perfecto continuo)</strong>'));
+
+Q.push(mq(13,1,'They ___ the project by next Friday.',  ['will finish','will have finished','are finishing','finish'], 1,
+  '"Will have finished" es futuro perfecto. "By next Friday" = para el proximo viernes indica que la accion estara completada antes de ese punto futuro.',
+  '"Ellos ___ el proyecto para el proximo viernes." → <strong>Will have finished = Habran terminado (futuro perfecto)</strong>'));
+
+Q.push(mq(14,1,'This time tomorrow, I ___ on the beach.',  ['will lie','will be lying','am lying','lie'], 1,
+  '"Will be lying" es futuro continuo. "This time tomorrow" = a esta hora manana indica una accion en progreso en un momento futuro especifico.',
+  '"A esta hora manana, yo ___ en la playa." → <strong>Will be lying = Estare recostado (futuro continuo)</strong>'));
+
+Q.push(mq(15,1,'The company ___ its profits significantly last quarter.',  ['increases','increased','has increased','is increasing'], 1,
+  '"Increased" es pasado simple. "Last quarter" = el trimestre pasado indica tiempo especifico terminado, entonces pasado simple.',
+  '"La empresa ___ sus ganancias significativamente el trimestre pasado." → <strong>Increased = Aumento (pasado simple)</strong>'));
+
+// ===== PARTE 2: CONDICIONALES Y WISH (16-25) =====
+Q.push(mq(16,2,'If it rains, we ___ stay home.',  ['will','would','had','should'], 0,
+  'First conditional: If + presente simple, will + base. Situacion real/posible. "If it rains" = si llueve (posible).',
+  '"Si llueve, nos quedaremos en casa." → <strong>If + presente, will = Primer condicional (posible)</strong>'));
+
+Q.push(mq(17,2,'If I ___ rich, I would travel the world.',  ['am','were','was','will be'], 1,
+  'Second conditional: If + pasado simple (were para todas las personas), would + base. Situacion hipotetica/irreal presente. Nota: en condicionales se prefiere "were" sobre "was".',
+  '"Si fuera rico, viajaria por el mundo." → <strong>If + were, would = Segundo condicional (hipotetico)</strong>'));
+
+Q.push(mq(18,2,'If she had studied harder, she ___ the exam.',  ['would pass','would have passed','will pass','passed'], 1,
+  'Third conditional: If + pasado perfecto, would have + participio. Situacion hipotetica en el pasado (no ocurrio). "Had studied" = habria estudiado.',
+  '"Si hubiera estudiado mas, ___ el examen." → <strong>If + had pp, would have pp = Tercer condicional (pasado irreal)</strong>'));
+
+Q.push(mq(19,2,'If water reaches 100 degrees, it ___.',  ['boils','would boil','will boil','boiled'], 0,
+  'Zero conditional: If + presente simple, presente simple. Hecho cientifico o verdad universal. No es condicion, es causa-efecto garantizado.',
+  '"Si el agua llega a 100 grados, ___." → <strong>If + presente, presente = Condicional cero (hecho cientifico)</strong>'));
+
+Q.push(mq(20,2,'I wish I ___ speak French fluently.',  ['can','could','would','will'], 1,
+  'Wish + pasado simple para deseos sobre el presente. "Could" = pudiera. "I wish I could" = ojala pudiera. "Wish" siempre va con forma pasada del verbo para presente irreal.',
+  '"Ojala pudiera hablar frances con fluidez." → <strong>Wish + could = Deseo presente irreal</strong>'));
+
+Q.push(mq(21,2,'If I were you, I ___ accept that job offer.',  ['will','would','shall','may'], 1,
+  '"If I were you" es la expresion clasica para dar consejos. Second conditional: would + base. "Would accept" = aceptaria.',
+  '"Si yo fuera tu, ___ esa oferta de trabajo." → <strong>If I were you, I would = Si yo fuera tu, yo... (consejo)</strong>'));
+
+Q.push(mq(22,2,'She wishes she ___ harder when she was in college.',  ['studied','had studied','would study','studies'], 1,
+  'Wish + pasado perfecto para arrepentimiento del pasado. "Had studied" = hubiera estudiado. Expresa que lamenta no haberlo hecho.',
+  '"Ella desea haber estudiado mas cuando estaba en la universidad." → <strong>Wish + had pp = Arrepentimiento del pasado</strong>'));
+
+Q.push(mq(23,2,'Unless you ___ now, you will miss the bus.',  ['leave','will leave','left','leaving'], 0,
+  '"Unless" = a menos que / si no. Funciona como "if not": Unless you leave = If you do not leave. First conditional: presente simple en la clausula if.',
+  '"A menos que ___ ahora, perderas el bus." → <strong>Unless = A menos que / Si no</strong>'));
+
+Q.push(mq(24,2,'If he ___ his phone, he would have seen the message.',  ['checked','had checked','checks','would check'], 1,
+  'Third conditional: If + pasado perfecto, would have + participio. El no reviso su telefono (pasado irreal), entonces no vio el mensaje.',
+  '"Si hubiera revisado su telefono, ___ el mensaje." → <strong>Third conditional = Pasado irreal</strong>'));
+
+Q.push(mq(25,2,'I wish it ___ stop raining.',  ['would','could','should','might'], 0,
+  'Wish + would para quejarse de una situacion actual que queremos que cambie. "I wish it would stop raining" = ojala dejara de llover. Se usa para situaciones fuera de nuestro control.',
+  '"Ojala dejara de llover." → <strong>Wish + would = Queja sobre situacion actual</strong>'));
+
+// ===== PARTE 3: VOZ PASIVA Y REPORTED SPEECH (26-35) =====
+Q.push(mq(26,3,'The cake ___ by my grandmother yesterday.',  ['baked','was baked','is baked','has baked'], 1,
+  'Voz pasiva pasado simple: was/were + participio. "The cake was baked" = El pastel fue horneado. El sujeto recibe la accion, no la realiza.',
+  '"El pastel fue ___ por mi abuela ayer." → <strong>Was baked = Fue horneado (pasivo, pasado simple)</strong>'));
+
+Q.push(mq(27,3,'"I am tired," she said. She said she ___ tired.',  ['is','was','has been','were'], 1,
+  'Reported speech: presente → pasado. "I am" se cambia a "she was". Backshift: am/is → was, are → were, will → would, can → could.',
+  '"Estoy cansada," dijo ella. Dijo que ___ cansada." → <strong>Am → Was en reported speech</strong>'));
+
+Q.push(mq(28,3,'The new hospital ___ next year.',  ['will build','will be built','is building','builds'], 1,
+  'Voz pasiva futuro: will be + participio. "The hospital will be built" = El hospital sera construido. El hospital no construye, es construido.',
+  '"El nuevo hospital ___ el proximo ano." → <strong>Will be built = Sera construido (pasivo futuro)</strong>'));
+
+Q.push(mq(29,3,'He told me ___ the door.',  ['to close','close','closing','closed'], 0,
+  'Reported speech con imperativo: told + objeto + to + infinitivo. "Close the door" → "told me to close the door". "Tell" siempre lleva "to" en reported speech.',
+  '"Me dijo que ___ la puerta." → <strong>Told + to + infinitivo = Reportar ordenes</strong>'));
+
+Q.push(mq(30,3,'The documents ___ on the table when I arrived.',  ['were left','had been left','were leaving','left'], 1,
+  'Voz pasiva pasado perfecto: had been + participio. Los documentos fueron dejados ANTES de que llegara. Pasado perfecto pasivo = habian sido + participio.',
+  '"Los documentos ___ sobre la mesa cuando llegue." → <strong>Had been left = Habian sido dejados (pasivo pasado perfecto)</strong>'));
+
+Q.push(mq(31,3,'"I will call you tomorrow," he said. He said he ___ call me ___.',  ['will/tomorrow','would/the next day','would/tomorrow','will/the following day'], 1,
+  'Reported speech: will → would, tomorrow → the next day/the following day. Cambio de tiempo verbal Y de expresiones de tiempo.',
+  '"Te llamare manana," dijo. Dijo que me llamaria ___." → <strong>Will → Would; Tomorrow → The next day</strong>'));
+
+Q.push(mq(32,3,'English ___ all over the world.',  ['speaks','is spoken','is speaking','spoke'], 1,
+  'Voz pasiva presente simple: am/is/are + participio. Hecho general. "English is spoken" = El ingles es hablado. No sabemos QUIEN lo habla, importa la accion.',
+  '"El ingles ___ en todo el mundo." → <strong>Is spoken = Es hablado (pasivo presente simple)</strong>'));
+
+Q.push(mq(33,3,'She asked me where I ___.',  ['live','lived','am living','was living'], 1,
+  'Reported questions: presente → pasado. "Where do you live?" → "She asked me where I lived." Nota: NO hay inversion en reported questions y se quita el auxiliar do/does.',
+  '"Me pregunto donde ___." → <strong>Reported question: do/does desaparece, verbo al pasado</strong>'));
+
+Q.push(mq(34,3,'The car ___ repaired at the moment.',  ['is being','was being','has been','is'], 0,
+  'Voz pasiva presente continuo: is/am/are being + participio. "At the moment" = en este momento indica accion en progreso.',
+  '"El carro ___ reparado en este momento." → <strong>Is being repaired = Esta siendo reparado (pasivo presente continuo)</strong>'));
+
+Q.push(mq(35,3,'"Do not open the window," the teacher said. The teacher told us ___ the window.',  ['not to open','to not open','do not open','not open'], 0,
+  'Reported speech imperativo negativo: told + objeto + not to + infinitivo. "Not" va ANTES de "to". "Do not open" → "not to open".',
+  '"No abras la ventana," dijo la profesora. Nos dijo que no ___ la ventana." → <strong>Told + not to + infinitivo = Orden negativa reportada</strong>'));
+
+// ===== PARTE 4: MODALES, ARTICULOS, PRONOMBRES, PREPOSICIONES (36-45) =====
+Q.push(mq(36,4,'You ___ drive without a license. It is illegal.',  ['must not','should not','do not have to','might not'], 0,
+  '"Must not" = prohibicion absoluta (no debes). "Should not" = recomendacion (no deberias). "Do not have to" = no es necesario (no tienes que). "It is illegal" = es ilegal exige "must not".',
+  '"No ___ conducir sin licencia. Es ilegal." → <strong>Must not = Prohibicion absoluta</strong>'));
+
+Q.push(mq(37,4,'She is ___ engineer who won the award.',  ['a','an','the','-'], 2,
+  '"The" es articulo definido. Se usa porque "who won the award" especifica CUAL ingeniera. No es cualquier ingeniera, es LA que gano el premio.',
+  '"Ella es ___ ingeniera que gano el premio." → <strong>The = Articulo definido (especifico)</strong>'));
+
+Q.push(mq(38,4,'The book ___ is on the table is mine.',  ['who','which','whom','whose'], 1,
+  '"Which" es pronombre relativo para cosas. "Who" es para personas. "Whom" es objeto directo de personas. "Whose" es posesivo. "Book" = cosa → which.',
+  '"El libro que esta en la mesa es mio." → <strong>Which = Que/Pronombre relativo para cosas</strong>'));
+
+Q.push(mq(39,4,'We arrived ___ the airport two hours early.',  ['at','in','to','on'], 0,
+  '"Arrive at" se usa para lugares especificos como aeropuerto, estacion, escuela. "Arrive in" es para ciudades/paises grandes.',
+  '"Llegamos ___ el aeropuerto dos horas antes." → <strong>Arrive at = Llegar a (lugar especifico)</strong>'));
+
+Q.push(mq(40,4,'You ___ see a doctor. You look very pale.',  ['should','must','can','might'], 0,
+  '"Should" = recomendacion (deberias). "Must" = obligacion fuerte (debes). Mirar palido sugiere recomendacion medica, no obligacion legal.',
+  '"Deberias ver a un doctor. Muy palido." → <strong>Should = Recomendacion (deberias)</strong>'));
+
+Q.push(mq(41,4,'I am interested ___ learning new languages.',  ['on','in','at','about'], 1,
+  '"Interested in" es una colocacion fija. No se puede cambiar la preposicion. Otras: "good at", "afraid of", "responsible for".',
+  '"Estoy interesado ___ aprender nuevos idiomas." → <strong>Interested in = Interesado en (colocacion fija)</strong>'));
+
+Q.push(mq(42,4,'That is the woman ___ son is a famous actor.',  ['who','which','whose','whom'], 2,
+  '"Whose" es pronombre relativo posesivo. "Whose son" = cuyo hijo. Indica pertenencia. No se refiere a quien sino a DE QUIEN es algo.',
+  '"Esa es la mujer ___ hijo es un actor famoso." → <strong>Whose = Cuyo/de quien (posesivo)</strong>'));
+
+Q.push(mq(43,4,'She ___ be at home. I saw her car in the driveway.',  ['must','cannot','might','should'], 0,
+  '"Must" para deduccion logica casi segura. "I saw her car" = vi su carro es evidencia fuerte. "Must be" = debe estar (casi seguro). "Cannot be" = no puede estar (seguro que no).',
+  '"Ella ___ estar en casa. Vi su carro." → <strong>Must be = Debe estar (deduccion logica)</strong>'));
+
+Q.push(mq(44,4,'___ water is essential for life.',  ['A','An','The','-'], 3,
+  'Sin articulo para verdades generales. "Water is essential" = El agua es esencial. No decimos "THE water" cuando hablamos del agua en general.',
+  '"___ agua es esencial para la vida." → <strong>Sin articulo = Verdad general</strong>'));
+
+Q.push(mq(45,4,'He has been working here ___ 2015.',  ['for','since','from','during'], 1,
+  '"Since" + punto especifico en el tiempo (2015). "For" + periodo de duracion (for 9 years). "During" + sustantivo/evento (during the class).',
+  '"Ha estado trabajando aqui desde 2015." → <strong>Since = Desde (punto en el tiempo); For = Durante (duracion)</strong>'));
+
+// ===== PARTE 5: VOCABULARIO EN CONTEXTO (46-60) =====
+Q.push(mq(46,5,'The company decided to ___ 200 employees due to budget cuts.',  ['hire','promote','fire','train'], 2,
+  '"Fire" = despedir. "Due to budget cuts" = debido a recortes de presupuesto indica que despidieron personal. "Hire" = contratar (lo opuesto). "Promote" = ascender. "Train" = capacitar.',
+  '"La empresa decidio ___ 200 empleados debido a recortes." → <strong>Fire = Despedir; Budget cuts = Recortes de presupuesto</strong>'));
+
+Q.push(mq(47,5,'The results were ___. No one expected such outcomes.',  ['predictable','unexpected','obvious','simple'], 1,
+  '"Unexpected" = inesperado. "No one expected" = nadie esperaba confirma que los resultados fueron inesperados. "Predictable" = predecible (lo opuesto).',
+  '"Los resultados fueron ___. Nadie esperaba eso." → <strong>Unexpected = Inesperado; Predictable = Predecible</strong>'));
+
+Q.push(mq(48,5,'She has a remarkable ___ for learning languages quickly.',  ['ability','weakness','fear','dislike'], 0,
+  '"Ability" = habilidad/capacidad. "Remarkable ability" = habilidad notable. "For learning" = para aprender confirma que es una capacidad positiva.',
+  '"Tiene una notable ___ para aprender idiomas rapido." → <strong>Ability = Habilidad/Capacidad; Remarkable = Notable</strong>'));
+
+Q.push(mq(49,5,'The government implemented new ___ to reduce pollution.',  ['measures','problems','challenges','difficulties'], 0,
+  '"Measures" = medidas/politicas. "Implemented measures" = implemento medidas. "Problems", "challenges" y "difficulties" son cosas negativas que no se "implementan".',
+  '"El gobierno implemento nuevas ___ para reducir la contaminacion." → <strong>Measures = Medidas/Politicas; Implemented = Implemento</strong>'));
+
+Q.push(mq(50,5,'The traffic was so ___ that we arrived two hours late.',  ['light','heavy','fast','quick'], 1,
+  '"Heavy traffic" = trafico pesado/denso. Es una colocacion fija en ingles. "Light traffic" = trafico ligero. "Heavy" con trafico siempre significa denso.',
+  '"El trafico estaba tan ___ que llegamos dos horas tarde." → <strong>Heavy traffic = Trafico pesado/denso (colocacion fija)</strong>'));
+
+Q.push(mq(51,5,'Please ___ the form before submitting it.',  ['fill out','give up','turn down','put off'], 0,
+  '"Fill out" = llenar/completar (un formulario). "Give up" = rendirse. "Turn down" = rechazar. "Put off" = posponer. Solo "fill out" tiene sentido con "form".',
+  '"Por favor ___ el formulario antes de enviarlo." → <strong>Fill out = Llenar (formulario); Give up = Rendirse</strong>'));
+
+Q.push(mq(52,5,'The scientist made a significant ___ in cancer research.',  ['breakthrough','setback','mistake','effort'], 0,
+  '"Breakthrough" = avance importante/descubrimiento. "Significant breakthrough" = avance significativo. "Setback" = reves/contratiempo (lo opuesto).',
+  '"El cientifico hizo un ___ significativo en investigacion del cancer." → <strong>Breakthrough = Avance/Descubrimiento; Setback = Reves</strong>'));
+
+Q.push(mq(53,5,'It is ___ to wear a seatbelt while driving.',  ['optional','compulsory','unnecessary','dangerous'], 1,
+  '"Compulsory" = obligatorio. En la mayoria de paises usar cinturon es obligatorio por ley. "Optional" = opcional (lo opuesto). "Unnecessary" = innecesario.',
+  '"Es ___ usar cinturon de seguridad mientras conduces." → <strong>Compulsory = Obligatorio; Optional = Opcional</strong>'));
+
+Q.push(mq(54,5,'The meeting has been ___ until next Monday.',  ['postponed','cancelled','advanced','confirmed'], 0,
+  '"Postponed" = pospuesta/retrasada. Hasta el proximo lunes indica que se movio para despues, no que se cancelo. "Cancelled" = cancelada (definitiva).',
+  '"La reunion ha sido ___ hasta el proximo lunes." → <strong>Postponed = Pospuesta; Cancelled = Cancelada</strong>'));
+
+Q.push(mq(55,5,'She could not ___ the temptation to check her phone during the exam.',  ['resist','enjoy','create','ignore'], 0,
+  '"Resist" = resistir. "Could not resist the temptation" = no pudo resistir la tentacion. Colocacion fija muy comun en ingles.',
+  '"No pudo ___ la tentacion de mirar su celular en el examen." → <strong>Resist = Resistir; Temptation = Tentacion</strong>'));
+
+Q.push(mq(56,5,'The new policy will ___ affect all students next semester.',  ['significantly','slightly','barely','never'], 0,
+  '"Significantly" = significativamente/considerablemente. En contexto academico, una politica que "afecta a TODOS los estudiantes" lo haria de forma significativa.',
+  '"La nueva politica ___ afectara a todos los estudiantes el proximo semestre." → <strong>Significantly = Significativamente</strong>'));
+
+Q.push(mq(57,5,'The manager asked the team to ___ the project by Friday.',  ['work out','hand in','turn in','come up with'], 1,
+  '"Hand in" = entregar/presentar. "Hand in the project" = entregar el proyecto. "Turn in" tambien significa entregar pero "hand in" es mas comun en ingles britanico. "Come up with" = idear.',
+  '"El gerente pidio al equipo que ___ el proyecto para el viernes." → <strong>Hand in = Entregar/Presentar</strong>'));
+
+Q.push(mq(58,5,'His ___ to the company was recognized with an award.',  ['contribution','objection','rejection','connection'], 0,
+  '"Contribution" = contribucion/aporte. "Recognized with an award" = reconocido con un premio confirma que fue algo positivo.',
+  '"Su ___ a la empresa fue reconocida con un premio." → <strong>Contribution = Contribucion/Aporte; Recognized = Reconocido</strong>'));
+
+Q.push(mq(59,5,'The students found the lecture very ___. They could barely stay awake.',  ['engaging','boring','interesting','exciting'], 1,
+  '"Boring" = aburrido. "Could barely stay awake" = apenas podian mantenerse despiertos indica que la charla era aburrida. "Engaging" = cautivante (lo opuesto).',
+  '"Los estudiantes encontraron la charla muy ___. Apenas podian mantenerse despiertos." → <strong>Boring = Aburrido; Barely = Apenas</strong>'));
+
+Q.push(mq(60,5,'We need to ___ a solution to this problem before it gets worse.',  ['come up with','give up','put off','look forward to'], 0,
+  '"Come up with" = idear/encontrar (una solucion, idea). "Come up with a solution" = encontrar una solucion. "Give up" = rendirse. "Put off" = posponer.',
+  '"Necesitamos ___ una solucion antes de que empeore." → <strong>Come up with = Idear/Encontrar (solucion)</strong>'));
+
+// ===== PARTE 6: CONECTORES Y COHESION (61-70) =====
+Q.push(mq(61,6,'The project was difficult; ___, the team completed it on time.',  ['however','therefore','although','moreover'], 0,
+  '"However" = sin embargo (contraste). El proyecto fue dificil PERO se completo a tiempo. Contraste entre dificultad y resultado exitoso. Va despues de punto y coma.',
+  '"El proyecto fue dificil; ___, el equipo lo completo a tiempo." → <strong>However = Sin embargo (contraste)</strong>'));
+
+Q.push(mq(62,6,'___ the bad weather, the event was a great success.',  ['Despite','Although','Because','However'], 0,
+  '"Despite" + sustantivo = a pesar de. "Despite the bad weather" = a pesar del mal tiempo. "Although" va con clausula (sujeto + verbo). "Despite" va con sustantivo o gerundio.',
+  '"___ el mal tiempo, el evento fue un exito." → <strong>Despite + sustantivo = A pesar de</strong>'));
+
+Q.push(mq(63,6,'She studied hard for the exam; ___, she got the highest score.',  ['nevertheless','therefore','however','although'], 1,
+  '"Therefore" = por lo tanto (consecuencia). Estudio duro CONSECUENCIA: mejor nota. "Nevertheless" = no obstante (contraste).',
+  '"Ella estudio mucho; ___, obtuvo la mejor nota." → <strong>Therefore = Por lo tanto (consecuencia)</strong>'));
+
+Q.push(mq(64,6,'___ he was tired, he finished all his assignments.',  ['Although','Because','Despite','Therefore'], 0,
+  '"Although" + clausula = aunque. "Although he was tired" = aunque estaba cansado. Va seguido de sujeto + verbo. "Despite" NO lleva sujeto+verbo despues.',
+  '"___ estaba cansado, termino todas sus tareas." → <strong>Although + clausula = Aunque</strong>'));
+
+Q.push(mq(65,6,'The course is very demanding. ___, it is extremely rewarding.',  ['However','Moreover','Because','Although'], 1,
+  '"Moreover" = ademas (adicion). Agrega informacion positiva. El curso es exigente ADEMAS es gratificante. "However" seria contraste.',
+  '"El curso es muy exigente. ___, es extremadamente gratificante." → <strong>Moreover = Ademas (adicion)</strong>'));
+
+Q.push(mq(66,6,'You should submit your application early; ___, you might miss the deadline.',  ['otherwise','however','moreover','although'], 0,
+  '"Otherwise" = de lo contrario/si no. Advierte sobre una consecuencia negativa si no actas. "Submit early; otherwise, miss deadline".',
+  '"Deberias enviar tu aplicacion temprano; ___, podrias perder la fecha limite." → <strong>Otherwise = De lo contrario / Si no</strong>'));
+
+Q.push(mq(67,6,'___ the fact that she was nervous, she delivered an excellent presentation.',  ['In spite of','Because of','Instead of','Due to'], 0,
+  '"In spite of" = a pesar de (concesion). "In spite of the fact that" es una estructura completa para contraste. "Due to" = debido a (causa).',
+  '"___ de que estaba nerviosa, dio una excelente presentacion." → <strong>In spite of = A pesar de (concesion)</strong>'));
+
+Q.push(mq(68,6,'Neither the teacher ___ the students knew about the schedule change.',  ['or','and','nor','but'], 2,
+  '"Neither...nor" = ni...ni. Estructura correlativa. "Neither the teacher nor the students" = ni el profesor ni los estudiantes. Concordancia: el verbo concuerda con el sujeto mas cercano.',
+  '"Ni el profesor ___ los estudiantes sabian del cambio." → <strong>Neither...nor = Ni...ni</strong>'));
+
+Q.push(mq(69,6,'The experiment failed ___ to a technical error.',  ['due','because','since','despite'], 0,
+  '"Due to" + sustantivo = debido a. "Due to a technical error" = debido a un error tecnico. "Because" va con clausula (because OF va con sustantivo).',
+  '"El experimento fracaso ___ a un error tecnico." → <strong>Due to = Debido a (+ sustantivo)</strong>'));
+
+Q.push(mq(70,6,'He not only speaks English fluently ___ he also writes it perfectly.',  ['but','but also','and','so'], 1,
+  '"Not only...but also" = no solo...sino tambien. Estructura correlativa para agregar informacion enfatizando que hace MAS de una cosa.',
+  '"No solo habla ingles con fluidez ___ tambien lo escribe perfectamente." → <strong>Not only...but also = No solo...sino tambien</strong>'));
+
+// ===== PARTE 7: COMPRENSION LECTORA 1 (71-85) =====
+Q.push(mq(71,7,'What is the main idea of the passage?',  ['Sustainable engineering is too expensive for most countries','Traditional engineering practices should be completely abandoned','Sustainable engineering is a necessary response to environmental challenges','Green buildings are the only solution to climate change'], 2,
+  'La idea principal es que la ingenieria sostenible es NECESARIA ante los desafios ambientales. No dice que sea la unica solucion ni que sea barata, sino que es imprescindible.',
+  '"Cual es la idea principal?" → <strong>Sustainable engineering = Ingenieria sostenible; Necessary = Necesaria</strong>', 'p7'));
+
+Q.push(mq(72,7,'The circular economy differs from the traditional model because it...',  ['costs significantly more','is much faster','treats waste as a resource','uses more raw materials'], 2,
+  'El texto dice: "the circular approach treats waste as a resource rather than a problem." Tratar el desperdicio como recurso es la diferencia clave.',
+  '"La economia circular difiere porque..." → <strong>Treats waste as a resource = Trata el desperdicio como recurso</strong>', 'p7'));
+
+Q.push(mq(73,7,'According to the passage, green buildings can reduce energy consumption by up to...',  ['10%','20%','30%','50%'], 2,
+  'Dato explicito del texto: "green buildings can reduce energy consumption by up to 30% and water usage by up to 50%." Cuidado: 50% es para AGUA, no energia.',
+  '"Los edificios verdes reducen energia hasta..." → <strong>Up to 30% = Hasta un 30%; Water usage = Uso de agua</strong>', 'p7'));
+
+Q.push(mq(74,7,'The word "prohibitive" in paragraph 4 is closest in meaning to...',  ['affordable','reasonable','excessively expensive','necessary'], 2,
+  '"Prohibitive" = prohibitivo = excesivamente caro, que prohibe por el precio. En contexto: costos prohibitivos para paises en desarrollo = tan caros que impiden la adopcion.',
+  '"Prohibitive significa..." → <strong>Prohibitive = Prohibitivo/Excesivamente caro</strong>', 'p7'));
+
+Q.push(mq(75,7,'What do critics argue about sustainable engineering solutions?',  ['They are too technologically advanced','They fail to address root causes of environmental problems','They should only be implemented in developed countries','They have been proven ineffective'], 1,
+  'Criticos dicen que son "temporary fixes that fail to address the root causes" = soluciones temporales que no abordan las causas raiz como el sobreconsumo.',
+  '"Que argumentan los criticos?" → <strong>Root causes = Causas raiz; Overconsumption = Sobreconsumo</strong>', 'p7'));
+
+Q.push(mq(76,7,'According to the engineer quoted, sustainable practices are...',  ['optional for wealthy nations','a necessity for the planet','only relevant for new constructions','a temporary trend'], 1,
+  '"Sustainable engineering is not a luxury but a necessity." No es un lujo sino una NECESIDAD. "Luxury" se contrasta con "necessity".',
+  '"Segun la ingeniera, las practicas sostenibles son..." → <strong>Not a luxury but a necessity = No un lujo sino una necesidad</strong>', 'p7'));
+
+Q.push(mq(77,7,'The phrase "temporary fixes" in paragraph 4 suggests...',  ['permanent and reliable solutions','quick solutions that do not solve the real problem','medical treatments for engineers','construction materials'], 1,
+  '"Temporary fixes" = parches/temporales. Sugiere soluciones superficiales que no atacan la causa real. "Fix" = solucion/arreglo, "temporary" = temporal.',
+  '"Temporary fixes sugiere..." → <strong>Temporary fixes = Soluciones temporales/Parches</strong>', 'p7'));
+
+Q.push(mq(78,7,'Smart glass technology adjusts its...',  ['color','size','transparency','weight'], 2,
+  'Dato explicito: "smart glass, which adjusts its transparency based on sunlight." Transparencia = transparency.',
+  '"El vidrio inteligente ajusta su..." → <strong>Transparency = Transparencia; Sunlight = Luz solar</strong>', 'p7'));
+
+Q.push(mq(79,7,'The word "diminish" in paragraph 1 is closest in meaning to...',  ['increase','decrease','remain stable','improve'], 1,
+  '"Diminish" = disminuir/reducir. Contexto: recursos naturales que se reducen por el cambio climatico. Sinonimo: decrease, decline, reduce.',
+  '"Diminish significa..." → <strong>Diminish = Disminuir/Reducir</strong>', 'p7'));
+
+Q.push(mq(80,7,'According to the passage, the traditional linear model involves...',  ['recycling and reusing','repairing and maintaining','take, make, dispose','sustainable manufacturing'], 2,
+  'Texto explicito: "the traditional linear model of take, make, dispose." Lineal = tomar, hacer, desechar. Es el modelo opuesto al circular.',
+  '"El modelo lineal tradicional involucra..." → <strong>Take, make, dispose = Tomar, hacer, desechar</strong>', 'p7'));
+
+Q.push(mq(81,7,'What can be inferred about sustainable engineering in developing countries?',  ['It is widely implemented there','It faces significant financial barriers','It is more advanced than in developed countries','It is not needed in those regions'], 1,
+  'Se infiere: "initial costs can be prohibitive for developing countries" = costos prohibitivos = barreras financieras. No dice que no se necesite ni que sea mas avanzado.',
+  '"Que se infiere sobre paises en desarrollo?" → <strong>Prohibitive costs = Costos prohibitivos; Financial barriers = Barreras financieras</strong>', 'p7'));
+
+Q.push(mq(82,7,'What does the passage suggest about policymakers?',  ['They are leading the sustainable engineering movement','They often lack awareness about sustainable practices','They have fully embraced all sustainable solutions','They actively oppose sustainable engineering'], 1,
+  '"There is often a lack of awareness among policymakers" = a menudo falta concientizacion entre los formuladores de politicas. "Lack of awareness" = falta de concientizacion.',
+  '"Que sugiere el texto sobre los formuladores de politicas?" → <strong>Lack of awareness = Falta de concientizacion</strong>', 'p7'));
+
+Q.push(mq(83,7,'The word "irreversible" in the last paragraph is closest in meaning to...',  ['reversible','impossible to undo','slow to happen','easy to fix'], 1,
+  '"Irreversible" = irreversible = imposible de deshacer. Prefijo "ir-" = negacion + "reversible". El dano se vuelve permanente.',
+  '"Irreversible significa..." → <strong>Irreversible = Irreversible/Imposible de deshacer</strong>', 'p7'));
+
+Q.push(mq(84,7,'Green roofs provide...',  ['solar energy','natural insulation','water purification','internet connectivity'], 1,
+  'Texto: "green roofs, which provide natural insulation." Aislamiento natural = natural insulation. Los techos verdes aislman el edificio.',
+  '"Los techos verdes proporcionan..." → <strong>Natural insulation = Aislamiento natural</strong>', 'p7'));
+
+Q.push(mq(85,7,'What is the overall tone of the passage?',  ['Purely optimistic and enthusiastic','Deeply pessimistic about the future','Objective and balanced','Highly critical of all engineering'], 2,
+  'El tono es objetivo y equilibrado: presenta beneficios PERO tambien limitaciones y criticas. No es puramente optimista ni pesimista. "Balanced" = equilibrado.',
+  '"Cual es el tono general?" → <strong>Objective and balanced = Objetivo y equilibrado</strong>', 'p7'));
+
+// ===== PARTE 8: COMPRENSION LECTORA 2 (86-100) =====
+Q.push(mq(86,8,'What is the main idea of the passage?',  ['AI will completely replace human doctors soon','AI is transforming healthcare but faces significant challenges','AI is too dangerous to use in medical settings','AI only works in drug discovery'], 1,
+  'Idea principal: AI esta transformando la salud PERO enfrenta desafios importantes. El texto presenta beneficios y problemas, no es extremista en ninguna direccion.',
+  '"Cual es la idea principal?" → <strong>Transforming = Transformando; Faces challenges = Enfrenta desafios</strong>', 'p8'));
+
+Q.push(mq(87,8,'According to the passage, AI systems in medical imaging have...',  ['lower accuracy than human radiologists','matched or exceeded human accuracy in some cases','never been tested in real hospitals','been rejected by most doctors'], 1,
+  '"AI systems have matched or even outperformed experienced radiologists" = igualado o superado. "In some cases" = en algunos casos. No dice que sea siempre mejor.',
+  '"Los sistemas de IA en imagenes medicas han..." → <strong>Outperformed = Superado; Matched = Igualado</strong>', 'p8'));
+
+Q.push(mq(88,8,'The AI system for breast cancer detection achieved...',  ['88.4% accuracy','94.5% accuracy','100% accuracy','50% accuracy'], 1,
+  'Dato explicito: "AI system detected breast cancer in mammograms with 94.5% accuracy, compared to 88.4% for human radiologists." 94.5% es IA, 88.4% es humano.',
+  '"El sistema de IA logro..." → <strong>94.5% accuracy = 94.5% de precision</strong>', 'p8'));
+
+Q.push(mq(89,8,'How does AI accelerate drug discovery?',  ['By replacing all scientists in laboratories','By analyzing large datasets much faster than traditional methods','By conducting only physical experiments','By reducing the cost to zero'], 1,
+  '"By analyzing vast datasets of molecular structures... AI can identify potential drug candidates in months rather than years." Analiza grandes volumentes de datos rapidamente.',
+  '"Como acelera la IA el descubrimiento de drogas?" → <strong>Vast datasets = Conjuntos de datos masivos; In months rather than years = En meses en vez de anos</strong>', 'p8'));
+
+Q.push(mq(90,8,'The word "revolutionizing" in paragraph 1 is closest in meaning to...',  ['destroying','slowly changing','completely transforming','maintaining'], 2,
+  '"Revolutionizing" = revolucionando = transformando completamente. Raiz: "revolution" = revolucion. No es cambio lento ni destruccion.',
+  '"Revolutionizing significa..." → <strong>Completely transforming = Transformando completamente</strong>', 'p8'));
+
+Q.push(mq(91,8,'What is a significant concern about AI in healthcare?',  ['It requires too much electricity','Algorithmic bias and data privacy issues','It makes doctors work longer hours','Patients prefer human doctors only'], 1,
+  'Texto: "Concerns about data privacy, algorithmic bias, and the potential displacement of medical professionals." Preocupaciones principales: privacidad y sesgo.',
+  '"Cual es una preocupacion significativa?" → <strong>Algorithmic bias = Sesgo algoritmico; Data privacy = Privacidad de datos</strong>', 'p8'));
+
+Q.push(mq(92,8,'Why might AI dermatology systems perform poorly on darker-skinned patients?',  ['The technology is fundamentally flawed','Training data lacked diversity in skin tones','Darker skin is inherently harder to analyze','Doctors prefer manual diagnosis'], 1,
+  '"AI systems trained mainly on light-skinned patients have shown significantly lower accuracy when diagnosing skin conditions in darker-skinned individuals." Datos de entrenamiento sin diversidad.',
+  '"Por que los sistemas de IA fallan en piel oscura?" → <strong>Trained mainly on = Entrenado principalmente en; Lacked diversity = Falto diversidad</strong>', 'p8'));
+
+Q.push(mq(93,8,'What does the passage say about accountability for AI errors?',  ['It is clearly defined by law','Regulatory frameworks are still struggling to keep pace','Doctors are always held responsible','Companies are never held accountable'], 1,
+  '"Regulatory frameworks are still struggling to keep pace with these technological developments." Los marcos reguladores aun no alcanzan a la tecnologia.',
+  '"Que dice sobre la responsabilidad de errores de IA?" → <strong>Regulatory frameworks = Marcos regulatorios; Struggling to keep pace = Luchan por mantenerse al dia</strong>', 'p8'));
+
+Q.push(mq(94,8,'The word "indispensable" in the last paragraph is closest in meaning to...',  ['useless','unnecessary','essential','outdated'], 2,
+  '"Indispensable" = indispensable/esencial. Algo que no puede prescindirse. "AI will become an indispensable tool" = una herramienta esencial.',
+  '"Indispensable significa..." → <strong>Indispensable = Indispensable/Essencial = Esencial</strong>', 'p8'));
+
+Q.push(mq(95,8,'According to the passage, traditional drug discovery takes...',  ['1-2 years','5-10 years','10-15 years','20+ years'], 2,
+  'Dato explicito: "a process that traditionally takes an average of 10-15 years and costs billions of dollars."',
+  '"El descubrimiento tradicional de drogas toma..." → <strong>10-15 years = 10-15 anos; Costs billions = Cuesta miles de millones</strong>', 'p8'));
+
+Q.push(mq(96,8,'What does the passage suggest about the future role of AI in medicine?',  ['It will completely replace human doctors','It will augment rather than replace doctors','It will only be used in surgery','It will eventually be banned'], 1,
+  '"The key lies not in replacing human doctors but in augmenting their capabilities." Augmentar = potenciar/mejorar, no reemplazar.',
+  '"Que sugiere sobre el rol futuro de la IA?" → <strong>Augmenting = Potenciar/Mejorar (no reemplazar)</strong>', 'p8'));
+
+Q.push(mq(97,8,'The word "augmenting" in the last paragraph is closest in meaning to...',  ['reducing','enhancing','replacing','ignoring'], 1,
+  '"Augmenting" = aumentando/potenciando/mejorando. En contexto: mejorar las capacidades de los doctores, no reemplazarlas. Sinonimo: enhancing.',
+  '"Augmenting significa..." → <strong>Augmenting = Potenciando/Mejorando; Enhancing = Mejorando</strong>', 'p8'));
+
+Q.push(mq(98,8,'What can be inferred about the integration of AI in healthcare?',  ['It is a simple and straightforward process','It involves complex ethical and practical challenges','It has been fully completed already','It has absolutely no risks'], 1,
+  'Se infiere por toda la discusion sobre sesgo, privacidad, responsabilidad, etc. que la integracion es compleja con desafios eticos y practicos.',
+  '"Que se infiere sobre la integracion de IA en salud?" → <strong>Complex ethical and practical challenges = Desafios eticos y practicos complejos</strong>', 'p8'));
+
+Q.push(mq(99,8,'The passage mentions all of the following as AI applications EXCEPT...',  ['Medical imaging analysis','Drug candidate identification','Performing surgical procedures','Diagnosing skin conditions'], 2,
+  'El texto menciona imagenes medicas, descubrimiento de drogas y diagnostico dermatologico. NO menciona realizar procedimientos quirurgicos directamente.',
+  '"Cual NO se menciona como aplicacion?" → <strong>Performing surgical procedures = Realizar procedimientos quirurgicos</strong>', 'p8'));
+
+Q.push(mq(100,8,'The overall tone of the passage is...',  ['Strongly negative about AI in medicine','Cautiously optimistic about AI potential','Completely neutral with no opinion','Highly skeptical of all AI applications'], 1,
+  '"Cautiously optimistic" = cautelosamente optimista. Reconoce beneficios enormes PERO advierte sobre desafios serios. No es negativo ni ingenuamente positivo.',
+  '"Cual es el tono general?" → <strong>Cautiously optimistic = Cautelosamente optimista</strong>', 'p8'));
+
+/* ========== VOCABULARIO CLAVE ========== */
+var VL=[
+{e:"goes",s:"va (3ra persona presente simple)"},
+{e:"were watching",s:"estaban viendo (pasado continuo)"},
+{e:"since",s:"desde (punto en el tiempo)"},
+{e:"had started",s:"habia comenzado (pasado perfecto)"},
+{e:"will open",s:"abriran (futuro simple)"},
+{e:"right now",s:"ahora mismo"},
+{e:"have been",s:"han ido/estado (experiencia)"},
+{e:"is going to",s:"va a (prediccion con evidencia)"},
+{e:"had been studying",s:"habia estado estudiando (pp continuo)"},
+{e:"will have finished",s:"habran terminado (futuro perfecto)"},
+{e:"second conditional",s:"condicional segundo (hipotetico)"},
+{e:"third conditional",s:"condicional tercero (pasado irreal)"},
+{e:"wish",s:"ojala/deseo"},
+{e:"unless",s:"a menos que / si no"},
+{e:"was baked",s:"fue horneado (pasivo pasado)"},
+{e:"reported speech",s:"estilo indirecto"},
+{e:"will be built",s:"sera construido (pasivo futuro)"},
+{e:"told to",s:"dijo que (reportar ordenes)"},
+{e:"is being",s:"esta siendo (pasivo continuo)"},
+{e:"must not",s:"no debes (prohibicion)"},
+{e:"should",s:"deberias (recomendacion)"},
+{e:"whose",s:"cuyo / de quien (posesivo)"},
+{e:"arrive at",s:"llegar a (lugar especifico)"},
+{e:"interested in",s:"interesado en"},
+{e:"must be",s:"debe ser (deduccion logica)"},
+{e:"since vs for",s:"since=punto en tiempo; for=duracion"},
+{e:"fire",s:"despedir (trabajo)"},
+{e:"unexpected",s:"inesperado"},
+{e:"breakthrough",s:"avance / descubrimiento"},
+{e:"compulsory",s:"obligatorio"},
+{e:"postponed",s:"pospuesto"},
+{e:"fill out",s:"llenar (formulario)"},
+{e:"come up with",s:"idear / encontrar (solucion)"},
+{e:"contribution",s:"contribucion / aporte"},
+{e:"however",s:"sin embargo (contraste)"},
+{e:"despite",s:"a pesar de (+ sustantivo)"},
+{e:"therefore",s:"por lo tanto (consecuencia)"},
+{e:"although",s:"aunque (+ clausula)"},
+{e:"moreover",s:"ademas (adicion)"},
+{e:"otherwise",s:"de lo contrario"},
+{e:"neither...nor",s:"ni...ni"},
+{e:"due to",s:"debido a (+ sustantivo)"},
+{e:"not only...but also",s:"no solo...sino tambien"},
+{e:"sustainable",s:"sostenible"},
+{e:"circular economy",s:"economia circular"},
+{e:"prohibitive",s:"prohibitivo / excesivamente caro"},
+{e:"root causes",s:"causas raiz"},
+{e:"irreversible",s:"irreversible"},
+{e:"revolutionizing",s:"revolucionando"},
+{e:"algorithmic bias",s:"sesgo algoritmico"},
+{e:"indispensable",s:"indispensable / esencial"},
+{e:"augmenting",s:"potenciando / mejorando"},
+{e:"accountability",s:"responsabilidad / rendicion de cuentas"},
+{e:"cautiously optimistic",s:"cautelosamente optimista"}
+];
+
+/* ========== ESTADO ========== */
+var cur=0,score=0,ans=[],done=false;
+var tmS=0,tmI=null;
+
+/* ========== FUNCIONES ========== */
+function startQuiz(){
+  cur=0;score=0;ans=[];done=false;tmS=0;
+  if(tmI)clearInterval(tmI);
+  tmI=setInterval(function(){
+    tmS++;var m=String(Math.floor(tmS/60)).padStart(2,'0');
+    var s=String(tmS%60).padStart(2,'0');
+    document.getElementById('tmD').textContent=m+':'+s;
+  },1000);
+  showS('quiz');renderQ();
+}
+
+function showS(id){
+  var ss=document.querySelectorAll('.screen');
+  for(var i=0;i<ss.length;i++)ss[i].classList.remove('active');
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function renderQ(){
+  done=false;
+  var q=Q[cur];var card=document.getElementById('qC');
+  document.getElementById('pBdg').textContent='P'+q.part+' — '+q.pn;
+  document.getElementById('scD').textContent=score;
+  document.getElementById('prB').style.width=(cur/Q.length*100)+'%';
+  card.style.animation='none';void card.offsetHeight;card.style.animation='cI .35s ease-out';
+
+  var h='';
+  if(q.pt==='p7')h+='<div class="pbox">'+pass7+'</div>';
+  else if(q.pt==='p8')h+='<div class="pbox">'+pass8+'</div>';
+
+  h+='<div class="qn">Pregunta '+q.id+' de '+Q.length+'</div>';
+  h+='<div class="qt">'+q.tx+'</div>';
+  h+='<div class="og">';
+  var lt='ABCD';
+  for(var i=0;i<q.op.length;i++){
+    h+='<button class="ob" data-i="'+i+'" onclick="selO('+i+')" aria-label="'+lt[i]+': '+q.op[i]+'"><span class="ol">'+lt[i]+'</span><span>'+q.op[i]+'</span></button>';
+  }
+  h+='</div><div id="fbA"></div>';
+  card.innerHTML=h;
+}
+
+function selO(idx){
+  if(done)return;done=true;
+  var q=Q[cur];var sel=q.op[idx];var ok=(sel===q.cr);
+  if(ok)score++;
+  ans.push({id:q.id,part:q.part,pn:q.pn,sel:sel,cr:q.cr,ok:ok,tx:q.tx,ex:q.ex,tr:q.tr});
+
+  var btns=document.querySelectorAll('.ob');
+  for(var i=0;i<btns.length;i++){
+    btns[i].classList.add('dis');
+    if(q.op[i]===q.cr)btns[i].classList.add('ca');
+    if(i===idx&&!ok){btns[i].classList.add('wa');document.querySelector('.og').classList.add('shk');}
+  }
+  document.getElementById('scD').textContent=score;
+
+  var fa=document.getElementById('fbA');
+  var ic=ok?'fa-circle-check':'fa-circle-xmark';
+  var fc=ok?'cf':'if';
+  var ht=ok?'Correcto':'Incorrecto — Respuesta: '+q.cr;
+  var nl=cur<Q.length-1?'Siguiente pregunta':'Ver resultados';
+
+  fa.innerHTML='<div class="fb '+fc+'"><div class="fh"><i class="fa-solid '+ic+'"></i> '+ht+'</div><div class="fb2">'+q.ex+'</div><div class="trb"><i class="fa-solid fa-language" style="margin-right:5px;"></i>'+q.tr+'</div></div><button class="bn" onclick="nxtQ()">'+nl+' <i class="fa-solid fa-arrow-right"></i></button>';
+}
+
+function nxtQ(){
+  cur++;
+  if(cur<Q.length){renderQ();window.scrollTo({top:0,behavior:'smooth'});}
+  else{if(tmI)clearInterval(tmI);showRes();}
+}
+
+/* ========== RESULTADOS ========== */
+function showRes(){
+  showS('results');
+  var pct=Math.round((score/Q.length)*100);
+  var circ=2*Math.PI*65;var off=circ-(pct/100)*circ;
+  var passed=score>=60;
+
+  var secs=[];
+  for(var p=1;p<=8;p++){var pn=PI[p].n;var sa=ans.filter(function(a){return a.part===p;});var cc=sa.filter(function(a){return a.ok;}).length;secs.push({n:pn,t:sa.length,c:cc});}
+
+  var sh='';
+  for(var s=0;s<secs.length;s++){
+    var sp=secs[s].t>0?Math.round((secs[s].c/secs[s].t)*100):0;
+    var col=sp>=60?'var(--correct)':(sp>=40?'var(--accent)':'var(--incorrect)');
+    sh+='<div class="sc"><div class="sn">P'+(s+1)+': '+secs[s].n+'</div><div class="ss" style="color:'+col+'">'+secs[s].c+'/'+secs[s].t+'</div><div class="sd">'+sp+'%</div></div>';
+  }
+
+  var wa=ans.filter(function(a){return !a.ok;});
+  var wh=wa.length===0?'<p style="color:var(--correct);text-align:center;padding:1.5rem;">Sin errores. Excelente.</p>':wa.map(bRI).join('');
+  var ah=ans.map(bRI).join('');
+
+  var vh='';
+  for(var v=0;v<VL.length;v++)vh+='<div class="vc2"><span class="ve">'+VL[v].e+'</span><span class="vs">'+VL[v].s+'</span></div>';
+
+  var tm=String(Math.floor(tmS/60)).padStart(2,'0')+':'+String(tmS%60).padStart(2,'0');
+  var need=60-score;
+  var needMsg=need>0?'Te faltan <strong style="color:var(--incorrect);">'+need+' pregunta'+(need>1?'s':'')+'</strong> para aprobar.':'Felicidades, superaste el minimo requerido.';
+
+  document.getElementById('results').innerHTML=
+    '<div class="rh"><h2>Resultados EKT — Ingles B2</h2>'+
+    '<p style="color:var(--muted);font-size:.9rem;">Tiempo: <strong style="color:var(--accent-light);">'+tm+'</strong> &nbsp;|&nbsp; Minimo aprobatorio: 60/100</p>'+
+    '<div class="verdict '+(passed?'pass':'fail')+'"><i class="fa-solid '+(passed?'fa-circle-check':'fa-circle-xmark')+'"></i> '+(passed?'APROBADO':'NO APROBADO')+'</div>'+
+    '<p style="font-size:.85rem;color:var(--muted);">'+needMsg+'</p>'+
+    '<div class="cs"><svg viewBox="0 0 150 150"><circle class="tk" cx="75" cy="75" r="65"/><circle class="fr" cx="75" cy="75" r="65" stroke-dasharray="'+circ+'" stroke-dashoffset="'+circ+'" id="sR" style="stroke:'+(passed?'var(--correct)':'var(--incorrect)')+'"/></svg><div><div class="st">'+score+'/100</div></div><div class="sl">'+pct+'%</div></div></div>'+
+    '<div class="sbd">'+sh+'</div>'+
+    '<div class="trow"><button class="tbtn active" onclick="sTb(\'w\',this)">Errores ('+wa.length+')</button><button class="tbtn" onclick="sTb(\'a\',this)">Todas (100)</button><button class="tbtn" onclick="sTb(\'v\',this)">Vocabulario ('+VL.length+')</button></div>'+
+    '<div class="tc active" id="tab-w">'+wh+'</div>'+
+    '<div class="tc" id="tab-a">'+ah+'</div>'+
+    '<div class="tc" id="tab-v"><p style="color:var(--muted);font-size:.82rem;margin-bottom:.8rem;">Terminos clave para memorizar:</p><div class="vg">'+vh+'</div></div>'+
+    '<div style="text-align:center;"><button class="br" onclick="startQuiz()"><i class="fa-solid fa-rotate-right"></i> Intentar de nuevo</button></div>';
+
+  requestAnimationFrame(function(){setTimeout(function(){var r=document.getElementById('sR');if(r)r.style.strokeDashoffset=off;},150);});
+}
+
+function bRI(a){
+  var cl=a.ok?'rr':'wr';
+  var ct=a.tx.replace(/<[^>]*>/g,'');
+  var ce=a.ex.replace(/<[^>]*>/g,'');
+  var ct2=a.tr.replace(/<[^>]*>/g,'');
+  var h='<div class="ri '+cl+'"><div class="rq"><strong>P'+a.id+'</strong> — '+ct+'</div>';
+  if(!a.ok)h+='<div class="ra"><span class="lb">Tu respuesta: </span><span class="vw">'+a.sel+'</span></div>';
+  h+='<div class="ra"><span class="lb">Correcta: </span><span class="vc">'+a.cr+'</span></div>';
+  h+='<div class="re">'+ce+'<br><em style="color:var(--accent-light);">'+ct2+'</em></div></div>';
+  return h;
+}
+
+function sTb(t,btn){
+  var ts=document.querySelectorAll('.tbtn');var cs=document.querySelectorAll('.tc');
+  for(var i=0;i<ts.length;i++)ts[i].classList.remove('active');
+  for(var j=0;j<cs.length;j++)cs[j].classList.remove('active');
+  btn.classList.add('active');document.getElementById('tab-'+t).classList.add('active');
+}
+
+document.addEventListener('keydown',function(e){
+  if(!document.getElementById('quiz').classList.contains('active'))return;
+  if(done){if(e.key==='Enter'||e.key===' '){e.preventDefault();nxtQ();}return;}
+  var km={a:0,b:1,c:2,d:3};var k=e.key.toLowerCase();
+  if(km.hasOwnProperty(k)&&km[k]<Q[cur].op.length)selO(km[k]);
+});
+</script>
+</body>
+</html>
