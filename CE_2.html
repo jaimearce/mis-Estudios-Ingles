@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comunicacion Escrita — Saber Pro / EKT</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{--bg:#0C0A09;--card:#1A1714;--card2:#221E19;--text:#F5F0E8;--muted:#8A8070;--accent:#D97706;--accent-light:#FBBF24;--accent-dark:#92400E;--correct:#34D399;--correct-bg:rgba(52,211,153,.08);--incorrect:#FB7185;--incorrect-bg:rgba(251,113,133,.08);--warn:#FBBF24;--warn-bg:rgba(251,191,36,.08);--border:#2E2820;--low:#FB7185;--mid:#FBBF24;--high:#34D399}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Source Sans 3',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+h1,h2,h3,h4{font-family:'Playfair Display',serif}
+.bg-fx{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.bg-fx .b{position:absolute;border-radius:50%;filter:blur(100px);opacity:.1;animation:bf 25s ease-in-out infinite alternate}
+.bg-fx .b:nth-child(1){width:450px;height:450px;background:#D97706;top:-8%;left:-5%;animation-duration:28s}
+.bg-fx .b:nth-child(2){width:350px;height:350px;background:#78350F;bottom:-10%;right:-5%;animation-duration:22s;animation-delay:-7s}
+.bg-fx .b:nth-child(3){width:250px;height:250px;background:#FBBF24;top:40%;left:60%;animation-duration:35s;animation-delay:-14s;opacity:.05}
+@keyframes bf{0%{transform:translate(0,0) scale(1)}33%{transform:translate(20px,-30px) scale(1.06)}66%{transform:translate(-15px,25px) scale(.95)}100%{transform:translate(10px,-10px) scale(1.03)}}
+.screen{display:none;position:relative;z-index:1}.screen.active{display:flex}
+#welcome{min-height:100vh;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;animation:fU .8s ease-out}
+.badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(217,119,6,.1);border:1px solid rgba(217,119,6,.2);border-radius:999px;padding:.35rem 1.1rem;font-size:.8rem;color:var(--accent-light);margin-bottom:1.5rem;animation:fU .8s ease-out .1s both}
+#welcome h1{font-size:clamp(2.2rem,6vw,3.8rem);font-weight:900;line-height:1.08;margin-bottom:.8rem;background:linear-gradient(135deg,var(--text) 25%,var(--accent-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:fU .8s ease-out .2s both}
+.sub{font-size:clamp(.95rem,2.2vw,1.15rem);color:var(--muted);max-width:540px;line-height:1.6;margin-bottom:2rem;animation:fU .8s ease-out .3s both}
+.infos{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.8rem;width:100%;max-width:600px;margin-bottom:2rem;animation:fU .8s ease-out .4s both}
+.ic{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.9rem 1rem}
+.ic .iv{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--accent)}
+.ic .il{font-size:.72rem;color:var(--muted);margin-top:.15rem}
+.btn-go{display:inline-flex;align-items:center;gap:.65rem;background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:var(--bg);font-weight:700;font-size:1.05rem;padding:.9rem 2.2rem;border-radius:11px;border:none;cursor:pointer;transition:all .3s;animation:fU .8s ease-out .5s both}
+.btn-go:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(217,119,6,.3)}
+.hint{margin-top:1.5rem;padding:.8rem 1.2rem;background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:9px;max-width:500px;text-align:left;animation:fU .8s ease-out .6s both}
+.hint p{font-size:.78rem;color:var(--muted);line-height:1.5}.hint strong{color:var(--accent-light)}
+.rubric-row{display:grid;grid-template-columns:80px 1fr 1fr 1fr;gap:0;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:.6rem;font-size:.78rem}
+.rubric-row.hdr{background:var(--card2)}.rubric-row.hdr div{font-weight:700;color:var(--accent-light);padding:.6rem .5rem}
+.rubric-row div{padding:.5rem;color:var(--muted);border-right:1px solid var(--border);line-height:1.4}
+.rubric-row div:last-child{border-right:none}
+.rubric-row .lv{font-weight:700;display:flex;align-items:center;justify-content:center}
+.rubric-row .lv.lo{color:var(--low)}.rubric-row .lv.md{color:var(--mid)}.rubric-row .lv.hi{color:var(--high)}
+.topic-num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:rgba(217,119,6,.12);color:var(--accent-light);font-size:.68rem;font-weight:700;margin-right:6px;flex-shrink:0}
+#topics{min-height:100vh;flex-direction:column;padding:1.5rem;max-width:750px;margin:0 auto;width:100%}
+.topic-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.3rem;margin-bottom:.7rem;cursor:pointer;transition:all .25s}
+.topic-card:hover{border-color:var(--accent-dark);background:var(--card2);transform:translateY(-2px)}
+.topic-card .tn{font-size:.7rem;color:var(--accent);font-weight:600;text-transform:uppercase;letter-spacing:.04em;margin-bottom:.4rem;display:flex;align-items:center}
+.topic-card .tq{font-size:1rem;font-weight:600;line-height:1.5;color:var(--text)}
+.topic-card .td{font-size:.8rem;color:var(--muted);margin-top:.4rem;line-height:1.4}
+.topic-card .ta{display:flex;align-items:center;gap:.4rem;font-size:.78rem;color:var(--accent-light);margin-top:.6rem;font-weight:600}
+#writing{min-height:100vh;flex-direction:column;padding:1rem;max-width:780px;margin:0 auto;width:100%}
+.wh{position:sticky;top:0;z-index:10;background:var(--bg);padding:.6rem 0;margin-bottom:.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.4rem;border-bottom:1px solid var(--border)}
+.wh .pt{font-size:.72rem;font-weight:600;color:var(--accent);background:rgba(217,119,6,.08);border:1px solid rgba(217,119,6,.15);padding:.25rem .6rem;border-radius:5px}
+.wh .tm{font-size:.82rem;color:var(--muted);display:flex;align-items:center;gap:.3rem}
+.wh .tm i{color:var(--accent-dark);font-size:.68rem}
+.wh .wc{font-size:.82rem;color:var(--muted);display:flex;align-items:center;gap:.3rem}
+.wh .wc i{color:var(--accent)}
+.wc .wn{color:var(--accent-light);font-weight:600}
+.wc .wl{color:var(--incorrect);font-weight:600}
+.topic-banner{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem 1.2rem;margin-bottom:1rem}
+.topic-banner .tbq{font-size:1rem;font-weight:700;line-height:1.5;color:var(--accent-light)}
+.topic-banner .tbi{font-size:.82rem;color:var(--muted);margin-top:.5rem;line-height:1.5}
+.checklist-box{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem;margin-bottom:1rem}
+.checklist-box .clh{font-size:.82rem;font-weight:700;color:var(--accent-light);margin-bottom:.6rem;display:flex;align-items:center;gap:.4rem}
+.cl-item{display:flex;align-items:flex-start;gap:.5rem;font-size:.8rem;color:var(--muted);margin-bottom:.35rem;line-height:1.4}
+.cl-item input[type=checkbox]{accent-color:var(--accent);margin-top:2px;flex-shrink:0}
+textarea{width:100%;min-height:380px;background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1.2rem;color:var(--text);font-size:1rem;line-height:1.8;resize:vertical;font-family:'Source Sans 3',sans-serif;transition:border-color .3s}
+textarea:focus{outline:none;border-color:var(--accent-dark)}
+textarea::placeholder{color:#5A5245}
+.btn-row{display:flex;gap:.6rem;margin-top:.8rem;flex-wrap:wrap}
+.btn-submit{flex:1;display:flex;align-items:center;justify-content:center;gap:.5rem;background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:var(--bg);font-weight:700;font-size:.95rem;padding:.8rem;border-radius:10px;border:none;cursor:pointer;transition:all .3s}
+.btn-submit:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(217,119,6,.25)}
+.btn-submit:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-back{display:flex;align-items:center;justify-content:center;gap:.4rem;background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:10px;padding:.8rem 1.2rem;color:var(--muted);font-weight:600;font-size:.85rem;cursor:pointer;transition:all .2s}
+.btn-back:hover{border-color:var(--accent-dark);color:var(--text)}
+#results{min-height:100vh;flex-direction:column;padding:1.5rem;max-width:780px;margin:0 auto;width:100%;animation:fU .6s ease-out}
+.res-hero{text-align:center;margin-bottom:1.5rem}
+.res-hero h2{font-size:clamp(1.5rem,4vw,2rem);font-weight:900;margin-bottom:.3rem}
+.score-big{font-family:'Playfair Display',serif;font-size:3.5rem;font-weight:900;margin:.5rem 0}
+.score-big.pass{color:var(--correct)}.score-big.fail{color:var(--incorrect)}
+.score-label{font-size:.85rem;color:var(--muted)}
+.verdict{display:inline-flex;align-items:center;gap:.5rem;padding:.4rem 1.2rem;border-radius:8px;font-weight:700;font-size:1rem;margin:.5rem 0}
+.verdict.pass{background:var(--correct-bg);border:1px solid rgba(52,211,153,.2);color:var(--correct)}
+.verdict.mid{background:var(--warn-bg);border:1px solid rgba(251,191,36,.2);color:var(--warn)}
+.verdict.fail{background:var(--incorrect-bg);border:1px solid rgba(251,113,133,.2);color:var(--incorrect)}
+.crit-card{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:1.2rem;margin-bottom:.7rem}
+.crit-card .ch{display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem}
+.crit-card .cn{font-size:.95rem;font-weight:700;color:var(--text)}
+.crit-card .cs{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:900}
+.crit-card .cs.lo{color:var(--low)}.crit-card .cs.md{color:var(--mid)}.crit-card .cs.hi{color:var(--high)}
+.crit-bar{width:100%;height:6px;background:var(--border);border-radius:99px;overflow:hidden;margin-bottom:.7rem}
+.crit-bar .cf{height:100%;border-radius:99px;transition:width 1s ease}
+.crit-card .cd{font-size:.82rem;color:var(--muted);line-height:1.5}
+.err-section{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:1.2rem;margin-bottom:.7rem}
+.err-section .eh{font-size:.9rem;font-weight:700;color:var(--text);margin-bottom:.6rem;display:flex;align-items:center;gap:.4rem}
+.err-item{font-size:.82rem;color:var(--muted);margin-bottom:.4rem;line-height:1.5;padding:.4rem .6rem;background:rgba(251,113,133,.04);border-radius:6px;border-left:2px solid var(--incorrect)}
+.err-item .ew{color:var(--incorrect);text-decoration:line-through;font-weight:600}.err-item .ec{color:var(--correct);font-weight:600}
+.tip-card{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:1.2rem;margin-bottom:.7rem}
+.tip-card .th{font-size:.9rem;font-weight:700;color:var(--accent-light);margin-bottom:.5rem;display:flex;align-items:center;gap:.4rem}
+.tip-card .ti{font-size:.84rem;color:var(--muted);line-height:1.5;margin-bottom:.35rem;padding-left:.8rem;border-left:2px solid var(--accent)}
+.strength-card{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:1.2rem;margin-bottom:.7rem}
+.strength-card .sh{font-size:.9rem;font-weight:700;color:var(--correct);margin-bottom:.5rem;display:flex;align-items:center;gap:.4rem}
+.strength-card .si{font-size:.84rem;color:var(--muted);line-height:1.5;margin-bottom:.3rem;padding-left:.8rem;border-left:2px solid var(--correct)}
+.btn-new{display:inline-flex;align-items:center;gap:.5rem;background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:var(--bg);font-weight:700;padding:.8rem 1.8rem;border-radius:10px;border:none;cursor:pointer;font-size:.95rem;margin-top:.5rem;margin-bottom:2rem;transition:all .3s}
+.btn-new:hover{transform:translateY(-2px);box-shadow:0 6px 22px rgba(217,119,6,.25)}
+@keyframes fU{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@keyframes cI{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes sU{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){.rubric-row{grid-template-columns:60px 1fr 1fr 1fr;font-size:.7rem}.infos{grid-template-columns:1fr 1fr}textarea{min-height:280px}}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="bg-fx" aria-hidden="true"><div class="b"></div><div class="b"></div><div class="b"></div></div>
+
+<section id="welcome" class="screen active" role="main">
+  <div class="badge"><i class="fa-solid fa-pen-nib"></i> Saber Pro / EKT — UFPS</div>
+  <h1>Comunicacion Escrita</h1>
+  <p class="sub">Entrenador interactivo para practicar ensayos argumentativos segun la rubrica oficial del modulo de Comunicacion Escrita.</p>
+  <div class="infos">
+    <div class="ic"><div class="iv">20</div><div class="il">Temas de practica</div></div>
+    <div class="ic"><div class="iv">4</div><div class="il">Parrafos ideales</div></div>
+    <div class="ic"><div class="iv">200-400</div><div class="il">Palabras recomendadas</div></div>
+    <div class="ic"><div class="iv">40 min</div><div class="il">Tiempo del examen</div></div>
+  </div>
+  <button class="btn-go" onclick="goTo('topics')">Ver temas de practica <i class="fa-solid fa-arrow-right"></i></button>
+  <div class="hint">
+    <p><strong>Como funciona:</strong> Eliges un tema, redactas tu ensayo argumentativo (200-400 palabras), y el sistema te evalua segun la rubrica oficial: <strong>Planteamiento</strong>, <strong>Organizacion</strong> y <strong>Forma de expresion</strong>. Recibes retroalimentacion detallada con errores corregidos y consejos.</p>
+  </div>
+  <div style="margin-top:1.5rem;max-width:600px;width:100%;animation:fU .8s ease-out .7s both">
+    <p style="font-size:.78rem;color:var(--accent);font-weight:600;margin-bottom:.5rem;">RUBRICA OFICIAL DE EVALUACION</p>
+    <div class="rubric-row hdr"><div>Criterio</div><div>Bajo (1-2)</div><div>Medio (3)</div><div>Alto (4-5)</div></div>
+    <div class="rubric-row"><div class="lv lo">Planteam.</div><div>Evade o responde ambiguamente</div><div>Responde con tesis poco firme</div><div>Responde directo y sostiene postura clara</div></div>
+    <div class="rubric-row"><div class="lv md">Organizac.</div><div>Ideas sueltas o repetidas</div><div>Hay orden, transiciones debiles</div><div>Secuencia logica y parrafos funcionales</div></div>
+    <div class="rubric-row"><div class="lv hi">Expresion</div><div>Errores que dificultan entender</div><div>Se entiende parcialmente</div><div>Redaccion clara, precisa y legible</div></div>
+  </div>
+</section>
+
+<section id="topics" class="screen" role="main">
+  <div style="margin-bottom:1.2rem">
+    <p style="font-size:.72rem;color:var(--accent);font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Paso 1</p>
+    <h2 style="font-size:1.4rem;font-weight:900;margin:.3rem 0 .3rem;">Elige un tema</h2>
+    <p style="font-size:.85rem;color:var(--muted);line-height:1.5;">Selecciona una pregunta argumentativa para redactar tu ensayo. Cada tema esta basado en el formato real del examen.</p>
+  </div>
+  <div id="topicList"></div>
+</section>
+
+<section id="writing" class="screen" role="main">
+  <div class="wh">
+    <div class="pt" id="wPart">Redaccion</div>
+    <div class="tm"><i class="fa-solid fa-clock"></i> <span id="wTimer">40:00</span></div>
+    <div class="wc"><i class="fa-solid fa-font"></i> <span id="wCount" class="wn">0</span> palabras</div>
+  </div>
+  <div class="topic-banner" id="wBanner"></div>
+  <div class="checklist-box">
+    <div class="clh"><i class="fa-solid fa-clipboard-check"></i> Lista de chequeo antes de enviar</div>
+    <label class="cl-item"><input type="checkbox" id="cl1"> Ya tome una postura clara (si, no o matizada).</label>
+    <label class="cl-item"><input type="checkbox" id="cl2"> Mi primer parrafo responde directamente la pregunta.</label>
+    <label class="cl-item"><input type="checkbox" id="cl3"> Cada parrafo aporta una razon distinta.</label>
+    <label class="cl-item"><input type="checkbox" id="cl4"> Use conectores con intencion (porque, ademas, sin embargo, por lo tanto).</label>
+    <label class="cl-item"><input type="checkbox" id="cl5"> Mi cierre retoma la tesis; no termina de golpe.</label>
+    <label class="cl-item"><input type="checkbox" id="cl6"> No deje errores que cambien el sentido de lo que quiero decir.</label>
+  </div>
+  <textarea id="essayArea" placeholder="Escribe tu ensayo argumentativo aqui...&#10;&#10;Recuerda: 4 parrafos, 6 a 9 oraciones bien hechas, mejor que 20 lineas desordenadas.&#10;&#10;Estructura sugerida:&#10;1. Tesis (responde si, no o matizada)&#10;2. Razon principal (por que tu postura es valida)&#10;3. Desarrollo (2 argumentos: uno social/etico y otro pratico/tecnico)&#10;4. Cierre (retoma la tesis y da una consecuencia final)" oninput="updateWC()"></textarea>
+  <div class="btn-row">
+    <button class="btn-back" onclick="goTo('topics')"><i class="fa-solid fa-arrow-left"></i> Temas</button>
+    <button class="btn-submit" id="btnSubmit" onclick="evaluarEnsayo()" disabled><i class="fa-solid fa-paper-plane"></i> Enviar para evaluacion</button>
+  </div>
+</section>
+
+<section id="results" class="screen" role="main"></section>
+
+<script>
+/* ========== TEMAS ========== */
+var topics=[
+  {id:1,src:"UFPS — Byron Medina",
+   context:"Con el proposito de disminuir las emisiones de gases contaminantes, varios gobiernos han aprobado leyes que promueven el uso de vehiculos electricos mediante la eliminacion de impuestos de circulacion. Esta medida ha generado debate sobre su viabilidad y equidad.",
+   question:"Esta de acuerdo con que en Colombia se eliminen los impuestos de circulacion para los vehiculos electricos?",
+   hint:"Considera: impacto ambiental real, costo fiscal, equidad social, infraestructura disponible."},
+  {id:2,src:"Icfes — Saber Pro",
+   context:"Actualmente es permitido que los menores de 14 anos puedan realizarse procedimientos esteticos. Esta decision ha generado controversia. Por un lado, quienes estan a favor aducen que no permitirlo iria en contra de derechos fundamentales como el libre desarrollo de la personalidad. Por otro lado, sus detractores opinan que a los 14 anos los menores aun no han completado su desarrollo emocional.",
+   question:"Esta de acuerdo con que en Colombia se permita a los menores de 14 anos realizarse procedimientos esteticos?",
+   hint:"Considera: libre desarrollo de la personalidad, madurez emocional, consentimiento informado, presion social."},
+  {id:3,src:"UFPS — Byron Medina",
+   context:"La inteligencia artificial generativa (como ChatGPT) esta siendo cada vez mas utilizada por estudiantes universitarios. Algunos proponen permitir su uso siempre que el estudiante declare como la empleo, mientras otros argumentan que esto afectaria el desarrollo del pensamiento critico y la autonomia del estudiante.",
+   question:"Deberian las universidades permitir el uso de IA generativa en cursos de ingenieria, siempre que el estudiante declare como la uso?",
+   hint:"Ruta sugerida: prohibir totalmente desconoce herramientas del ejercicio profesional; permitir sin control afecta la autonomia. La clave es uso regulado, trazable y evaluable."},
+  {id:4,src:"Tema de actualidad",
+   context:"Tras la pandemia, muchas empresas han adoptado el trabajo remoto permanente. Si bien esto ha mejorado la calidad de vida de algunos empleados, tambien ha generado preocupacion sobre la perdida de la cultura organizacional, la desconexion entre colegas y el impacto en ciudades que dependen del comercio local.",
+   question:"Esta de acuerdo con que las empresas mantengan el trabajo remoto permanente como modelo principal de trabajo?",
+   hint:"Considera: calidad de vida vs. cultura organizacional, impacto economico local, productividad real, desigualdad digital."},
+  {id:5,src:"Tema de actualidad",
+   context:"En los ultimos anos se ha intensificado el debate sobre el uso de redes sociales por parte de menores de edad. Estudios han encontrado asociacion entre el uso prolongado de estas plataformas y problemas de salud mental como ansiedad, depresion y baja autoestima en adolescentes. Frente a esto, algunos paises han prohibido el acceso de menores a ciertas plataformas.",
+   question:"Esta de acuerdo con que se prohiba el acceso de menores de edad a las redes sociales?",
+   hint:"Considera: proteccion vs. libertad individual, rol de los padres, educacion digital, eficacia real de las prohibiciones."},
+  {id:6,src:"Tema de actualidad",
+   context:"La educacion virtual se expandio drasticamente durante la pandemia. Aunque permitio la continuidad academica, tambien evidencio brechas profundas: estudiantes sin acceso a internet, dificultades de concentracion y falta de interaccion presencial. Algunos proponen que la educacion superior deberia ser predominantemente virtual por su flexibilidad y menor costo.",
+   question:"Esta de acuerdo con que la educacion superior en Colombia deberia ser predominantemente virtual?",
+   hint:"Considera: accesibilidad, calidad de aprendizaje, desigualdad digital, interaccion social, costos."},
+  {id:7,src:"Icfes — Saber Pro",
+   context:"En Colombia, el servicio militar obligatorio ha sido objeto de debate durante decadas. Quienes lo defienden senalan que forma el caracter, fomenta el sentido de pertenencia y contribuye a la seguridad nacional. Sus criticos argumentan que es una carga desproporcionada sobre jovenes de estratos bajos, que no tienen alternativas para cumplirlo, y que en la practica no mejora la preparacion militar real del pais.",
+   question:"Esta de acuerdo con que en Colombia se mantenga el servicio militar obligatorio?",
+   hint:"Considera: equidad social, seguridad nacional real, alternativas civiles, derecho a la objecion de conciencia, costo-beneficio para los jovenes."},
+  {id:8,src:"Icfes — Saber Pro",
+   context:"Las pruebas estandarizadas como las del Icfes son el principal criterio para acceder a la educacion superior en Colombia. Algunos expertos proponen eliminarlas como requisito obligatorio y reemplazarlas por evaluaciones continuas del desempeno academico en la secundaria. Otros sostienen que son la unica forma objetiva e imparcial de comparar estudiantes de contextos muy diferentes.",
+   question:"Esta de acuerdo con que las pruebas estandarizadas (Icfes) se eliminen como requisito obligatorio para ingresar a la educacion superior?",
+   hint:"Considera: objetividad vs. desigualdad de preparacion, rol del colegio en la nota del Icfes, alternativas de evaluacion, equidad entre instituciones publicas y privadas."},
+  {id:9,src:"Tema de actualidad",
+   context:"Ante la crisis carcelaria en Colombia —hacinamiento, violencia intra-muros y rehabilitacion ineficaz— se ha propuesto implementar sistemas de monitoreo electronico (pulseras GPS) para delitos de baja y mediana gravedad. Sus defensores argumentan que reducen el hacinamiento y los costos del sistema penitenciario. Sus detractores senalan que no garantizan la seguridad ciudadana y que podria normalizar la impunidad.",
+   question:"Esta de acuerdo con que se implemente el monitoreo electronico como alternativa a la carcel para delitos de baja y mediana gravedad?",
+   hint:"Considera: crisis del sistema carcelario, costo de prisiones, derechos de las victimas, efectividad real del monitoreo, equidad en su aplicacion."},
+  {id:10,src:"UFPS — Byron Medina",
+   context:"En Colombia existe una brecha digital significativa entre zonas urbanas y rurales. Mientras en las ciudades el acceso a internet de alta velocidad es relativamente comun, en muchas zonas rurales la cobertura es inexistente o de muy baja calidad. Algunos proponen que el acceso a internet de calidad deberia ser declarado un derecho fundamental, lo que obligaria al Estado a garantizar conectividad en todo el territorio nacional.",
+   question:"Esta de acuerdo con que el acceso a internet de calidad deberia ser declarado un derecho fundamental en Colombia?",
+   hint:"Considera: rol del internet en educacion, salud y economia; capacidad financiera del Estado; prioridad frente a otros derechos como agua o vivienda; experiencias de otros paises."},
+  {id:11,src:"Tema de actualidad",
+   context:"El salario minimo en Colombia se fija anualmente mediante acuerdo entre gobierno, empresarios y sindicatos. Algunos economistas argumentan que aumentar el salario minimo por encima de la inflacion genera desempleo y informalidad, especialmente en pequenas empresas. Otros sostienen que el salario minimo actual no cubre las necesidades basicas de una familia y que el problema no es el salario sino la baja productividad y la concentracion de la riqueza.",
+   question:"Esta de acuerdo con que el salario minimo en Colombia deberia aumentarse por encima de la inflacion, independientemente de la productividad del pais?",
+   hint:"Considera: poder adquisitivo real vs. riesgo de desempleo, informalidad laboral, costo para pequenas empresas, redistribucion de la riqueza, experiencias internacionales."},
+  {id:12,src:"Icfes — Saber Pro",
+   context:"Varios paises de America Latina han implementado leyes de etiquetado frontal en alimentos para combatir la obesidad y las enfermedades no transmisibles. En Colombia, el reglamento de etiquetado exige que los productos con exceso de azucar, sodio, grasas saturadas o calorias lleven sellos de advertencia en la parte frontal del empaque. La industria alimentaria ha argumentado que esto afecta sus ventas y genera estigma. Organizaciones de salud defienden la medida como necesaria para la salud publica.",
+   question:"Esta de acuerdo con que en Colombia se mantenga la politica de etiquetado frontal de advertencia en alimentos procesados?",
+   hint:"Considera: derecho a la informacion del consumidor, libertades de la industria, eficacia real en la reduccion de obesidad, costo de reformulacion para pequenos productores, educacion alimentaria vs. regulacion."},
+  {id:13,src:"Tema de actualidad",
+   context:"En 2023, el Congreso de Colombia aprobo la ley que regulariza el uso del cannabis para fines medicinales yscientificos. Sin embargo, el debate sobre la despenalizacion del uso recreativo sigue abierto. Quienes la apoyan argumentan que reduciria la carga sobre el sistema judicial, eliminaria el mercado negro y generaria ingresos por impuestos. Quienes se oponen senalan riesgos para la salud publica, especialmente en menores, y temen un aumento en el consumo.",
+   question:"Esta de acuerdo con la despenalizacion del uso recreativo de cannabis en Colombia?",
+   hint:"Considera: experiencia de Uruguay y otros paises, impacto en salud publica, mercado negro vs. mercado regulado, generacion de ingresos fiscales, proteccion de menores, estigmatizacion social."},
+  {id:14,src:"Tema de actualidad",
+   context:"Colombia ha sido uno de los paises mas afectados por el fenomeno del fracking en la discusion publica. Sus defensores sostienen que permitira explotar yacimientos de gas y petroleo no convencionales, reduciendo la dependencia de importaciones y generando empleos. Sus opositores argumentan que contamina acuiferos, genera sismos inducidos y perpetua la economia fósil en un momento en que el mundo busca transitar hacia energias limpias.",
+   question:"Esta de acuerdo con que se permita la practica del fracking en Colombia?",
+   hint:"Considera: seguridad energetica vs. riesgo ambiental, compromisos climaticos de Colombia, economia regional en zonas petroleras, alternativas energeticas reales disponibles, experiencias de otros paises."},
+  {id:15,src:"Icfes — Saber Pro",
+   context:"La reforma pensional en Colombia ha sido un tema recurrente. El sistema actual combina un regimen solidario de prima media con ahorro individual. Algunos proponen eliminar el regimen de ahorro individual y unificar todo en un sistema publico solidario. Otros argumentan que la competencia entre regimenes es sana y que eliminar la opcion privada reducira las pensiones futuras por la carga fiscal.",
+   question:"Esta de acuerdo con que Colombia elimine el regimen de ahorro individual y unifique el sistema pensional en un solo fondo publico?",
+   hint:"Considera: sostenibilidad fiscal del sistema actual, diferencia entre pensiones de ambos regimenes, principio de solidaridad vs. libertad individual, carga sobre las nuevas generaciones de trabajadores."},
+  {id:16,src:"Tema de actualidad",
+   context:"Plataformas de transporte como Uber, DiDi y Beat operan en Colombia bajo un marco juridico que ha generado tension con el transporte tradicional (taxismetros). Los taxistas argumentan que estas plataformas compiten de forma desleal porque no cumplen los mismos requisitos legales ni costos de operacion. Los usuarios de plataformas valoran la conveniencia, el precio y la seguridad percibida. El gobierno ha buscado regular sin lograr un consenso definitivo.",
+   question:"Esta de acuerdo con que las plataformas digitales de transporte operen bajo las mismas reglas que los taxismetros tradicionales en Colombia?",
+   hint:"Considera: competencia leal vs. innovacion tecnologica, derechos de los trabajadores de plataformas, seguridad del usuario, costo del servicio, capacidad regulatoria del Estado."},
+  {id:17,src:"Tema de actualidad",
+   context:"La salud mental en los jovenes universitarios se ha convertido en una preocupacion creciente. Estudios recientes indican que un porcentaje significativo de estudiantes universitarios en Colombia presenta sintomas de ansiedad, depresion o estres cronico. Algunas universidades han implementado programas de apoyo psicologico gratuito, pero su cobertura es limitada. Se debate si la atencion en salud mental deberia ser obligatoria y gratuita en todas las instituciones de educacion superior.",
+   question:"Esta de acuerdo con que todas las universidades en Colombia deban ofrecer servicios de atencion en salud mental de forma obligatoria y gratuita?",
+   hint:"Considera: responsabilidad de la universidad vs. del sistema de salud, costo para las instituciones, estigma asociado a buscar ayuda, prevencion vs. atencion, desigualdad entre universidades publicas y privadas."},
+  {id:18,src:"Icfes — Saber Pro",
+   context:"En Colombia, la educacion sexual en los colegios ha sido objeto de multiples disputas. El gobierno nacional ha emitido directrices para incluir educacion sexual integral en el curriculo escolar. Algunos sectores, incluyendo organizaciones religiosas y padres de familia, se oponen argumentando que es competencia exclusiva de los padres decidir que enseñanzas reciben sus hijos sobre sexualidad. Otros sectores sostienen que la educacion sexual previene embarazos a temprana edad, enfermedades de transmision sexual y violencia de genero.",
+   question:"Esta de acuerdo con que la educacion sexual integral sea obligatoria en todos los colegios de Colombia, independientemente de su caracter (publico o privado)?",
+   hint:"Considera: derechos de los padres vs. derechos de los menores a la informacion, datos sobre embarazo adolescente, libertad de enseñanza de las instituciones privadas, rol del Estado en la proteccion de la infancia."},
+  {id:19,src:"Tema de actualidad",
+   context:"Colombia es el segundo pais mas contaminado por plastico en America Latina. Cada ano se consumen millones de toneladas de plastico de un solo uso (bolsas, pitillos, envases). Algunas ciudades como Bogota han implementado restricciones parciales con resultados mixtos. Se propone una prohibicion nacional total de plasticos de un solo uso, reemplazandolos por alternativas biodegradables. La industria del plastico advierte sobre perdida de empleos y aumento de costos para comercios.",
+   question:"Esta de acuerdo con que Colombia prohíba a nivel nacional todos los plasticos de un solo uso?",
+   hint:"Considera: impacto ambiental documentado, alternativas biodegradables disponibles y su costo real, empleos en la industria del plastico, eficacia de las prohibiciones parciales ya implementadas, responsabilidad compartida entre productores y consumidores."},
+  {id:20,src:"Tema de actualidad",
+   context:"El numero de venezolanos migrantes en Colombia supera los dos millones y medio, constituyendo la mayor crisis migratoria en la historia reciente del pais. Algunos proponen una regularizacion masiva que otorgue permisos de trabajo y acceso a servicios basicos de salud y educacion, argumentando que esto formalizaria la economia, mejoraria la seguridad y permitiria integrar a la poblacion migrante. Otros sostienen que una regularizacion masiva incentivaria mas migracion, sobrecargaria los servicios publicos y generaria resentimiento social.",
+   question:"Esta de acuerdo con que Colombia implemente un programa de regularizacion masiva para la poblacion migrante venezolana?",
+   hint:"Considera: capacidad real del Estado colombiano para absorber la poblacion, impacto en salud publica y educacion, beneficios economicos de la formalizacion laboral, senalamiento social, compromisos internacionales de derechos humanos, experiencias de regularizacion en otros paises."}
+];
+
+var curTopic=null;
+var timerSec=2400;
+var timerInterval=null;
+var timerRunning=false;
+
+/* ========== NAVEGACION ========== */
+function goTo(id){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+  if(id==='topics')renderTopics();
+}
+
+function renderTopics(){
+  var h='';
+  for(var i=0;i<topics.length;i++){
+    var t=topics[i];
+    var shortCtx=t.context.length>130?t.context.substring(0,130)+'...':t.context;
+    h+='<div class="topic-card" onclick="selectTopic('+i+')">';
+    h+='<div class="tn"><span class="topic-num">'+t.id+'</span><i class="fa-solid fa-quote-left" style="margin-right:4px;"></i> '+t.src+'</div>';
+    h+='<div class="tq">'+t.question+'</div>';
+    h+='<div class="td">'+shortCtx+'</div>';
+    h+='<div class="ta"><i class="fa-solid fa-pen"></i> Redactar ensayo <i class="fa-solid fa-chevron-right" style="font-size:.65rem;"></i></div>';
+    h+='</div>';
+  }
+  document.getElementById('topicList').innerHTML=h;
+}
+
+function selectTopic(idx){
+  curTopic=topics[idx];
+  timerSec=2400;timerRunning=false;
+  if(timerInterval)clearInterval(timerInterval);
+  document.getElementById('wTimer').textContent='40:00';
+  document.getElementById('wTimer').style.color='';
+  document.getElementById('wPart').textContent='Tema '+curTopic.id+' — '+curTopic.src;
+  document.getElementById('wBanner').innerHTML='<div class="tbq"><i class="fa-solid fa-circle-question" style="margin-right:6px;color:var(--accent);"></i>'+curTopic.question+'</div><div class="tbi"><strong>Contexto:</strong> '+curTopic.context+'<br><br><strong>Pista:</strong> <em>'+curTopic.hint+'</em></div>';
+  document.getElementById('essayArea').value='';
+  document.getElementById('wCount').textContent='0';
+  document.getElementById('wCount').className='wn';
+  document.getElementById('btnSubmit').disabled=true;
+  for(var c=1;c<=6;c++)document.getElementById('cl'+c).checked=false;
+  goTo('writing');
+  document.getElementById('essayArea').focus();
+}
+
+function updateWC(){
+  var txt=document.getElementById('essayArea').value.trim();
+  var words=txt.length===0?0:txt.split(/\s+/).length;
+  var el=document.getElementById('wCount');
+  el.textContent=words;
+  el.className=words>=200&&words<=400?'wn':'wl';
+  document.getElementById('btnSubmit').disabled=words<30;
+  if(!timerRunning&&words>0){timerRunning=true;startTimer();}
+}
+
+function startTimer(){
+  timerInterval=setInterval(function(){
+    if(timerSec>0){
+      timerSec--;
+      var m=String(Math.floor(timerSec/60)).padStart(2,'0');
+      var s=String(timerSec%60).padStart(2,'0');
+      var el=document.getElementById('wTimer');
+      el.textContent=m+':'+s;
+      el.style.color=timerSec<=300?'var(--incorrect)':'var(--muted)';
+    }else{clearInterval(timerInterval);}
+  },1000);
+}
+
+/* ========== EVALUACION ========== */
+function evaluarEnsayo(){
+  try {
+    if(timerInterval)clearInterval(timerInterval);
+    var txt=document.getElementById('essayArea').value.trim();
+    var words=txt.split(/\s+/);
+    var wc=words.length;
+
+    var paragraphs=txt.split(/\n\s*\n/).filter(function(p){return p.trim().length>0;});
+    var numP=paragraphs.length;
+    var sentences=txt.split(/[.!?]+/).filter(function(s){return s.trim().length>5;});
+    var numS=sentences.length;
+
+    var postura=findPostura(txt);
+    var args=findArguments(txt);
+    var pScore=calcPlant(postura,args,numP,wc);
+
+    var conns=findConectores(txt);
+    var intro=findIntro(txt);
+    var cierre=findCierre(txt);
+    var oScore=calcOrg(numP,conns,intro,cierre);
+
+    var errs=findErrors(txt);
+    var variety=calcVariety(words);
+    var fScore=calcExpr(errs,variety,wc);
+
+    var total=Math.round((pScore+oScore+fScore)/3*10)/10;
+    var pct=Math.round(total/5*100);
+
+    var clChecked=0;
+    for(var c=1;c<=6;c++){if(document.getElementById('cl'+c).checked)clChecked++;}
+
+    renderResults(pScore,oScore,fScore,total,pct,postura,args,conns,intro,cierre,errs,variety,wc,numP,numS,clChecked,txt);
+    goTo('results');
+    
+  } catch(error) {
+    console.error("Error capturado: ", error);
+    alert("Hubo un error tecnico al analizar tu ensayo. Revisa la consola para mas detalles.");
+  }
+}
+
+/* --- DETECTORES --- */
+function findPostura(t){
+  var tl=t.toLowerCase();
+  var yes=['estoy de acuerdo','considero que','creo que','defiendo que','sostengo que','opino que','a favor','a mi parecer','mi posicion es','es correcto','es justo','es necesario','es conveniente','deberia','debiera','es apropiado','es importante','es fundamental','concuerdo','comparto'];
+  var no=['no estoy de acuerdo','rechazo','estoy en contra','no considero','no creo','no opino','no es correcto','no es justo','no deberia','es incorrecto','es inapropiado','no comparto','me opongo','desacuerdo'];
+  var m=['si bien','por un lado pero','depende','no es absoluto','en cierta medida','con matices','parcialmente','no completamente','con reservas','es complejo'];
+  var found={yes:0,no:0,matiz:0};
+  for(var i=0;i<yes.length;i++){if(tl.indexOf(yes[i])>=0)found.yes++;}
+  for(var j=0;j<no.length;j++){if(tl.indexOf(no[j])>=0)found.no++;}
+  for(var k=0;k<m.length;k++){if(tl.indexOf(m[k])>=0)found.matiz++;}
+  if(found.yes>0&&found.no===0)return 'favor';
+  if(found.no>0&&found.yes===0)return 'contra';
+  if(found.yes>0&&found.no>0)return 'matizada';
+  if(found.matiz>0)return 'matizada';
+  return 'ninguna';
+}
+
+function findArguments(t){
+  var tl=t.toLowerCase();
+  var marks=['porque','debido a','dado que','puesto que','ya que','como consecuencia','gracias a','a causa de','en razon de','pues','por lo tanto','por ende','asi que','en primer lugar','en segundo lugar','por otra parte','ademas','tambien','de igual forma','de igual manera','no solo','otro argumento','otra razon','por ejemplo','como evidencia','esto demuestra','esto muestra','lo anterior permite','se observa que','es decir','en otras palabras'];
+  var c=0;
+  for(var i=0;i<marks.length;i++){if(tl.indexOf(marks[i])>=0)c++;}
+  return c;
+}
+
+function findConectores(t){
+  var tl=t.toLowerCase();
+  var cats={
+    adiccion:['ademas','tambien','de igual forma','de igual manera','en igual sentido','asi mismo','asimismo','encima','agregado a esto'],
+    contraste:['sin embargo','no obstante','aunque','a pesar de','por el contrario','en cambio','mas bien','pero','no obstante','empero'],
+    consecuencia:['por lo tanto','por ende','asi que','en consecuencia','de ahi que','por consiguiente','como resultado','en tal sentido'],
+    orden:['en primer lugar','en segundo lugar','en tercer lugar','primero','segundo','tercero','por un lado','por otro lado','finalmente','para comenzar','en conclusion','en resumen','para terminar','en sintesis','para finalizar'],
+    causa:['porque','debido a','dado que','puesto que','ya que','pues','gracias a','en razon de','a causa de'],
+    reformulacion:['es decir','en otras palabras','o sea','esto es','mejor dicho','en otros terminos']
+  };
+  var found={adiccion:0,contraste:0,consecuencia:0,orden:0,causa:0,reformulacion:0,total:0};
+  for(var cat in cats){
+    for(var i=0;i<cats[cat].length;i++){
+      if(tl.indexOf(cats[cat][i])>=0){found[cat]++;found.total++;}
+    }
+  }
+  return found;
+}
+
+function findIntro(t){
+  var tl=t.toLowerCase();
+  var marks=['en la actualidad','hoy en dia','en el mundo actual','actualmente','en los ultimos anos','en las ultimas decadas','en la sociedad contemporanea','en el contexto actual','recientemente','en tiempos recientes','en la epoca actual'];
+  var c=0;
+  for(var i=0;i<marks.length;i++){if(tl.indexOf(marks[i])>=0)c++;}
+  return c;
+}
+
+function findCierre(t){
+  var tl=t.toLowerCase();
+  var marks=['en conclusion','en resumen','para concluir','para finalizar','para terminar','en sintesis','en definitiva','finalmente','en ultimo termino','como conclusion','a manera de cierre','en terminos generales'];
+  var c=0;
+  for(var i=0;i<marks.length;i++){if(tl.indexOf(marks[i])>=0)c++;}
+  return c;
+}
+
+function findErrors(t){
+  var errs=[];
+  var words=t.split(/\s+/);
+  var wc=words.length;
+  
+  var tildeErrors=[
+    {bad:'ademas',good:'ademas',msg:'Lleva tilde: ademas → además'},
+    {bad:'sin embargo',good:'sin embargo',msg:'"sin embargo" no lleva tilde — es correcto sin ella'},
+    {bad:'tambien',good:'tambien',msg:'Lleva tilde: tambien → también'},
+    {bad:'solo',good:'solo',msg:'Segun contexto puede llevar tilde: solo → sólo (si es adverbio)'},
+    {bad:'porque',good:'porque',msg:'"porque" (causal) no lleva tilde. "por qué" (interrogativo) sí lleva tilde.'},
+    {bad:'ademas de',good:'ademas de',msg:'Lleva tilde: ademas → además'},
+    {bad:'difícil',good:'dificil',msg:'Lleva tilde: dificil → difícil'},
+    {bad:'posible',good:'posible',msg:'No lleva tilde: posible es grave'},
+    {bad:'necesario',good:'necesario',msg:'No lleva tilde: necesario es grave'},
+    {bad:'genero',good:'genero',msg:'Lleva tilde: genero → género'},
+    {bad:'tecnologia',good:'tecnologia',msg:'Lleva tilde: tecnologia → tecnología'},
+    {bad:'importante',good:'importante',msg:'No lleva tilde: importante es grave'},
+    {bad:'politica',good:'politica',msg:'Lleva tilde: politica → política (sustantivo)'},
+    {bad:'economico',good:'economico',msg:'Lleva tilde: economico → económico'},
+    {bad:'social',good:'social',msg:'No lleva tilde: social es grave'},
+    {bad:'ambiente',good:'ambiente',msg:'No lleva tilde: ambiente es grave'},
+    {bad:'adecuado',good:'adecuado',msg:'No lleva tilde: adecuado es grave'}
+  ];
+  var tl=t.toLowerCase();
+  for(var i=0;i<tildeErrors.length;i++){
+    if(tl.indexOf(tildeErrors[i].bad)>=0){
+      errs.push({type:'tilde',msg:tildeErrors[i].msg});
+    }
+  }
+  var spellErrors=[
+    {bad:'a ver',good:'a ver',msg:'"a ver" = para mirar (correcto). No confundir con "haber".'},
+    {bad:'a haber',good:'a ver',msg:'Posible error: quizas querias decir "a ver" (para mirar), no "a haber".'},
+    {bad:'eh visto',good:'he visto',msg:'Error: "eh" no existe como verbo. Debe ser "he" (del verbo haber).'},
+    {bad:'ahì',good:'ahí',msg:'La tilde solo va en "ahí" (adverbio de lugar). "ahi" (sustantivo=no tilde). "ahi" no existe.'},
+    {bad:'mas bien',good:'mas bien',msg:'"mas" como adverbio lleva tilde: más bien.'}
+  ];
+  for(var j=0;j<spellErrors.length;j++){
+    if(tl.indexOf(spellErrors[j].bad)>=0){
+      errs.push({type:'spell',msg:spellErrors[j].msg});
+    }
+  }
+  if(t.indexOf(',')===-1&&wc>30)errs.push({type:'punct',msg:'No se encontraron comas. Revisa si necesitas separar elementos en enumeraciones o frases explicativas.'});
+  var longSentences=t.split(/[.!?]+/).filter(function(s){return s.trim().length>0;});
+  for(var k=0;k<longSentences.length;k++){
+    var sw=longSentences[k].trim().split(/\s+/).length;
+    if(sw>35)errs.push({type:'long',msg:'Oracion de '+sw+' palabras detectada. Divide oraciones largas para mejorar claridad.'});
+  }
+  var wordFreq={};
+  var stopWords=['que','de','la','el','en','y','a','los','las','un','una','se','no','es','por','con','para','al','del','lo','su','como','mas','pero','sus','le','ya','o','fue','este','ha','ser','esta','son','entre','cuando','muy','sin','sobre','ser','tambien','me','hasta','hay','donde','quien','desde','todo','nos','durante','todos','uno','les','ni','contra','otros','ese','eso','asi','esto','mismo','aqui','ello','cada','nosotros','algunos','otras','otra','estos','estas','algo','pueden','debe','deben','desde','tiene','puede','han','ese','esa','ese'];
+  for(var w=0;w<words.length;w++){
+    var lw=words[w].toLowerCase().replace(/[^a-záéíóúñü]/g,'');
+    if(lw.length<3||stopWords.indexOf(lw)>=0)continue;
+    wordFreq[lw]=(wordFreq[lw]||0)+1;
+  }
+  for(var wf in wordFreq){
+    if(wordFreq[wf]>4 && typeof wordFreq[wf]==='number'){
+      errs.push({type:'repeat',msg:'La palabra "'+wf+'" se repite '+wordFreq[wf]+' veces. Usa sinonimos para evitar repeticion.'});
+    }
+  }
+  return errs;
+}
+
+function calcVariety(words){
+  if(words.length===0)return 0;
+  var unique={};
+  for(var i=0;i<words.length;i++){
+    var w=words[i].toLowerCase().replace(/[^a-záéíóúñü]/g,'');
+    if(w.length>2)unique[w]=true;
+  }
+  return Object.keys(unique).length/words.length;
+}
+
+/* --- CALCULO DE PUNTAJES --- */
+function calcPlant(postura,args,numP,wc){
+  var s=1;
+  if(postura==='favor'||postura==='contra')s+=1.5;
+  else if(postura==='matizada')s+=1.2;
+  if(args>=6)s+=1.5;
+  else if(args>=4)s+=1.2;
+  else if(args>=2)s+=0.8;
+  else s+=0.3;
+  if(numP>=4)s+=0.5;
+  else if(numP>=3)s+=0.3;
+  if(wc>=200)s+=0.5;
+  else if(wc>=120)s+=0.3;
+  else if(wc>=60)s+=0.1;
+  return Math.min(5,Math.max(1,Math.round(s*10)/10));
+}
+
+function calcOrg(numP,conns,intro,cierre){
+  var s=1;
+  if(numP===4)s+=1;
+  else if(numP>=3)s+=0.7;
+  else if(numP>=2)s+=0.3;
+  if(conns.total>=8)s+=1.2;
+  else if(conns.total>=5)s+=0.9;
+  else if(conns.total>=3)s+=0.6;
+  else s+=0.2;
+  var catCount=0;
+  for(var c in conns){if(c!=='total'&&conns[c]>0)catCount++;}
+  if(catCount>=4)s+=0.6;
+  else if(catCount>=3)s+=0.4;
+  else if(catCount>=2)s+=0.2;
+  if(intro>0)s+=0.4;
+  if(cierre>0)s+=0.4;
+  return Math.min(5,Math.max(1,Math.round(s*10)/10));
+}
+
+function calcExpr(errs,variety,wc){
+  var s=4.5;
+  var tildeErrs=errs.filter(function(e){return e.type==='tilde';}).length;
+  var spellErrs=errs.filter(function(e){return e.type==='spell';}).length;
+  var punctErrs=errs.filter(function(e){return e.type==='punct';}).length;
+  var longErrs=errs.filter(function(e){return e.type==='long';}).length;
+  var repeatErrs=errs.filter(function(e){return e.type==='repeat';}).length;
+  s-=tildeErrs*0.4;
+  s-=spellErrs*0.5;
+  s-=punctErrs*0.3;
+  s-=longErrs*0.3;
+  s-=repeatErrs*0.25;
+  if(variety>=0.6)s+=0.3;
+  else if(variety>=0.5)s+=0.1;
+  else s-=0.2;
+  if(wc<100)s-=0.5;
+  else if(wc<150)s-=0.2;
+  return Math.min(5,Math.max(1,Math.round(s*10)/10));
+}
+
+/* ========== RENDERIZAR RESULTADOS ========== */
+function renderResults(pS,oS,fS,total,pct,postura,args,conns,intro,cierre,errs,variety,wc,numP,numS,clChecked,txt){
+  var passed=pct>=60;
+  var mid=pct>=40&&pct<60;
+  var vClass=passed?'pass':(mid?'mid':'fail');
+  var vText=passed?'DESEMPENO ADECUADO':(mid?'DESEMPENO MEDIO — REQUIERE MEJORAR':'DESEMPENO BAJO — REQUIERE MUCHA PRACTICA');
+  var vIcon=passed?'fa-circle-check':(mid?'fa-triangle-exclamation':'fa-circle-xmark');
+
+  function sLabel(s){return s>=4?'Alto':(s>=3?'Medio':'Bajo');}
+  function sColor(s){return s>=4?'var(--high)':(s>=3?'var(--mid)':'var(--low)');}
+  function sClass(s){return s>=4?'hi':(s>=3?'md':'lo');}
+
+  var posturaText='';
+  if(postura==='favor')posturaText='Se detecto una postura a <strong style="color:var(--correct)">favor</strong> del tema propuesto.';
+  else if(postura==='contra')posturaText='Se detecto una postura <strong style="color:var(--incorrect)">en contra</strong> del tema propuesto.';
+  else if(postura==='matizada')posturaText='Se detecto una postura <strong style="color:var(--mid)">matizada</strong> (reconoce ambos lados).';
+  else posturaText='<strong style="color:var(--incorrect)">No se detecto una postura clara.</strong> El texto no contiene explicitamente si estas a favor o en contra.';
+
+  var connDetail='';
+  if(conns.total===0)connDetail='<span style="color:var(--incorrect);">No se detectaron conectores textuales.</span> Esto afecta la cohesión del texto.';
+  else{
+    var parts=[];
+    if(conns.adiccion>0)parts.push('adicion: '+conns.adiccion);
+    if(conns.contraste>0)parts.push('contraste: '+conns.contraste);
+    if(conns.consecuencia>0)parts.push('consecuencia: '+conns.consecuencia);
+    if(conns.orden>0)parts.push('orden: '+conns.orden);
+    if(conns.causa>0)parts.push('causa: '+conns.causa);
+    if(conns.reformulacion>0)parts.push('reformulacion: '+conns.reformulacion);
+    connDetail=parts.join(' | ');
+  }
+
+  var errHTML='';
+  if(errs.length===0)errHTML='<p style="font-size:.82rem;color:var(--correct);"><i class="fa-solid fa-check" style="margin-right:4px;"></i>No se detectaron errores evidentes. Buen trabajo.</p>';
+  else{
+    for(var i=0;i<Math.min(errs.length,8);i++){
+      var eIcon=errs[i].type==='tilde'?'fa-spell-check':(errs[i].type==='spell'?'fa-font':'fa-ellipsis');
+      errHTML+='<div class="err-item"><i class="fa-solid '+eIcon+'" style="margin-right:5px;color:var(--incorrect);font-size:.7rem;"></i>'+errs[i].msg+'</div>';
+    }
+    if(errs.length>8)errHTML+='<p style="font-size:.78rem;color:var(--muted);margin-top:.3rem;">...y '+(errs.length-8)+' observaciones mas.</p>';
+  }
+
+  var strengths=[];
+  if(postura==='favor'||postura==='contra')strengths.push('Definiste una postura clara y explicita, lo cual es lo primero que evalua el evaluador.');
+  if(postura==='matizada')strengths.push('Manejaste una postura matizada, lo que demuestra pensamiento critico (asegurate de que no se lea como evasiva).');
+  if(numP>=4)strengths.push('Estructuraste tu texto en '+numP+' parrafos, lo cual facilita la lectura y demuestra organizacion.');
+  if(numP>=3)strengths.push('Dividiste tu texto en parrafos, lo cual ayuda a la coherencia.');
+  if(conns.contraste>0)strengths.push('Incluiste conectores de contraste, lo cual enriquece tu argumentacion al reconocer perspectivas opuestas.');
+  if(conns.consecuencia>0)strengths.push('Usaste conectores de consecuencia para derivar conclusiones de tus argumentos.');
+  if(conns.total>=5)strengths.push('Empleaste '+conns.total+' conectores textuales, lo cual mejora la cohesion del texto.');
+  if(intro>0)strengths.push('Tu introduccion contextualiza el tema con formulas adecuadas.');
+  if(cierre>0)strengths.push('Incluiste un cierre explicito, lo cual evita que el texto termine de golpe.');
+  if(variety>=0.55)strengths.push('Mostraste buena variedad de vocabulario (ratio de unicas: '+(variety*100).toFixed(0)+'%).');
+  if(wc>=200)strengths.push('Alcanzaste la longitud recomendada ('+wc+' palabras), lo cual permite desarrollar argumentos con suficiente profundidad.');
+  if(errs.length===0)strengths.push('No se detectaron errores ortograficos o gramaticales evidentes.');
+  if(strengths.length===0)strengths.push('Enviaste tu texto para evaluacion, lo cual ya es un paso importante para mejorar.');
+
+  var tips=[];
+  if(postura==='ninguna')tips.push('<strong>Toma postura explicita:</strong> En tu primer parrafo, usa formulas como "Estoy de acuerdo con..." o "Considero que no deberia..." El evaluador necesita saber tu posicion desde la primera linea. Si fallas aqui, pierde fuerza todo el texto.');
+  if(numP<4)tips.push('<strong>Apunta a 4 parrafos funcionales:</strong> (1) Tesis, (2) Razon principal, (3) Desarrollo con 2 argumentos, (4) Cierre. 4 parrafos de 6-9 oraciones bien hechas valen mas que 20 lineas desordenadas.');
+  if(conns.total<4)tips.push('<strong>Usa conectores con intencion:</strong> No los pongas al azar. "Ademas" suma, "sin embargo" contrasta, "por lo tanto" concluye, "en primer lugar" ordena. Cada conector debe tener una funcion clara en tu ruta argumentativa.');
+  if(conns.contraste===0)tips.push('<strong>Incluye al menos un contraste:</strong> Reconocer la posicion opuesta y refutarla demuestra pensamiento critico. Usa "aunque", "sin embargo" o "por otro lado" para introducir la perspectiva contraria.');
+  if(cierre===0)tips.push('<strong>No termines de golpe:</strong> Usa "en conclusion", "en definitiva" o "por lo tanto" para cerrar. Tu ultimo parrafo debe retomar la tesis y dejar una consecuencia o criterio final.');
+  if(wc<200)tips.push('<strong>Extiende tu texto:</strong> Con menos de 200 palabras es dificil desarrollar argumentos solidos. Apunta a 200-400 palabras. Si te falta contenido, anade un segundo argumento con un ejemplo concreto.');
+  if(errs.filter(function(e){return e.type==='tilde';}).length>0)tips.push('<strong>Revisa tildes:</strong> Las tildes cambian el sentido de las palabras ("solo" vs "sólo", "porque" vs "por qué"). Es el error mas comun y mas facil de corregir.');
+  if(errs.filter(function(e){return e.type==='long';}).length>0)tips.push('<strong>Divide oraciones largas:</strong> Si una oracion supera 30 palabras, busca donde puedes cortarla con un punto. Oraciones cortas = ideas claras.');
+  if(errs.filter(function(e){return e.type==='repeat';}).length>0)tips.push('<strong>Evita repeticiones:</strong> Si una palabra se repite mas de 4 veces, busca sinonimos. Esto demuestra riqueza de vocabulario y mantiene el interes del lector.');
+  if(tips.length<2)tips.push('<strong>Practica con diferentes temas:</strong> La comunicacion escrita es una habilidad que se mejora con repeticion. Intenta temas que no te sean comodos para ampliar tu repertorio argumentativo.');
+  if(tips.length<2)tips.push('<strong>Lee tu texto en voz alta antes de enviarlo:</strong> Si te trabas al leerlo o suena extraño, probablemente necesita conectores, puntos o reordenamiento.');
+
+  var strHTML='';
+  for(var s=0;s<strengths.length;s++)strHTML+='<div class="si"><i class="fa-solid fa-check" style="color:var(--correct);margin-right:5px;font-size:.7rem;"></i>'+strengths[s]+'</div>';
+
+  var tipHTML='';
+  for(var t=0;t<tips.length;t++)tipHTML+='<div class="ti"><i class="fa-solid fa-lightbulb" style="color:var(--accent);margin-right:5px;font-size:.7rem;"></i>'+tips[t]+'</div>';
+
+  var statsHTML='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:.5rem;margin-bottom:1.2rem;">';
+  statsHTML+='<div class="ic"><div class="iv" style="font-size:1.3rem;">'+wc+'</div><div class="il">Palabras</div></div>';
+  statsHTML+='<div class="ic"><div class="iv" style="font-size:1.3rem;">'+numP+'</div><div class="il">Parrafos</div></div>';
+  statsHTML+='<div class="ic"><div class="iv" style="font-size:1.3rem;">'+numS+'</div><div class="il">Oraciones</div></div>';
+  statsHTML+='<div class="ic"><div class="iv" style="font-size:1.3rem;">'+conns.total+'</div><div class="il">Conectores</div></div>';
+  statsHTML+='<div class="ic"><div class="iv" style="font-size:1.3rem;">'+(variety*100).toFixed(0)+'%</div><div class="il">Variedad vocab.</div></div>';
+  statsHTML+='<div class="ic"><div class="iv" style="font-size:1.3rem;">'+clChecked+'/6</div><div class="il">Chequeo propio</div></div>';
+  statsHTML+='</div>';
+
+  var el=document.getElementById('results');
+  el.innerHTML=
+    '<div class="res-hero"><h2>Resultado de tu ensayo</h2>'+
+    '<div class="verdict '+vClass+'"><i class="fa-solid '+vIcon+'"></i> '+vText+'</div>'+
+    '<div class="score-big '+vClass+'">'+total.toFixed(1)+'</div>'+
+    '<div class="score-label">de 5.0 puntos — '+pct+'% de desempeno</div></div>'+
+    statsHTML+
+    '<div class="crit-card"><div class="ch"><span class="cn"><i class="fa-solid fa-crosshairs" style="color:var(--accent);margin-right:5px;"></i>Planteamiento y Argumentacion</span><span class="cs '+sClass(pS)+'">'+pS.toFixed(1)+'</span></div><div class="crit-bar"><div class="cf" style="width:'+pS/5*100+'%;background:'+sColor(pS)+';"></div></div><div class="cd"><strong>Nivel: '+sLabel(pS)+'</strong> — '+posturaText+(args<3?' Falta desarrollar argumentos que sustenten tu postura. Usa "porque", "debido a", "dado que" para justificar.':' Detectaste '+args+' marcadores argumentativos.')+'</div></div>'+
+    '<div class="crit-card"><div class="ch"><span class="cn"><i class="fa-solid fa-sitemap" style="color:var(--accent);margin-right:5px;"></i>Organizacion (Coherencia y Cohesion)</span><span class="cs '+sClass(oS)+'">'+oS.toFixed(1)+'</span></div><div class="crit-bar"><div class="cf" style="width:'+oS/5*100+'%;background:'+sColor(oS)+';"></div></div><div class="cd"><strong>Nivel: '+sLabel(oS)+'</strong> — '+(numP<3?'Tu texto tiene menos de 3 parrafos, lo cual dificulta seguir una ruta logica. ':'')+(numP===4?'Estructura de 4 parrafos detectada. ':'Estructura de '+numP+' parrafos. ')+(intro>0?'Introduccion contextualizada. ':'No se detecto contextualizacion en la introduccion. ')+(cierre>0?'Cierre explicito. ':'No se detecto cierre explicito. ')+'Conectores: '+connDetail+'</div></div>'+
+    '<div class="crit-card"><div class="ch"><span class="cn"><i class="fa-solid fa-spell-check" style="color:var(--accent);margin-right:5px;"></i>Forma de Expresion</span><span class="cs '+sClass(fS)+'">'+fS.toFixed(1)+'</span></div><div class="crit-bar"><div class="cf" style="width:'+fS/5*100+'%;background:'+sColor(fS)+';"></div></div><div class="cd"><strong>Nivel: '+sLabel(fS)+'</strong> — '+(errs.length===0?'No se detectaron errores evidentes.':'Se encontraron '+errs.length+' observacion(es) entre errores de tildes, puntuacion, oraciones largas o repeticion de palabras.')+' Variedad lexica: '+(variety*100).toFixed(0)+'%.</div></div>'+
+    '<div class="err-section"><div class="eh"><i class="fa-solid fa-magnifying-glass" style="color:var(--incorrect);"></i> Observaciones y correcciones</div>'+errHTML+'</div>'+
+    '<div class="strength-card"><div class="sh"><i class="fa-solid fa-star"></i> Fortalezas de tu texto</div>'+strHTML+'</div>'+
+    '<div class="tip-card"><div class="th"><i class="fa-solid fa-lightbulb"></i> 2+ Consejos practicos para mejorar</div>'+tipHTML+'</div>'+
+    '<div class="tip-card"><div class="th"><i class="fa-solid fa-book"></i> Recordatorio: que evalua realmente el evaluador</div>'+
+    '<div class="ti" style="border-left-color:var(--muted);">Si falla la pregunta "contesto?", el texto pierde fuerza, aunque tenga vocabulario "bonito". Lo primero no es si el evaluador esta de acuerdo contigo, sino si tu texto cumple la tarea argumentativa.</div>'+
+    '<div class="ti" style="border-left-color:var(--muted);">No ganas por "saber del tema", sino por tomar postura y justificarla bien con estructura clara.</div></div>'+
+    '<div style="text-align:center;"><button class="btn-new" onclick="goTo(\'topics\')"><i class="fa-solid fa-rotate-right"></i> Intentar con otro tema</button></div>';
+}
+</script>
+</body>
+</html>
