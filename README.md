@@ -2,7 +2,9 @@
 
 Aplicación web basada en archivos HTML interactivos diseñada para entrenar competencias en inglés mediante simulación real de exámenes tipo **EKT (UFPS)** y **Saber Pro**.
 
-El sistema se complementa con un módulo adicional de **comunicación escrita en español**, enfocado en el desarrollo de habilidades argumentativas.
+El sistema se complementa con módulos adicionales de:
+- **Comunicación escrita en español**
+- **Razonamiento cuantitativo**
 
 ---
 
@@ -14,7 +16,8 @@ Facilitar la preparación autónoma para pruebas de inglés mediante:
 - Evaluación cuantitativa del desempeño  
 
 Complementariamente:
-- Fortalecer la **producción escrita en español** (tipo Saber Pro)
+- Fortalecer la **producción escrita en español**  
+- Desarrollar habilidades de **razonamiento lógico-matemático**
 
 ---
 
@@ -75,29 +78,56 @@ Complementariamente:
 | Archivo | `ComprecionEscrita.html` |
 | Idioma | Español |
 | Enfoque | Producción escrita argumentativa |
-| Objetivo | Desarrollar habilidades de redacción tipo Saber Pro |
+| Objetivo | Desarrollo de habilidades de redacción tipo Saber Pro |
 
 Este módulo permite:
-- Redactar ensayos argumentativos en español  
-- Mejorar la estructura lógica del texto  
-- Desarrollar coherencia y cohesión  
-- Recibir retroalimentación automática basada en criterios de evaluación  
+- Redactar ensayos argumentativos  
+- Mejorar la coherencia y cohesión  
+- Estructurar ideas de forma lógica  
+- Recibir retroalimentación automática  
+
+---
+
+### 4. 🔢 Módulo de Razonamiento Cuantitativo
+
+| Característica | Detalle |
+|------|--------|
+| Archivo | `RazonamientoCuantitativo.html` |
+| Enfoque | Resolución de problemas matemáticos |
+| Objetivo | Preparación tipo Saber Pro |
+
+Este módulo permite:
+- Resolver problemas lógico-matemáticos  
+- Interpretar datos numéricos  
+- Analizar relaciones y patrones  
+- Aplicar pensamiento crítico cuantitativo  
+
+---
+
+### 5. 🧪 Módulo Experimental (CE_2)
+
+| Característica | Detalle |
+|------|--------|
+| Archivo | `CE_2.html` |
+| Estado | Experimental / en desarrollo |
+
+Este módulo corresponde a:
+- Pruebas o mejoras del sistema de comunicación escrita  
+- Nuevas funcionalidades en evaluación automática  
 
 ---
 
 ## ✨ Características Principales
 
-- ✅ **Feedback inmediato** por pregunta  
-- 📖 **Explicación gramatical detallada**  
-- 🌐 **Traducción al español** (en módulos de inglés)  
-- ⏱️ **Cronómetro integrado**  
-- 📊 **Resultados completos**  
-- 🔴🟢 Indicador de **APROBADO / NO APROBADO**  
-- 📝 Modo revisión  
-- 🎨 **Modo oscuro**  
-- ⌨️ **Atajos de teclado**  
-- 📱 **Responsive**  
-- 🚫 **100% offline**  
+- ✅ Feedback inmediato  
+- 📖 Explicación detallada  
+- 🌐 Traducción al español (módulos de inglés)  
+- ⏱️ Cronómetro  
+- 📊 Resultados completos  
+- 🔴🟢 Estado aprobado / no aprobado  
+- 🎨 Modo oscuro  
+- 📱 Diseño responsive  
+- 🚫 Funcionamiento offline  
 
 ---
 
