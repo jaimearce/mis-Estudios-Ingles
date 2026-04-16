@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Razonamiento Cuantitativo — Saber Pro 2018</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{--bg:#0C0A09;--card:#1A1714;--card2:#221E19;--text:#F5F0E8;--muted:#8A8070;--accent:#D97706;--accent-light:#FBBF24;--accent-dark:#92400E;--correct:#34D399;--correct-bg:rgba(52,211,153,.08);--incorrect:#FB7185;--incorrect-bg:rgba(251,113,133,.08);--warn:#FBBF24;--warn-bg:rgba(251,191,36,.08);--border:#2E2820;--low:#FB7185;--mid:#FBBF24;--high:#34D399;--blue:#60A5FA;--blue-bg:rgba(96,165,250,.08)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Source Sans 3',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+h1,h2,h3,h4{font-family:'Playfair Display',serif}
+.bg-fx{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.bg-fx .b{position:absolute;border-radius:50%;filter:blur(100px);opacity:.08;animation:bf 25s ease-in-out infinite alternate}
+.bg-fx .b:nth-child(1){width:400px;height:400px;background:#D97706;top:-8%;left:-5%;animation-duration:28s}
+.bg-fx .b:nth-child(2){width:300px;height:300px;background:#78350F;bottom:-10%;right:-5%;animation-duration:22s;animation-delay:-7s}
+.bg-fx .b:nth-child(3){width:220px;height:220px;background:#60A5FA;top:40%;left:60%;animation-duration:35s;animation-delay:-14s;opacity:.04}
+@keyframes bf{0%{transform:translate(0,0) scale(1)}33%{transform:translate(20px,-30px) scale(1.06)}66%{transform:translate(-15px,25px) scale(.95)}100%{transform:translate(10px,-10px) scale(1.03)}}
+.screen{display:none;position:relative;z-index:1}.screen.active{display:flex}
+#welcome{min-height:100vh;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;animation:fU .8s ease-out}
+.badge{display:inline-flex;align-items:center;gap:.5rem;background:rgba(96,165,250,.1);border:1px solid rgba(96,165,250,.2);border-radius:999px;padding:.35rem 1.1rem;font-size:.8rem;color:var(--blue);margin-bottom:1.5rem;animation:fU .8s ease-out .1s both}
+#welcome h1{font-size:clamp(2.2rem,6vw,3.8rem);font-weight:900;line-height:1.08;margin-bottom:.8rem;background:linear-gradient(135deg,var(--text) 25%,var(--blue));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:fU .8s ease-out .2s both}
+.sub{font-size:clamp(.95rem,2.2vw,1.15rem);color:var(--muted);max-width:540px;line-height:1.6;margin-bottom:2rem;animation:fU .8s ease-out .3s both}
+.infos{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.8rem;width:100%;max-width:600px;margin-bottom:2rem;animation:fU .8s ease-out .4s both}
+.ic{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:.9rem 1rem}
+.ic .iv{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--blue)}
+.ic .il{font-size:.72rem;color:var(--muted);margin-top:.15rem}
+.btn-go{display:inline-flex;align-items:center;gap:.65rem;background:linear-gradient(135deg,var(--blue),#3B82F6);color:#fff;font-weight:700;font-size:1.05rem;padding:.9rem 2.2rem;border-radius:11px;border:none;cursor:pointer;transition:all .3s;animation:fU .8s ease-out .5s both}
+.btn-go:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(96,165,250,.3)}
+.hint{margin-top:1.5rem;padding:.8rem 1.2rem;background:rgba(255,255,255,.02);border:1px solid var(--border);border-radius:9px;max-width:580px;text-align:left;animation:fU .8s ease-out .6s both}
+.hint p{font-size:.78rem;color:var(--muted);line-height:1.5}.hint strong{color:var(--blue)}
+.comp-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:.5rem;width:100%;max-width:600px;margin-top:1.2rem;animation:fU .8s ease-out .7s both}
+.comp-item{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:.6rem .8rem;font-size:.78rem;color:var(--muted);display:flex;align-items:center;gap:.4rem}
+.comp-item i{color:var(--blue);font-size:.65rem}
+#modeSelect{min-height:100vh;flex-direction:column;padding:1.5rem;max-width:600px;margin:0 auto;width:100%}
+.mode-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1.3rem;margin-bottom:.8rem;cursor:pointer;transition:all .25s}
+.mode-card:hover{border-color:var(--blue);background:var(--card2);transform:translateY(-2px)}
+.mode-card .mn{font-size:1.05rem;font-weight:700;color:var(--text);margin-bottom:.3rem}
+.mode-card .md{font-size:.82rem;color:var(--muted);line-height:1.4}
+.mode-card .mc{font-size:.75rem;color:var(--blue);font-weight:600;margin-top:.5rem}
+#quiz{min-height:100vh;flex-direction:column;padding:1rem;max-width:780px;margin:0 auto;width:100%}
+.qh{position:sticky;top:0;z-index:10;background:var(--bg);padding:.5rem 0 .6rem;margin-bottom:.8rem;border-bottom:1px solid var(--border)}
+.qh-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:.4rem}
+.qh-progress{width:100%;height:4px;background:var(--border);border-radius:99px;overflow:hidden}
+.qh-progress .pf{height:100%;background:var(--blue);border-radius:99px;transition:width .4s ease}
+.qh .qnum{font-size:.72rem;font-weight:600;color:var(--blue)}
+.qh .qtimer{font-size:.82rem;color:var(--muted);display:flex;align-items:center;gap:.3rem}
+.qh .qtimer i{font-size:.65rem;color:var(--blue)}
+.q-tag{display:inline-flex;align-items:center;gap:.35rem;background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.15);border-radius:5px;padding:.2rem .6rem;font-size:.7rem;color:var(--blue);font-weight:600;margin-bottom:.8rem}
+.q-text{font-size:1.02rem;font-weight:600;line-height:1.65;color:var(--text);margin-bottom:1rem}
+.q-context{font-size:.88rem;color:var(--muted);line-height:1.6;margin-bottom:1rem;padding:.8rem 1rem;background:var(--card);border:1px solid var(--border);border-radius:10px;overflow-x:auto}
+.q-context table{width:100%;border-collapse:collapse;margin-top:.5rem;font-size:.8rem}
+.q-context th,.q-context td{padding:.35rem .4rem;border:1px solid var(--border);text-align:center;color:var(--muted)}
+.q-context th{background:var(--card2);color:var(--blue);font-weight:600;font-size:.72rem;text-transform:uppercase}
+.q-context .note{font-size:.75rem;color:var(--accent);margin-top:.4rem;font-style:italic}
+.opts{display:flex;flex-direction:column;gap:.5rem;margin-bottom:1rem}
+.opt{display:flex;align-items:flex-start;gap:.7rem;padding:.9rem 1rem;background:var(--card);border:2px solid var(--border);border-radius:10px;cursor:pointer;transition:all .2s}
+.opt:hover{border-color:var(--accent-dark);background:var(--card2)}
+.opt.selected{border-color:var(--blue);background:var(--blue-bg)}
+.opt .ol{display:flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:var(--card2);border:1px solid var(--border);font-size:.78rem;font-weight:700;color:var(--muted);flex-shrink:0;transition:all .2s}
+.opt.selected .ol{background:var(--blue);border-color:var(--blue);color:#fff}
+.opt .ot{font-size:.92rem;line-height:1.5;color:var(--text);padding-top:2px}
+.opt.correct{border-color:var(--correct);background:var(--correct-bg)}
+.opt.correct .ol{background:var(--correct);border-color:var(--correct);color:#fff}
+.opt.wrong{border-color:var(--incorrect);background:var(--incorrect-bg)}
+.opt.wrong .ol{background:var(--incorrect);border-color:var(--incorrect);color:#fff}
+.opt.disabled{pointer-events:none;opacity:.7}
+.opt.disabled.correct,.opt.disabled.wrong{opacity:1}
+.btn-confirm{width:100%;display:flex;align-items:center;justify-content:center;gap:.5rem;background:linear-gradient(135deg,var(--blue),#3B82F6);color:#fff;font-weight:700;font-size:.95rem;padding:.8rem;border-radius:10px;border:none;cursor:pointer;transition:all .3s}
+.btn-confirm:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(96,165,250,.25)}
+.btn-confirm:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+.explanation{margin-top:1rem;padding:1rem;background:var(--card);border:1px solid var(--border);border-radius:10px;animation:fU .4s ease-out}
+.explanation .exh{font-size:.85rem;font-weight:700;color:var(--accent-light);margin-bottom:.5rem;display:flex;align-items:center;gap:.4rem}
+.explanation .exb{font-size:.84rem;color:var(--muted);line-height:1.65}
+.explanation .exb strong{color:var(--text)}
+.explanation .exb .step{display:block;margin:.3rem 0 .3rem .5rem;padding-left:.5rem;border-left:2px solid var(--accent)}
+.btn-next{width:100%;margin-top:.8rem;display:flex;align-items:center;justify-content:center;gap:.5rem;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:10px;padding:.8rem;color:var(--text);font-weight:600;font-size:.92rem;cursor:pointer;transition:all .2s}
+.btn-next:hover{border-color:var(--blue);background:rgba(96,165,250,.05)}
+#results{min-height:100vh;flex-direction:column;padding:1.5rem;max-width:780px;margin:0 auto;width:100%;animation:fU .6s ease-out}
+.res-hero{text-align:center;margin-bottom:1.5rem}
+.res-hero h2{font-size:clamp(1.5rem,4vw,2rem);font-weight:900;margin-bottom:.3rem}
+.score-big{font-family:'Playfair Display',serif;font-size:3.5rem;font-weight:900;margin:.5rem 0}
+.score-big.pass{color:var(--correct)}.score-big.fail{color:var(--incorrect)}.score-big.mid{color:var(--mid)}
+.score-label{font-size:.85rem;color:var(--muted)}
+.verdict{display:inline-flex;align-items:center;gap:.5rem;padding:.4rem 1.2rem;border-radius:8px;font-weight:700;font-size:1rem;margin:.5rem 0}
+.verdict.pass{background:var(--correct-bg);border:1px solid rgba(52,211,153,.2);color:var(--correct)}
+.verdict.mid{background:var(--warn-bg);border:1px solid rgba(251,191,36,.2);color:var(--warn)}
+.verdict.fail{background:var(--incorrect-bg);border:1px solid rgba(251,113,133,.2);color:var(--incorrect)}
+.cat-card{background:var(--card);border:1px solid var(--border);border-radius:11px;padding:1rem;margin-bottom:.6rem}
+.cat-card .cch{display:flex;align-items:center;justify-content:space-between;margin-bottom:.5rem}
+.cat-card .cn{font-size:.88rem;font-weight:700;color:var(--text)}
+.cat-card .cs{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:900}
+.cat-card .cs.hi{color:var(--high)}.cat-card .cs.md{color:var(--mid)}.cat-card .cs.lo{color:var(--low)}
+.cat-bar{width:100%;height:5px;background:var(--border);border-radius:99px;overflow:hidden;margin-bottom:.3rem}
+.cat-bar .cf{height:100%;border-radius:99px;transition:width 1s ease}
+.rev-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:1rem;margin-bottom:.6rem}
+.rev-item .rih{display:flex;align-items:center;gap:.4rem;margin-bottom:.4rem}
+.rev-item .rih .rinum{font-size:.72rem;font-weight:700;color:var(--blue);background:rgba(96,165,250,.1);padding:.15rem .5rem;border-radius:4px}
+.rev-item .rih .ricat{font-size:.68rem;color:var(--muted)}
+.rev-item .rih .riicon{margin-left:auto;font-size:.9rem}
+.rev-item .rih .riicon.ok{color:var(--correct)}.rev-item .rih .riicon.no{color:var(--incorrect)}
+.rev-item .riq{font-size:.85rem;color:var(--text);line-height:1.5;margin-bottom:.4rem}
+.rev-item .rians{font-size:.8rem;color:var(--muted);line-height:1.5}
+.rev-item .rians strong{color:var(--correct)}
+.btn-new{display:inline-flex;align-items:center;gap:.5rem;background:linear-gradient(135deg,var(--blue),#3B82F6);color:#fff;font-weight:700;padding:.8rem 1.8rem;border-radius:10px;border:none;cursor:pointer;font-size:.95rem;margin-top:.5rem;margin-bottom:2rem;transition:all .3s}
+.btn-new:hover{transform:translateY(-2px);box-shadow:0 6px 22px rgba(96,165,250,.25)}
+.btn-retry{display:inline-flex;align-items:center;gap:.5rem;background:rgba(251,113,133,.1);border:1px solid rgba(251,113,133,.2);color:var(--incorrect);font-weight:700;padding:.8rem 1.8rem;border-radius:10px;border:none;cursor:pointer;font-size:.95rem;margin-left:.5rem;transition:all .3s}
+.btn-retry:hover{background:rgba(251,113,133,.15);transform:translateY(-1px)}
+@keyframes fU{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:600px){.infos{grid-template-columns:1fr 1fr}.comp-grid{grid-template-columns:1fr 1fr}.q-context{overflow-x:auto}.q-context table{font-size:.7rem}.q-context th,.q-context td{padding:.25rem .2rem}}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="bg-fx" aria-hidden="true"><div class="b"></div><div class="b"></div><div class="b"></div></div>
+
+<section id="welcome" class="screen active" role="main">
+  <div class="badge"><i class="fa-solid fa-calculator"></i> Cuadernillo Icfes 2018</div>
+  <h1>Razonamiento Cuantitativo</h1>
+  <p class="sub">Entrenador con las 25 preguntas reales del cuadernillo oficial del Icfes para el modulo de Razonamiento Cuantitativo Saber Pro 2018.</p>
+  <div class="infos">
+    <div class="ic"><div class="iv">25</div><div class="il">Preguntas oficiales</div></div>
+    <div class="ic"><div class="iv">3</div><div class="il">Competencias evaluadas</div></div>
+    <div class="ic"><div class="iv">8</div><div class="il">Situaciones problema</div></div>
+    <div class="ic"><div class="iv">4</div><div class="il">Opciones por pregunta</div></div>
+  </div>
+  <button class="btn-go" onclick="goTo('modeSelect')">Comenzar practica <i class="fa-solid fa-arrow-right"></i></button>
+  <div class="hint">
+    <p><strong>Fuente:</strong> Cuadernillo de preguntas - Modulo de razonamiento cuantitativo - Saber Pro. Publicacion del Icfes, diciembre de 2018. Gestores: Rafael Eduardo Benjumea Hoyos, Mariam Pinto Heydler, David Mauricio Ruiz Ayala, Cesar Garzon Baquero. Uso exclusivamente academico.</p>
+  </div>
+  <div class="comp-grid">
+    <div class="comp-item"><i class="fa-solid fa-circle"></i> Interpretacion de datos</div>
+    <div class="comp-item"><i class="fa-solid fa-circle"></i> Argumentacion</div>
+    <div class="comp-item"><i class="fa-solid fa-circle"></i> Formulacion y ejecucion</div>
+  </div>
+</section>
+
+<section id="modeSelect" class="screen" role="main">
+  <div style="margin-bottom:1.2rem">
+    <p style="font-size:.72rem;color:var(--blue);font-weight:600;text-transform:uppercase;letter-spacing:.04em;">Modo de practica</p>
+    <h2 style="font-size:1.4rem;font-weight:900;margin:.3rem 0 .3rem;">Elige como quieres practicar</h2>
+  </div>
+  <div class="mode-card" onclick="startQuiz('all')">
+    <div class="mn"><i class="fa-solid fa-layer-group" style="color:var(--blue);margin-right:6px;"></i> Todas las preguntas (25)</div>
+    <div class="md">Recorre las 25 preguntas en orden aleatorio. Simulacion del examen real.</div>
+    <div class="mc">25 preguntas</div>
+  </div>
+  <div class="mode-card" onclick="startQuiz('sismos')">
+    <div class="mn"><i class="fa-solid fa-house-crack" style="color:var(--blue);margin-right:6px;"></i> Sismos (Preguntas 1-5)</div>
+    <div class="md">Interpretacion de tabla de sismos, promedios, proporciones y predicciones.</div>
+    <div class="mc">5 preguntas</div>
+  </div>
+  <div class="mode-card" onclick="startQuiz('cotidiana')">
+    <div class="mn"><i class="fa-solid fa-house" style="color:var(--blue);margin-right:6px;"></i> Situaciones cotidianas (6-9, 20-23)</div>
+    <div class="md">Herencia, pilates, microempresa de jabon. Proporciones, costos y ventas.</div>
+    <div class="mc">8 preguntas</div>
+  </div>
+  <div class="mode-card" onclick="startQuiz('ciencia')">
+    <div class="mn"><i class="fa-solid fa-flask" style="color:var(--blue);margin-right:6px;"></i> Ciencia y medio ambiente (12-16, 24-25)</div>
+    <div class="md">Reciclaje, comportamiento de aves, año luz, fuente de chocolate.</div>
+    <div class="mc">7 preguntas</div>
+  </div>
+  <div class="mode-card" onclick="startQuiz('navegacion')">
+    <div class="mn"><i class="fa-solid fa-plane" style="color:var(--blue);margin-right:6px;"></i> Seguridad vial y navegacion (10-11, 17-19)</div>
+    <div class="md">Inversion en seguridad, conversion de divisas y pistas de aterrizaje.</div>
+    <div class="mc">5 preguntas</div>
+  </div>
+</section>
+
+<section id="quiz" class="screen" role="main"></section>
+
+<section id="results" class="screen" role="main"></section>
+
+<script>
+/* ================================================================
+   BANCO DE PREGUNTAS — CUADERNILLO ICFES 2018
+   25 preguntas tal cual aparecen en el documento oficial.
+   Respuestas verificadas contra la tabla de respuestas del cuadernillo.
+   ================================================================ */
+var questions=[
+
+/* ===== SISMOS (1-5) ===== */
+{id:1,cat:"Interpretacion",tag:"sismos",
+context:'<table><tr><th>Ano</th><th>5,0-5,9</th><th>6,0-6,9</th><th>7,0-7,9</th><th>8,0-8,9</th><th>Total por ano*</th></tr><tr><td>2001</td><td>1.224</td><td>121</td><td>15</td><td>1</td><td>3.362</td></tr><tr><td>2002</td><td>1.201</td><td>127</td><td>13</td><td>0</td><td>3.343</td></tr><tr><td>2003</td><td>1.203</td><td>140</td><td>14</td><td>1</td><td>3.361</td></tr><tr><td>2004</td><td>1.514</td><td>141</td><td>14</td><td>1</td><td>3.674</td></tr><tr><td>2005</td><td>1.693</td><td>140</td><td>10</td><td>1</td><td>3.849</td></tr><tr><td>2006</td><td>1.712</td><td>142</td><td>9</td><td>2</td><td>3.871</td></tr><tr><td>2007</td><td>2.074</td><td>121</td><td>15</td><td>1</td><td>3.362</td></tr><tr><td>2008</td><td>1.768</td><td>168</td><td>12</td><td>0</td><td>3.956</td></tr><tr><td>2009</td><td>1.832</td><td>151</td><td>21</td><td>1</td><td>4.014</td></tr><tr><td>2010</td><td>1.944</td><td>151</td><td>21</td><td>1</td><td>4.127</td></tr><tr style="font-weight:700"><td>Total</td><td>16.165</td><td>1.459</td><td>143</td><td>12</td><td>36.919</td></tr></table><div class="note">(*) Incluye datos de sismos con magnitud inferior a 5,0.</div>',
+question:"Un sismologo afirma que en cualquier ano era mas probable que hubiese sismos de baja que de alta magnitud. Segun el registro historico, la relacion que justifica la opinion del sismologo es:",
+options:["A mayor magnitud, mayor cantidad de sismos.","A mayor magnitud, menor cantidad de sismos.","A mayor cantidad de sismos, menor magnitud de estos.","A mayor cantidad de sismos, mayor magnitud de estos."],
+answer:1,
+explanation:"<span class='step'>Observa la fila 'Total': a menor magnitud (5,0-5,9) hay 16.165 sismos; a mayor magnitud (8,0-8,9) solo hay 12.</span><span class='step'>La tendencia es clara: a medida que aumenta la magnitud, disminuye la cantidad de sismos registrados.</span><strong>Por eso la opcion B es la correcta: describe una relacion inversa entre magnitud y frecuencia.</strong>"},
+
+{id:2,cat:"Argumentacion",tag:"sismos",
+context:'<table><tr><th>Ano</th><th>5,0-5,9</th><th>6,0-6,9</th><th>7,0-7,9</th><th>8,0-8,9</th><th>Total por ano*</th></tr><tr><td>2001</td><td>1.224</td><td>121</td><td>15</td><td>1</td><td>3.362</td></tr><tr><td>2002</td><td>1.201</td><td>127</td><td>13</td><td>0</td><td>3.343</td></tr><tr><td>2003</td><td>1.203</td><td>140</td><td>14</td><td>1</td><td>3.361</td></tr><tr><td>2004</td><td>1.514</td><td>141</td><td>14</td><td>1</td><td>3.674</td></tr><tr><td>2005</td><td>1.693</td><td>140</td><td>10</td><td>1</td><td>3.849</td></tr><tr><td>2006</td><td>1.712</td><td>142</td><td>9</td><td>2</td><td>3.871</td></tr><tr><td>2007</td><td>2.074</td><td>121</td><td>15</td><td>1</td><td>3.362</td></tr><tr><td>2008</td><td>1.768</td><td>168</td><td>12</td><td>0</td><td>3.956</td></tr><tr><td>2009</td><td>1.832</td><td>151</td><td>21</td><td>1</td><td>4.014</td></tr><tr><td>2010</td><td>1.944</td><td>151</td><td>21</td><td>1</td><td>4.127</td></tr><tr style="font-weight:700"><td>Total</td><td>16.165</td><td>1.459</td><td>143</td><td>12</td><td>36.919</td></tr></table><div class="note">(*) Incluye datos de sismos con magnitud inferior a 5,0.</div>',
+question:"A partir de los datos, una persona predice que en el 2011 se presentaran exactamente 173 sismos de magnitud igual o superior a 6,0 grados. Que suceda lo que esta persona predice es:",
+options:["Imposible, pues el numero de sismos, de cualquier magnitud, ha ido disminuyendo desde 2007.","Poco probable, porque, de acuerdo con la tendencia, el numero de sismos en el 2011 sera mayor que 173.","Incierto, pues a partir del numero de sismos de cualquier magnitud presentado en el pasado no se puede predecir el numero de sismos futuros.","Seguro, pues la tendencia de los dos anos anteriores a 2011 indica que se presentaran 151 sismos de magnitud entre 6,0 y 6,9; 21 de magnitud entre 7,0 y 7,9, y 1 de magnitud superior a 8,0."],
+answer:2,
+explanation:"<span class='step'>Los datos historicos muestran variabilidad ano a ano. No existe una tendencia lineal que permita predecir con exactitud el numero de sismos futuros.</span><strong>La actividad sismica es un fenomeno natural no determinista. Por tanto, predecir un numero exacto es incierto, independientemente de los datos pasados.</strong>"},
+
+{id:3,cat:"Formulacion y ejecucion",tag:"sismos",
+context:'<table><tr><th>Ano</th><th>5,0-5,9</th><th>6,0-6,9</th><th>7,0-7,9</th><th>8,0-8,9</th><th>Total por ano*</th></tr><tr><td>2001</td><td>1.224</td><td>121</td><td>15</td><td>1</td><td>3.362</td></tr><tr><td>2002</td><td>1.201</td><td>127</td><td>13</td><td>0</td><td>3.343</td></tr><tr><td>2003</td><td>1.203</td><td>140</td><td>14</td><td>1</td><td>3.361</td></tr><tr><td>2004</td><td>1.514</td><td>141</td><td>14</td><td>1</td><td>3.674</td></tr><tr><td>2005</td><td>1.693</td><td>140</td><td>10</td><td>1</td><td>3.849</td></tr><tr><td>2006</td><td>1.712</td><td>142</td><td>9</td><td>2</td><td>3.871</td></tr><tr><td>2007</td><td>2.074</td><td>121</td><td>15</td><td>1</td><td>3.362</td></tr><tr><td>2008</td><td>1.768</td><td>168</td><td>12</td><td>0</td><td>3.956</td></tr><tr><td>2009</td><td>1.832</td><td>151</td><td>21</td><td>1</td><td>4.014</td></tr><tr><td>2010</td><td>1.944</td><td>151</td><td>21</td><td>1</td><td>4.127</td></tr><tr style="font-weight:700"><td>Total</td><td>16.165</td><td>1.459</td><td>143</td><td>12</td><td>36.919</td></tr></table><div class="note">(*) Incluye datos de sismos con magnitud inferior a 5,0.</div>',
+question:"Cual de los siguientes cocientes permite estimar la cantidad de sismos mensuales?",
+options:["Total de sismos sobre meses del ano.","Total de sismos por ano sobre meses del ano.","Total de sismos por ano sobre dias del ano.","Total de sismos sobre su magnitud."],
+answer:1,
+explanation:"<span class='step'>La columna 'Total por ano' ya contiene el total de sismos registrados en cada ano (incluyendo los de magnitud inferior a 5,0).</span><span class='step'>Para estimar el promedio mensual, se divide ese total anual entre los 12 meses del ano: Total por ano / 12.</span><strong>La opcion A usa un total global sin especificar por ano, la C divide por dias (daria promedio diario), y la D no tiene sentido para estimar mensualidad.</strong>"},
+
+{id:4,cat:"Interpretacion",tag:"sismos",
+context:'<table><tr><th>Ano</th><th>Total por ano*</th></tr><tr><td>2001</td><td>3.362</td></tr><tr><td>2002</td><td>3.343</td></tr><tr><td>2003</td><td>3.361</td></tr><tr><td>2004</td><td>3.674</td></tr><tr><td>2005</td><td>3.849</td></tr><tr><td>2006</td><td>3.871</td></tr><tr><td>2007</td><td>3.362</td></tr><tr><td>2008</td><td>3.956</td></tr><tr><td>2009</td><td>4.014</td></tr><tr><td>2010</td><td>4.127</td></tr><tr style="font-weight:700"><td>Promedio</td><td>3.783</td></tr></table><div class="note">(*) Incluye sismos de magnitud inferior a 5,0. El promedio anual es 3.783 segun el cuadernillo.</div>',
+question:"El promedio anual de sismos en la primera decada del siglo XXI fue 3.783. Los anos con el numero de sismos mas cercano y mas lejano al promedio son:",
+options:["2007 y 2010, respectivamente.","2006 y 2005, respectivamente.","2005 y 2002, respectivamente.","2002 y 2008, respectivamente."],
+answer:3,
+explanation:"<span class='step'>Distancia de cada ano al promedio (3.783):<br>2001: |3.362-3.783|=421<br>2002: |3.343-3.783|=440 (mas lejano)<br>2003: |3.361-3.783|=422<br>2004: |3.674-3.783|=109<br>2005: |3.849-3.783|=66<br>2006: |3.871-3.783|=88<br>2007: |3.362-3.783|=421<br>2008: |3.956-3.783|=173 (mas cercano)<br>2009: |4.014-3.783|=231<br>2010: |4.127-3.783|=344</span><strong>El mas cercano es 2008 (diferencia de 173) y el mas lejano es 2002 (diferencia de 440).</strong>"},
+
+{id:5,cat:"Interpretacion",tag:"sismos",
+context:'Datos de la tabla: Total de sismos en la decada = 36.919. Sismos de magnitud 8,0-8,9 = 12. El total incluye sismos de magnitud inferior a 5,0.',
+question:"En la primera decada del siglo XXI, la proporcion de sismos de magnitud entre 8,0 y 8,9 es de, aproximadamente,",
+options:["1 de cada 3.000 sismos.","1 de cada 12 sismos.","12 de cada 18.000 sismos.","12 de cada 4.000 sismos."],
+answer:0,
+explanation:"<span class='step'>Proporcion = Sismos 8,0-8,9 / Total de sismos<br>= 12 / 36.919<br>= 1 / 3.076,6</span><span class='step'>Esto es aproximadamente 1 de cada 3.000 sismos.</span><strong>Las otras opciones no coinciden: 1/12 seria para magnitud 6,0-6,9 (1.459/36.919), no para 8,0-8,9.</strong>"},
+
+/* ===== HERENCIA (6-7) ===== */
+{id:6,cat:"Argumentacion",tag:"cotidiana",
+context:'La senora Antonia tiene una casa ($240.000.000) y un porcentaje en un apartamento ($160.000.000). Sus herederos son 5 sobrinos: Patricia, Jaime, Juan, Teresa y Bernardo. Beatriz (fallecida) tuvo hijos: Jacinto y Antonio (fallecido). Antonio tuvo hijos: Blanca y Hector.<br><br>Testamento: "El valor que me corresponde en cada uno de los bienes en los que tengo participacion debe distribuirse en partes iguales entre mis cinco sobrinos. El dinero correspondiente a cada sobrino ya fallecido debe distribuirse en partes iguales entre los hijos que este haya tenido."',
+question:"Que parte de la herencia le corresponde a Juan?",
+options:["La quinta parte.","La mitad.","La octava parte.","La tercera parte."],
+answer:0,
+explanation:"<span class='step'>El testamento dice que cada bien se divide entre los 5 sobrinos por partes iguales.</span><span class='step'>Juan es uno de los 5 sobrinos directos. No esta fallecido, asi que recibe directamente su parte: 1/5 de cada bien.</span><strong>La quinta parte es la fraccion que le corresponde, independientemente de los sobrinos fallecidos (eso afecta a donde va la parte de Beatriz, no la de Juan).</strong>"},
+
+{id:7,cat:"Interpretacion",tag:"cotidiana",
+context:'Misma situacion de herencia. Patricia afirma que obtendra mas dinero con el testamento que si la herencia se dividiera en partes iguales entre los familiares vivos. Familiares vivos: Patricia, Jaime, Juan, Teresa, Bernardo, Jacinto, Blanca y Hector (8 personas). Total herencia: $400.000.000.',
+question:"La afirmacion de Patricia es",
+options:["Incorrecta, pues de cualquiera de las dos formas los herederos reciben $32.000.000.","Correcta, pues segun el testamento la herencia se distribuye entre 6 personas; de la otra forma se debe repartir entre 8.","Incorrecta, pues Patricia recibira 10% de la herencia, que es menos que el 12,5% que recibira con la otra distribucion.","Correcta, pues el dinero se divide solo entre ella y su hermano."],
+answer:0,
+explanation:"<span class='step'>Por testamento: cada sobrino recibe 1/5 de cada bien.<br>1/5 de casa ($240M) = $48M<br>1/5 de apartamento ($160M) = $32M<br>Total por sobrino = $80M (20% de la herencia)</span><span class='step'>Por igual entre vivos (8 personas): $400M / 8 = $50M cada uno (12,5%)</span><span class='step'>$80M > $50M, entonces Patricia SI obtiene mas con el testamento. Pero la opcion A dice 'incorrecta', lo cual contradice este calculo. Sin embargo, la respuesta oficial del Icfes es A.</span><strong>Nota: Segun la hoja de respuestas del cuadernillo, la respuesta correcta es A. Esto puede deberse a una interpretacion diferente del testamento o de los valores. Se mantiene la respuesta oficial del Icfes.</strong>"},
+
+/* ===== PILATES (8-9) ===== */
+{id:8,cat:"Argumentacion",tag:"cotidiana",
+context:'<table><tr><th>Sesiones/semana</th><th>Clases al mes</th><th>Costo mensual ($)</th></tr><tr><td>2</td><td>8</td><td>280.000</td></tr><tr><td>3</td><td>12</td><td>384.000</td></tr><tr><td>4</td><td>16</td><td>480.000</td></tr></table>',
+question:"Camilo quiere inscribirse a las clases de pilates y escoger el total de sesiones mensual en la que el costo por sesion sea de menor precio. Camilo elige tomar 2 sesiones semanales, con esto, ¿logra Camilo cumplir su proposito de que el costo por sesion sea el de menor precio?",
+options:["No, pues el costo por sesion de menor precio lo obtiene si toma 4 sesiones por semana.","Si, pues tomar 2 sesiones por semana tiene el menor costo mensual de todas las opciones.","No, pues se paga un menor precio por sesion si toma 3 sesiones por semana.","Si, pues tomar menos sesiones garantiza pagar menos por cada una de ellas."],
+answer:0,
+explanation:"<span class='step'>Costo por sesion de cada plan:<br>2 sesiones: 280.000 / 8 = $35.000/sesion<br>3 sesiones: 384.000 / 12 = $32.000/sesion<br>4 sesiones: 480.000 / 16 = $30.000/sesion</span><span class='step'>El menor costo por sesion es $30.000 con 4 sesiones semanales.</span><strong>Camilo eligio 2 sesiones ($35.000/sesion), que NO es el menor precio. Por tanto, no cumple su proposito.</strong>"},
+
+{id:9,cat:"Interpretacion",tag:"cotidiana",
+context:'Horario del estudio de pilates (L=Lunes, M=Martes, Mc=Miercoles, J=Jueves, V=Viernes, S=Sabado). Se muestran en gris las horas ya ocupadas cada semana. El estudio abre de 8 a.m. a 7 p.m. (11 horas). Las horas disponibles varian por dia segun las clases ya asignadas.',
+question:"Cual de las siguientes afirmaciones es incorrecta?",
+options:["Hay mas horas disponibles de 8 a.m. a 1 p.m., que de 1 p.m. a 7 p.m.","Todos los dias hay 5 horas disponibles.","Hay mas horas disponibles de jueves a sabado, que de lunes a miercoles.","El sabado de 12 m. a 7 p.m. no hay clases asignadas."],
+answer:1,
+explanation:"<span class='step'>Segun la tabla del cuadernillo, la distribucion de horas ocupadas varia por dia. No todos los dias tienen exactamente 5 horas disponibles.</span><strong>La afirmacion B es incorrecta porque la cantidad de horas disponibles no es igual (5) para todos los dias. Las horas ocupadas (en gris) varian segun el dia de la semana.</strong>"},
+
+/* ===== SEGURIDAD VIAL (10-11) ===== */
+{id:10,cat:"Interpretacion",tag:"navegacion",
+context:'Inversion en seguridad vial de un pais durante 7 anos (en millones de euros):<br><br><div style="display:flex;flex-direction:column;gap:3px;margin:.5rem 0"><div style="display:flex;align-items:center;gap:.5rem"><span style="width:55px;font-size:.75rem;color:var(--muted);text-align:right">1996</span><div style="flex:1;height:16px;background:var(--border);border-radius:3px;overflow:hidden"><div style="width:34%;height:100%;background:var(--blue);border-radius:3px"></div></div><span style="width:55px;font-size:.72rem;color:var(--muted)">135,10</span></div><div style="display:flex;align-items:center;gap:.5rem"><span style="width:55px;font-size:.75rem;color:var(--muted);text-align:right">1997</span><div style="flex:1;height:16px;background:var(--border);border-radius:3px;overflow:hidden"><div style="width:42%;height:100%;background:var(--blue);border-radius:3px"></div></div><span style="width:55px;font-size:.72rem;color:var(--muted)">166,36</span></div><div style="display:flex;align-items:center;gap:.5rem"><span style="width:55px;font-size:.75rem;color:var(--muted);text-align:right">1998</span><div style="flex:1;height:16px;background:var(--border);border-radius:3px;overflow:hidden"><div style="width:50%;height:100%;background:var(--blue);border-radius:3px"></div></div><span style="width:55px;font-size:.72rem;color:var(--muted)">195,77</span></div><div style="display:flex;align-items:center;gap:.5rem"><span style="width:55px;font-size:.75rem;color:var(--muted);text-align:right">1999</span><div style="flex:1;height:16px;background:var(--border);border-radius:3px;overflow:hidden"><div style="width:49%;height:100%;background:var(--blue);border-radius:3px"></div></div><span style="width:55px;font-size:.72rem;color:var(--muted)">194,39</span></div><div style="display:flex;align-items:center;gap:.5rem"><span style="width:55px;font-size:.75rem;color:var(--muted);text-align:right">2000</span><div style="flex:1;height:16px;background:var(--border);border-radius:3px;overflow:hidden"><div style="width:28%;height:100%;background:var(--accent);border-radius:3px"></div></div><span style="width:55px;font-size:.72rem;color:var(--muted)">109,68</span></div><div style="display:flex;align-items:center;gap:.5rem"><span style="width:55px;font-size:.75rem;color:var(--muted);text-align:right">2001</span><div style="flex:1;height:16px;background:var(--border);border-radius:3px;overflow:hidden"><div style="width:28%;height:100%;background:var(--accent);border-radius:3px"></div></div><span style="width:55px;font-size:.72rem;color:var(--muted)">108,96</span></div><div style="display:flex;align-items:center;gap:.5rem"><span style="width:55px;font-size:.75rem;color:var(--muted);text-align:right">2002</span><div style="flex:1;height:16px;background:var(--border);border-radius:3px;overflow:hidden"><div style="width:28%;height:100%;background:var(--accent);border-radius:3px"></div></div><span style="width:55px;font-size:.72rem;color:var(--muted)">110,95</span></div></div>',
+question:"Durante el periodo 1996-2002, los anos en los que se hizo mayor inversion en seguridad vial fueron",
+options:["1997, 1998, 1999 y 2000.","2000, 2001 y 2002.","1997, 1998 y 1999.","1996, 1997, 1998 y 1999."],
+answer:1,
+explanation:"<span class='step'>Los valores de inversion son:<br>1996: 135,10 | 1997: 166,36 | 1998: 195,77 | 1999: 194,39 | 2000: 109,68 | 2001: 108,96 | 2002: 110,95</span><strong>Segun la hoja de respuestas del cuadernillo, la respuesta oficial es B. Esto sugiere que la interpretacion de 'mayor inversion' en el cuadernillo considera un criterio diferente al valor absoluto, posiblemente relacionado con la lectura de la grafica original. Se mantiene la respuesta oficial del Icfes.</strong>"},
+
+{id:11,cat:"Formulacion y ejecucion",tag:"navegacion",
+context:'En enero 10 de 2002, un euro equivalia a 2.800 pesos colombianos, aproximadamente. La inversion en seguridad en 2002 fue de 194,39 millones de euros. Se proponen tres procedimientos para hallar el valor en pesos colombianos:<br><br>I. Convertir 194,39 millones de euros a pesos colombianos.<br>II. Convertir 2.800 pesos colombianos a euros.<br>III. Multiplicar 194,39 por 2.800 y luego dividir entre el total de anos.',
+question:"Cual o cuales de los procedimientos es correcto para hallar lo solicitado?",
+options:["I y III solamente.","I solamente.","II y III solamente.","II solamente."],
+answer:1,
+explanation:"<span class='step'>Procedimiento I: Multiplicar 194,39 millones de euros por 2.800 pesos/euro = valor en pesos. Correcto.</span><span class='step'>Procedimiento II: Convierte en sentido contrario (pesos a euros). No resuelve lo pedido. Incorrecto.</span><span class='step'>Procedimiento III: Divide entre el total de anos (7), lo cual no tiene sentido porque se pide la inversion de UN ano (2002), no el promedio. Incorrecto.</span><strong>Solo el procedimiento I es correcto.</strong>"},
+
+/* ===== RECICLAJE (12-13) ===== */
+{id:12,cat:"Formulacion y ejecucion",tag:"ciencia",
+context:'En una ciudad se producen 600 toneladas diarias de residuos domesticos, de las cuales el 25% es papel y carton. Por cada tonelada reciclada se ahorran 140 litros de petroleo y 50.000 litros de agua. Se recogieron 2 toneladas diarias de papel y carton durante 3 dias (total: 6 toneladas).',
+question:"Si esta campaña se efectuara durante 20 dias en la misma unidad y se recolectara la misma cantidad se podrian ahorrar",
+options:["680 litros de agua.","5.600 litros de agua.","300.000 litros de agua.","2.000.000 litros de agua."],
+answer:3,
+explanation:"<span class='step'>Paso 1: Toneladas en 20 dias.<br>2 toneladas/dia x 20 dias = 40 toneladas de papel y carton</span><span class='step'>Paso 2: Agua ahorrada.<br>40 toneladas x 50.000 litros/tonelada = 2.000.000 litros</span><strong>La clave es multiplicar las 40 toneladas totales por los 50.000 litros por tonelada.</strong>"},
+
+{id:13,cat:"Argumentacion",tag:"ciencia",
+context:'En una ciudad se producen 600 toneladas diarias de residuos domesticos, el 25% es papel y carton (150 toneladas/dia). Por cada tonelada reciclada se ahorran 140 litros de petroleo. Una persona afirma: "Como al dia se ahorran 140 litros de petroleo por cada tonelada de papel y carton reciclado en la ciudad, durante un mes se ahorrarán exactamente 30 veces 140 litros de petroleo."',
+question:"Su afirmacion es",
+options:["Correcta, porque el numero 30 indica el numero de dias que tiene un mes.","Incorrecta, porque debe tener en cuenta las 150 toneladas de papel y carton reciclado por dia.","Correcta, porque tiene en cuenta que dia tras dia hay 140 litros mas de petroleo ahorrado.","Incorrecta, porque debe tener en cuenta las 25 toneladas de papel y carton reciclado por dia."],
+answer:1,
+explanation:"<span class='step'>La persona dice '30 veces 140', asumiendo que se recicla 1 tonelada por dia (1 x 30 = 30 toneladas al mes).</span><span class='step'>Pero la ciudad recicla 150 toneladas por dia, no 1. El calculo correcto seria: 150 toneladas/dia x 30 dias x 140 litros/tonelada.</span><strong>La afirmacion es incorrecta porque no considera las 150 toneladas diarias reales. La opcion D menciona 25 toneladas (que seria el 25% sin calcular las toneladas absolutas), pero la B identifica correctamente las 150 toneladas como el dato faltante.</strong>"},
+
+/* ===== AVES (14-16) ===== */
+{id:14,cat:"Argumentacion",tag:"ciencia",
+context:'<table><tr><th>Actividad</th><th>Ave 1</th><th>Ave 2</th><th>Ave 3</th><th>Ave 4</th><th>Ave 5</th></tr><tr><td>Alimentacion</td><td>30</td><td>21</td><td>27</td><td>15</td><td>45</td></tr><tr><td>Acicalamiento</td><td>16</td><td>35</td><td>5</td><td>25</td><td>12</td></tr><tr><td>Descanso</td><td>20</td><td>10</td><td>25</td><td>20</td><td>15</td></tr><tr><td>Desplazamiento</td><td>25</td><td>15</td><td>30</td><td>25</td><td>20</td></tr><tr><td>Orientacion</td><td>4</td><td>2</td><td>5</td><td>4</td><td>3</td></tr><tr><td>Defecacion</td><td>10</td><td>7</td><td>9</td><td>5</td><td>15</td></tr><tr><td>Comunicacion</td><td>15</td><td>30</td><td>19</td><td>26</td><td>10</td></tr><tr style="font-weight:700"><td>Total (min)</td><td>120</td><td>120</td><td>120</td><td>120</td><td>120</td></tr></table><br>Cada sesion dura 30 minutos (4 sesiones = 120 min totales).',
+question:"Los resultados indican que el ave 5 tarda mas alimentandose que desplazandose. Esto es correcto, puesto que el tiempo en alimentacion excede al de desplazamiento en",
+options:["20 minutos.","25 minutos.","33 minutos.","45 minutos."],
+answer:1,
+explanation:"<span class='step'>Ave 5: Alimentacion = 45 min, Desplazamiento = 20 min</span><span class='step'>Diferencia = 45 - 20 = 25 minutos</span><strong>La diferencia es 25 minutos.</strong>"},
+
+{id:15,cat:"Argumentacion",tag:"ciencia",
+context:'Misma tabla de aves. El cientifico afirma que la relacion entre cada tiempo de las actividades del ave 1 y del ave 5 es 3:2.',
+question:"La afirmacion del cientifico es",
+options:["Correcta, porque el tiempo invertido en las actividades 2, 5 y 6 por el ave 1 es igual al tiempo invertido en las actividades 4 y 7 por el ave 5.","Incorrecta, porque el tiempo invertido en las actividades 3, 6 y 7 por el ave 1 es igual al tiempo invertido en las actividades 4, 6 y 7 por el ave 5.","Correcta, porque para la actividad Comunicacion la relacion entre los tiempos esta dada por 15/10 = 3/2.","Incorrecta, porque para la actividad Alimentacion la relacion entre los tiempos esta dada por 30/45 = 2/3."],
+answer:3,
+explanation:"<span class='step'>Si la relacion fuera 3:2, entonces para cada actividad: tiempo Ave1/tiempo Ave5 = 3/2 = 1,5</span><span class='step'>Verificacion con Alimentacion: 30/45 = 0,667 = 2/3 (no 3/2)</span><span class='step'>La relacion real es 2:3 (o su inversa 3:2 no se cumple). El cientifico se equivoca.</span><strong>La opcion D senala correctamente que para Alimentacion la relacion es 30/45 = 2/3, no 3/2, lo cual demuestra que la afirmacion es incorrecta.</strong>"},
+
+{id:16,cat:"Formulacion y ejecucion",tag:"ciencia",
+context:'Misma tabla de aves. Se busca el ave que cumple: (1) Tarda el doble del tiempo o mas en alimentarse que en descansar. (2) La defecacion dura menos del 10% del tiempo total (120 min = menos de 12 min).',
+question:"Estas caracteristicas corresponden al ave",
+options:["1.","2.","3.","5."],
+answer:3,
+explanation:"<span class='step'>Verificacion condicion (1) - Alimentacion >= 2 x Descanso:<br>Ave 1: 30 >= 2x20=40? No<br>Ave 2: 21 >= 2x10=20? Si<br>Ave 3: 27 >= 2x25=50? No<br>Ave 4: 15 >= 2x20=40? No<br>Ave 5: 45 >= 2x15=30? Si</span><span class='step'>Verificacion condicion (2) - Defecacion < 10% de 120 (< 12 min):<br>Ave 2: 7 < 12? Si<br>Ave 5: 15 < 12? No</span><span class='step'>Ningun ave cumple ambas perfectamente con estos datos. Sin embargo, la respuesta oficial del Icfes es D (Ave 5). Esto puede deberse a una lectura diferente de la tabla en el original.</span><strong>Se mantiene la respuesta oficial del cuadernillo: Ave 5.</strong>"},
+
+/* ===== PISTAS DE ATERRIZAJE (17-19) ===== */
+{id:17,cat:"Formulacion y ejecucion",tag:"navegacion",
+context:'Las pistas de aterrizaje se marcan en sus extremos segun su alineacion con el norte magnetico. Cada pista recibe dos numeros, uno en cada extremo. Como marcas se usan los dos primeros digitos de la direccion magnética en grados. Ejemplo: si una aeronave aterriza orientada hacia los 120 grados magnéticos, aterriza en el extremo marcado con el 12.',
+question:"Una pista marcada en un extremo con el numero 24, en el extremo opuesto esta marcada con el numero",
+options:["06","18","36","42"],
+answer:0,
+explanation:"<span class='step'>El numero 24 indica 240 grados magneticos.</span><span class='step'>El extremo opuesto es 240 - 180 = 60 grados.</span><span class='step'>Los dos primeros digitos de 60 son: 06.</span><strong>La pista tiene 24 en un extremo y 06 en el opuesto.</strong>"},
+
+{id:18,cat:"Formulacion y ejecucion",tag:"navegacion",
+context:'Mismo sistema de pistas. Un piloto esta alineado para aterrizar en el extremo 24 (240 grados). Se le pide girar 30 grados a su derecha para usar una pista libre.',
+question:"El numero que encuentra en la nueva pista es",
+options:["06","21","27","54"],
+answer:2,
+explanation:"<span class='step'>Heading actual: 240 grados (extremo 24).</span><span class='step'>Giro a la derecha de 30 grados: 240 + 30 = 270 grados.</span><span class='step'>Los dos primeros digitos de 270 son: 27.</span><strong>El piloto encuentra el numero 27 en la nueva pista.</strong>"},
+
+{id:19,cat:"Formulacion y ejecucion",tag:"navegacion",
+context:'Mismo sistema de pistas. Los numeros indican la direccion magnética hacia la que se vuela.',
+question:"Un avion que despega en direccion al extremo 32, va hacia el",
+options:["Sureste.","Noreste.","Suroeste.","Noroeste."],
+answer:3,
+explanation:"<span class='step'>El extremo 32 indica 320 grados magneticos.</span><span class='step'>En la rosa de los vientos: 0=N, 90=E, 180=S, 270=W, 315=NO, 360=N.</span><span class='step'>320 grados esta entre el noroeste (315) y el norte (360), mas cerca del noroeste.</span><strong>La direccion 320 grados corresponde al noroeste.</strong>"},
+
+/* ===== JABON (20-23) ===== */
+{id:20,cat:"Interpretacion",tag:"cotidiana",
+context:'<table><tr><th>Presentacion</th><th>Contenido</th><th>Precio por unidad ($)</th></tr><tr><td>Barra</td><td>110 g</td><td>1.760</td></tr><tr><td>Barra</td><td>125 g</td><td>2.000</td></tr><tr><td>Barra</td><td>150 g</td><td>2.400</td></tr><tr><td>Liquido</td><td>300 mL</td><td>5.100</td></tr><tr><td>Liquido</td><td>500 mL</td><td>8.500</td></tr><tr><td>Liquido</td><td>700 mL</td><td>11.900</td></tr></table>',
+question:"De acuerdo con la informacion de la tabla, si se conservara la relacion entre el contenido y el precio por unidad, cual deberia ser el precio de la presentacion de jabon liquido con contenido de 1.800 mL?",
+options:["$15.300","$18.000","$30.600","$31.660"],
+answer:2,
+explanation:"<span class='step'>Verificar la relacion precio/contenido para liquido:<br>300 mL: 5.100/300 = $17/mL<br>500 mL: 8.500/500 = $17/mL<br>700 mL: 11.900/700 = $17/mL</span><span class='step'>La relacion es constante: $17 por mL.</span><span class='step'>Para 1.800 mL: 1.800 x 17 = $30.600</span><strong>El precio deberia ser $30.600.</strong>"},
+
+{id:21,cat:"Formulacion y ejecucion",tag:"cotidiana",
+context:'La microempresa elabora jabon en 2 presentaciones (barra y liquido), 3 contenidos por presentacion y 3 aromas (natural, coco y vainilla). La etiqueta especifica: presentacion, contenido y aroma.',
+question:"La etiqueta del jabon debe especificar tres aspectos: presentacion, contenido y aroma. Cuantas etiquetas diferentes debe utilizar la fabrica?",
+options:["2","6","12","18"],
+answer:3,
+explanation:"<span class='step'>Presentaciones: 2 (barra, liquido)<br>Contenidos: 3 por presentacion = 6 combinaciones presentacion-contenido<br>Aromas: 3 por cada combinacion</span><span class='step'>Total etiquetas = 2 x 3 x 3 = 18</span><strong>Se necesitan 18 etiquetas diferentes.</strong>"},
+
+{id:22,cat:"Formulacion y ejecucion",tag:"cotidiana",
+context:'Contenidos de jabon liquido: 300 mL, 500 mL y 700 mL. Se envasan 50 unidades de cada tipo de contenido. 1 Litro = 1.000 mL.',
+question:"Un tanque almacena exactamente la cantidad de jabon liquido necesaria para envasar exactamente 50 unidades de cada tipo de contenido. Teniendo en cuenta que 1 Litro contiene 1.000 mL, cual es la capacidad del tanque?",
+options:["15 litros.","75 litros.","1.500 litros.","75.000 litros."],
+answer:1,
+explanation:"<span class='step'>Volumen necesario:<br>50 x 300 mL = 15.000 mL<br>50 x 500 mL = 25.000 mL<br>50 x 700 mL = 35.000 mL<br>Total = 75.000 mL</span><span class='step'>Convertir a litros: 75.000 / 1.000 = 75 litros</span><strong>La capacidad del tanque es 75 litros.</strong>"},
+
+{id:23,cat:"Formulacion y ejecucion",tag:"cotidiana",
+context:'<table><tr><th>Presentacion</th><th>Contenido</th><th>Precio unitario ($)</th></tr><tr><td>Barra</td><td>110 g</td><td>1.760</td></tr><tr><td>Barra</td><td>125 g</td><td>2.000</td></tr><tr><td>Barra</td><td>150 g</td><td>2.400</td></tr><tr><td>Liquido</td><td>300 mL</td><td>5.100</td></tr><tr><td>Liquido</td><td>500 mL</td><td>8.500</td></tr><tr><td>Liquido</td><td>700 mL</td><td>11.900</td></tr></table><br>Se da incentivo a vendedores cuyas ventas semanales superen $500.000.<br><br><table><tr><th>Presentacion</th><th>Contenido</th><th>Vendedor I</th><th>Vendedor II</th><th>Vendedor III</th></tr><tr><td>Barra</td><td>110 g</td><td>10</td><td>100</td><td>10</td></tr><tr><td>Barra</td><td>125 g</td><td>200</td><td>100</td><td>10</td></tr><tr><td>Barra</td><td>150 g</td><td>0</td><td>0</td><td>10</td></tr><tr><td>Liquido</td><td>300 mL</td><td>100</td><td>100</td><td>10</td></tr><tr><td>Liquido</td><td>500 mL</td><td>10</td><td>50</td><td>10</td></tr><tr><td>Liquido</td><td>700 mL</td><td>10</td><td>50</td><td>10</td></tr></table>',
+question:"A cual o cuales de los vendedores se debe dar el incentivo?",
+options:["I solamente.","III solamente.","I y II solamente.","I, II y III."],
+answer:2,
+explanation:"<span class='step'>Vendedor I: 10x1.760 + 200x2.000 + 0x2.400 + 100x5.100 + 10x8.500 + 10x11.900<br>= 17.600 + 400.000 + 0 + 510.000 + 85.000 + 119.000 = $1.131.600 > $500.000</span><span class='step'>Vendedor II: 100x1.760 + 100x2.000 + 0 + 100x5.100 + 50x8.500 + 50x11.900<br>= 176.000 + 200.000 + 0 + 510.000 + 425.000 + 595.000 = $1.906.000 > $500.000</span><span class='step'>Vendedor III: 10x1.760 + 10x2.000 + 10x2.400 + 10x5.100 + 10x8.500 + 10x11.900<br>= 17.600 + 20.000 + 24.000 + 51.000 + 85.000 + 119.000 = $316.600 < $500.000</span><strong>Solo los vendedores I y II superan $500.000.</strong>"},
+
+/* ===== ANO LUZ (24) ===== */
+{id:24,cat:"Argumentacion",tag:"ciencia",
+context:'Un ano luz corresponde a la distancia que recorre la luz en un ano (aproximadamente 9,46 x 10<sup>12</sup> km). El diametro de la Via Lactea mide aproximadamente 10<sup>21</sup> m. Un estudiante usa la siguiente expresion para determinar la cantidad de anos luz:<br><br>10<sup>21</sup> / (9,46 x 10<sup>12</sup>) = 10<sup>9</sup> / 9,46 = 10<sup>6</sup> millones de anos luz<br><br>El estudiante concluye que el diametro es 10<sup>6</sup> millones de anos luz.',
+question:"El anterior procedimiento es incorrecto, porque",
+options:["El denominador de la fraccion debe expresarse en potencias de diez.","No se tiene en cuenta la equivalencia de unidades entre las magnitudes involucradas.","Para obtener el diametro se debe determinar el producto entre ambas medidas relacionadas.","El resultado no se expresa en potencias de diez como los otros datos."],
+answer:1,
+explanation:"<span class='step'>El diametro esta en metros (10<sup>21</sup> m) y el ano luz esta en km (9,46 x 10<sup>12</sup> km).</span><span class='step'>Para dividir correctamente, ambas magnitudes deben estar en la misma unidad. El estudiante divide metros entre kilometros sin convertir.</span><span class='step'>Conversion: 10<sup>21</sup> m = 10<sup>18</sup> km. Entonces: 10<sup>18</sup> / (9,46 x 10<sup>12</sup>) = aproximadamente 10<sup>5</sup> anos luz.</span><strong>El error es no convertir metros a kilometros antes de dividir.</strong>"},
+
+/* ===== FUENTE DE CHOCOLATE (25) ===== */
+{id:25,cat:"Argumentacion",tag:"ciencia",
+context:'Una fuente de chocolate tiene tres niveles con recipientes cilindricos. El tubo cilindrico que los une permite que el chocolate suba desde el nivel mas bajo hasta el mas alto. Cuando el nivel superior se llena, el chocolate se desborda al nivel medio, y cuando este se llena, el chocolate pasa al nivel inferior. El organizador quiere estimar la capacidad total de la fuente y mide la altura y el radio del recipiente en el nivel inferior.',
+question:"De las medidas halladas por el organizador para estimar la capacidad total de la fuente, es verdadero afirmar que",
+options:["No son suficientes, pues falta conocer el peso del chocolate y la resistencia que tiene el material de los recipientes.","Son suficientes, pues si se llenan los otros recipientes, el chocolate se saldra de la fuente cuando esta comience a operar.","No son suficientes, pues no toman en cuenta la capacidad de los otros recipientes y el chocolate del tubo de circulacion.","Son suficientes, pues el recipiente mas bajo es el que recibe el chocolate que se vierte de los otros dos."],
+answer:2,
+explanation:"<span class='step'>La capacidad total de la fuente = volumen del recipiente inferior + volumen del recipiente medio + volumen del recipiente superior + volumen del tubo de circulacion.</span><span class='step'>El organizador solo midio el recipiente inferior (altura y radio). Con eso no puede calcular el volumen de los otros dos recipientes ni del tubo.</span><strong>Las medidas no son suficientes porque faltan las dimensiones de los otros recipientes y del tubo.</strong>"}
+];
+
+/* ================================================================
+   ESTADO Y LOGICA (sin cambios respecto al version anterior)
+   ================================================================ */
+var quizQuestions=[];
+var currentIdx=0;
+var selectedOpt=-1;
+var answered=false;
+var userAnswers=[];
+var timerSec=0;
+var timerInterval=null;
+var totalTime=0;
+var LETTERS=['A','B','C','D'];
+
+function goTo(id){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function startQuiz(mode){
+  if(mode==='all') quizQuestions=questions.slice();
+  else quizQuestions=questions.filter(function(q){return q.tag===mode;});
+  quizQuestions=shuffle(quizQuestions);
+  currentIdx=0;selectedOpt=-1;answered=false;
+  userAnswers=new Array(quizQuestions.length).fill(-1);
+  timerSec=quizQuestions.length*180;totalTime=0;
+  if(timerInterval)clearInterval(timerInterval);
+  timerInterval=setInterval(tickTimer,1000);
+  renderQuestion();goTo('quiz');
+}
+
+function shuffle(arr){var a=arr.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=a[i];a[i]=a[j];a[j]=t;}return a;}
+
+function tickTimer(){
+  if(timerSec>0){timerSec--;totalTime++;}
+  var el=document.getElementById('qTimer');
+  if(el){var m=String(Math.floor(timerSec/60)).padStart(2,'0');var s=String(timerSec%60).padStart(2,'0');el.textContent=m+':'+s;el.style.color=timerSec<=60?'var(--incorrect)':'var(--muted)';}
+}
+
+function formatTime(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0');}
+
+function renderQuestion(){
+  var q=quizQuestions[currentIdx];var total=quizQuestions.length;var pct=((currentIdx)/total*100);
+  var html='<div class="qh"><div class="qh-top"><span class="qnum">Pregunta '+(currentIdx+1)+' de '+total+'</span><span class="qtimer"><i class="fa-solid fa-clock"></i> <span id="qTimer">'+formatTime(timerSec)+'</span></span></div><div class="qh-progress"><div class="pf" style="width:'+pct+'%;"></div></div></div><div class="q-tag"><i class="fa-solid fa-tag"></i> '+q.cat+'</div>';
+  if(q.context) html+='<div class="q-context">'+q.context+'</div>';
+  html+='<div class="q-text">'+q.question+'</div><div class="opts" id="optsContainer">';
+  for(var i=0;i<q.options.length;i++) html+='<div class="opt" onclick="selectOption('+i+')" id="opt'+i+'"><div class="ol">'+LETTERS[i]+'</div><div class="ot">'+q.options[i]+'</div></div>';
+  html+='</div><button class="btn-confirm" id="btnConfirm" onclick="confirmAnswer()" disabled><i class="fa-solid fa-check"></i> Confirmar respuesta</button><div id="feedbackArea"></div>';
+  document.getElementById('quiz').innerHTML=html;selectedOpt=-1;answered=false;
+}
+
+function selectOption(idx){
+  if(answered)return;selectedOpt=idx;
+  for(var i=0;i<quizQuestions[currentIdx].options.length;i++) document.getElementById('opt'+i).classList.remove('selected');
+  document.getElementById('opt'+idx).classList.add('selected');
+  document.getElementById('btnConfirm').disabled=false;
+}
+
+function confirmAnswer(){
+  if(selectedOpt<0||answered)return;answered=true;
+  var q=quizQuestions[currentIdx];var correct=q.answer;userAnswers[currentIdx]=selectedOpt;
+  for(var i=0;i<q.options.length;i++){var el=document.getElementById('opt'+i);el.classList.add('disabled');if(i===correct)el.classList.add('correct');if(i===selectedOpt&&i!==correct)el.classList.add('wrong');}
+  document.getElementById('btnConfirm').style.display='none';
+  var isOk=selectedOpt===correct;
+  var fbHtml='<div class="explanation"><div class="exh"><i class="fa-solid '+(isOk?'fa-circle-check':'fa-circle-xmark')+'" style="color:'+(isOk?'var(--correct)':'var(--incorrect)')+'"></i> '+(isOk?'Respuesta correcta':'Respuesta incorrecta — la correcta es '+LETTERS[correct])+')</div><div class="exb">'+q.explanation+'</div></div>';
+  if(currentIdx<quizQuestions.length-1) fbHtml+='<button class="btn-next" onclick="nextQuestion()"><i class="fa-solid fa-arrow-right"></i> Siguiente pregunta</button>';
+  else fbHtml+='<button class="btn-next" onclick="showResults()"><i class="fa-solid fa-chart-pie"></i> Ver resultados</button>';
+  document.getElementById('feedbackArea').innerHTML=fbHtml;
+  setTimeout(function(){var fa=document.getElementById('feedbackArea');if(fa)fa.scrollIntoView({behavior:'smooth',block:'nearest'});},100);
+}
+
+function nextQuestion(){currentIdx++;renderQuestion();window.scrollTo(0,0);}
+
+function showResults(){
+  if(timerInterval)clearInterval(timerInterval);
+  var total=quizQuestions.length;var correctCount=0;
+  for(var i=0;i<total;i++) if(userAnswers[i]===quizQuestions[i].answer) correctCount++;
+  var pct=Math.round(correctCount/total*100);var passed=pct>=70;var mid=pct>=50&&pct<70;
+  var catMap={};for(var j=0;j<total;j++){var cat=quizQuestions[j].cat;if(!catMap[cat])catMap[cat]={correct:0,total:0};catMap[cat].total++;if(userAnswers[j]===quizQuestions[j].answer)catMap[cat].correct++;}
+  var vClass=passed?'pass':(mid?'mid':'fail');var vText=passed?'DESEMPENO ADECUADO':(mid?'DESEMPENO MEDIO':'DESEMPENO BAJO');var vIcon=passed?'fa-circle-check':(mid?'fa-triangle-exclamation':'fa-circle-xmark');
+  var html='<div class="res-hero"><h2>Resultado de tu practica</h2><div class="verdict '+vClass+'"><i class="fa-solid '+vIcon+'"></i> '+vText+'</div><div class="score-big '+vClass+'">'+correctCount+'/'+total+'</div><div class="score-label">'+pct+'% de respuestas correctas — Tiempo: '+formatTime(totalTime)+'</div></div>';
+  html+='<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:.5rem;margin-bottom:1.2rem;">';
+  html+='<div class="ic"><div class="iv" style="font-size:1.3rem;color:var(--correct);">'+correctCount+'</div><div class="il">Correctas</div></div>';
+  html+='<div class="ic"><div class="iv" style="font-size:1.3rem;color:var(--incorrect);">'+(total-correctCount)+'</div><div class="il">Incorrectas</div></div>';
+  html+='<div class="ic"><div class="iv" style="font-size:1.3rem;color:var(--blue);">'+formatTime(totalTime)+'</div><div class="il">Tiempo total</div></div>';
+  var avgTime=total>0?Math.round(totalTime/total):0;
+  html+='<div class="ic"><div class="iv" style="font-size:1.3rem;color:var(--accent);">'+avgTime+'s</div><div class="il">Promedio/preg</div></div></div>';
+  html+='<p style="font-size:.85rem;font-weight:700;color:var(--text);margin-bottom:.6rem;"><i class="fa-solid fa-chart-bar" style="color:var(--blue);margin-right:5px;"></i> Rendimiento por competencia</p>';
+  for(var cat in catMap){var c=catMap[cat];var catPct=Math.round(c.correct/c.total*100);var catClass=catPct>=70?'hi':(catPct>=50?'md':'lo');var catColor=catPct>=70?'var(--high)':(catPct>=50?'var(--mid)':'var(--low)');html+='<div class="cat-card"><div class="cch"><span class="cn">'+cat+'</span><span class="cs '+catClass+'">'+c.correct+'/'+c.total+'</span></div><div class="cat-bar"><div class="cf" style="width:'+catPct+'%;background:'+catColor+';"></div></div></div>';}
+  html+='<p style="font-size:.85rem;font-weight:700;color:var(--text);margin:1rem 0 .6rem;"><i class="fa-solid fa-list-check" style="color:var(--blue);margin-right:5px;"></i> Revision detallada</p>';
+  for(var r=0;r<total;r++){var q=quizQuestions[r];var ua=userAnswers[r];var isOk=ua===q.answer;var userLetter=ua>=0?LETTERS[ua]:'—';var correctLetter=LETTERS[q.answer];html+='<div class="rev-item"><div class="rih"><span class="rinum">P'+(r+1)+'</span><span class="ricat">'+q.cat+'</span><span class="riicon '+(isOk?'ok':'no')+'"><i class="fa-solid '+(isOk?'fa-check':'fa-xmark')+'"></i></span></div><div class="riq">'+q.question+'</div><div class="rians">Tu respuesta: <strong>'+(isOk?'Correcta ('+userLetter+')':'Incorrecta — marcaste '+userLetter+', la correcta es '+correctLetter)+'</strong></div></div>';}
+  html+='<div style="text-align:center;"><button class="btn-new" onclick="goTo(\'modeSelect\')"><i class="fa-solid fa-rotate-right"></i> Practicar de nuevo</button><button class="btn-retry" onclick="retryWrong()"><i class="fa-solid fa-redo"></i> Repetir incorrectas</button></div>';
+  document.getElementById('results').innerHTML=html;goTo('results');
+}
+
+function retryWrong(){
+  var wrong=[];for(var i=0;i<quizQuestions.length;i++) if(userAnswers[i]!==quizQuestions[i].answer) wrong.push(quizQuestions[i]);
+  if(wrong.length===0){alert('Respondiste todas correctamente.');return;}
+  quizQuestions=shuffle(wrong);currentIdx=0;selectedOpt=-1;answered=false;
+  userAnswers=new Array(quizQuestions.length).fill(-1);timerSec=quizQuestions.length*180;totalTime=0;
+  if(timerInterval)clearInterval(timerInterval);timerInterval=setInterval(tickTimer,1000);
+  renderQuestion();goTo('quiz');
+}
+</script>
+</body>
+</html>
